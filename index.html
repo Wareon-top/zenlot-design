@@ -591,21 +591,67 @@
       .faq-item__answer { margin:0 17px 17px 75px; padding:0 58px 25px 0; color:rgba(255,255,255,.48); font-size:13px; line-height:1.7; }
       .faq-item__answer strong { color:rgb(var(--faq-accent)); font-weight:700; }
 
-      .final-wrap { padding:0 24px 24px; background:#090a0a; }
-      .final-cta { position:relative; display:flex; flex-direction:column; justify-content:space-between; width:min(1840px,100%); min-height:600px; margin:auto; padding:48px; overflow:hidden; border:1px solid rgba(255,210,28,.22); border-radius:34px; background:linear-gradient(118deg,#11130b 0%,#2c2607 47%,#1a1024 100%); isolation:isolate; }
-      .final-cta::before { position:absolute; z-index:-1; inset:0; background:radial-gradient(circle at 22% 105%,rgba(255,210,28,.34),transparent 34%),radial-gradient(circle at 92% 15%,rgba(169,103,255,.22),transparent 31%); content:""; }
-      .final-cta__orbit { position:absolute; z-index:-1; width:520px; height:520px; border:1px solid rgba(255,210,28,.25); border-radius:50%; }
-      .final-cta__orbit--one { top:-235px; right:8%; box-shadow:0 0 80px rgba(255,210,28,.08),inset 0 0 80px rgba(255,210,28,.05); }
-      .final-cta__orbit--two { right:-80px; bottom:-360px; width:700px; height:700px; border-color:rgba(190,131,255,.2); }
-      .final-cta__top { display:flex; align-items:center; justify-content:space-between; color:rgba(255,255,255,.5); font-size:10px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
-      .final-cta__status { display:flex; align-items:center; gap:9px; }
-      .final-cta__status::before { width:7px; height:7px; border-radius:50%; background:var(--yellow); box-shadow:0 0 14px rgba(255,210,28,.75); content:""; }
-      .final-cta__content { position:relative; z-index:2; display:grid; grid-template-columns:1.35fr .65fr; gap:80px; align-items:end; }
-      .final-cta h2 { max-width:1100px; margin:0; font-size:92px; font-weight:500; line-height:.94; letter-spacing:-.065em; }
+      .final-wrap { padding:0 24px 24px; background:#08090b; }
+      .final-cta {
+        position:relative;
+        width:min(1840px,100%);
+        min-height:760px;
+        margin:auto;
+        overflow:hidden;
+        border:1px solid rgba(255,255,255,.13);
+        border-radius:35px;
+        background:
+          radial-gradient(circle at 19% 89%,rgba(255,210,28,.21),transparent 30%),
+          radial-gradient(circle at 86% 18%,rgba(118,88,255,.25),transparent 35%),
+          #090a10;
+        box-shadow:0 44px 130px rgba(0,0,0,.36);
+        isolation:isolate;
+      }
+      .final-cta::before { position:absolute; z-index:-1; inset:0; opacity:.42; background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px); background-size:80px 80px; mask-image:linear-gradient(to bottom,#000 72%,transparent); content:""; }
+      .final-cta::after { position:absolute; z-index:-1; top:-310px; right:13%; width:720px; height:720px; border:1px solid rgba(163,132,255,.16); border-radius:50%; box-shadow:0 0 100px rgba(112,88,255,.06),inset 0 0 100px rgba(112,88,255,.04); content:""; }
+      .final-cta__top { position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; min-height:82px; padding:0 38px; border-bottom:1px solid rgba(255,255,255,.09); background:rgba(8,9,14,.47); color:rgba(255,255,255,.38); font-size:9px; font-weight:800; letter-spacing:.11em; text-transform:uppercase; }
+      .final-cta__status { display:flex; align-items:center; gap:9px; color:rgba(255,255,255,.62); }
+      .final-cta__status::before { width:7px; height:7px; border-radius:50%; background:#72e6a0; box-shadow:0 0 14px rgba(114,230,160,.75); content:""; }
+      .final-cta__protocol { display:flex; align-items:center; gap:14px; }
+      .final-cta__protocol b { color:var(--yellow); font-weight:800; }
+      .final-cta__content { position:relative; z-index:2; display:grid; grid-template-columns:minmax(0,1.13fr) minmax(440px,.87fr); gap:80px; align-items:center; min-height:570px; padding:58px 54px 46px; }
+      .final-cta__copy { min-width:0; }
+      .final-cta__eyebrow { display:flex; align-items:center; gap:10px; width:max-content; margin-bottom:28px; padding:9px 12px; border:1px solid rgba(255,210,28,.22); border-radius:999px; background:rgba(255,210,28,.065); color:var(--yellow); font-size:8px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .final-cta__eyebrow::before { width:6px; height:6px; border-radius:50%; background:var(--yellow); box-shadow:0 0 12px rgba(255,210,28,.62); content:""; }
+      .final-cta h2 { max-width:1030px; margin:0; font-size:clamp(68px,4.8vw,92px); font-weight:500; line-height:.94; letter-spacing:-.065em; }
       .final-cta h2 span { color:var(--yellow); }
-      .final-cta__action p { margin:0 0 28px; color:rgba(255,255,255,.62); font-size:15px; line-height:1.65; }
-      .final-cta__button { display:flex; align-items:center; justify-content:space-between; min-height:64px; padding:0 22px; border-radius:16px; background:var(--white); color:#090909; font-size:13px; font-weight:800; }
-      .final-cta__button::after { font-size:20px; content:"↗"; }
+      .final-cta__lead { max-width:720px; margin:31px 0 0; color:rgba(255,255,255,.54); font-size:16px; line-height:1.65; }
+      .final-cta__signals { display:flex; flex-wrap:wrap; gap:9px; margin-top:31px; }
+      .final-cta__signals span { display:flex; align-items:center; gap:8px; min-height:32px; padding:0 11px; border:1px solid rgba(255,255,255,.09); border-radius:999px; background:rgba(255,255,255,.025); color:rgba(255,255,255,.38); font-size:8px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
+      .final-cta__signals span::before { width:5px; height:5px; border-radius:50%; background:#72e6a0; content:""; }
+
+      .activation-card { position:relative; overflow:hidden; padding:22px; border:1px solid rgba(255,255,255,.13); border-radius:25px; background:radial-gradient(circle at 100% 0,rgba(126,95,255,.18),transparent 42%),rgba(13,14,22,.91); box-shadow:0 34px 100px rgba(0,0,0,.4),inset 0 1px rgba(255,255,255,.03); }
+      .activation-card::after { position:absolute; right:-86px; bottom:-108px; width:230px; height:230px; border:1px solid rgba(255,210,28,.11); border-radius:50%; content:""; pointer-events:none; }
+      .activation-card__top { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; padding-bottom:19px; border-bottom:1px solid rgba(255,255,255,.08); color:rgba(255,255,255,.31); font-size:8px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .activation-card__top span:last-child { display:flex; align-items:center; gap:8px; color:#72e6a0; }
+      .activation-card__top span:last-child::before { width:6px; height:6px; border-radius:50%; background:#72e6a0; box-shadow:0 0 12px rgba(114,230,160,.62); content:""; }
+      .activation-plan { position:relative; z-index:1; display:grid; grid-template-columns:54px minmax(0,1fr) auto; gap:15px; align-items:center; margin-top:20px; padding:16px; border:1px solid rgba(255,210,28,.18); border-radius:15px; background:rgba(255,210,28,.055); }
+      .activation-plan__mark { display:grid; place-items:center; width:54px; height:54px; border:1px solid rgba(255,210,28,.27); border-radius:13px; background:rgba(255,210,28,.11); color:var(--yellow); font-size:9px; font-weight:800; }
+      .activation-plan span { display:block; margin-bottom:5px; color:rgba(255,255,255,.29); font-size:7px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; }
+      .activation-plan h3 { margin:0; font-size:18px; font-weight:600; letter-spacing:-.035em; }
+      .activation-plan__price { text-align:right; }
+      .activation-plan__price strong { display:block; color:var(--yellow); font-size:23px; font-weight:600; line-height:1; letter-spacing:-.05em; }
+      .activation-plan__price small { color:rgba(255,255,255,.27); font-size:7px; font-weight:800; text-transform:uppercase; }
+      .activation-checks { position:relative; z-index:1; display:grid; gap:7px; margin:15px 0; }
+      .activation-check { display:grid; grid-template-columns:34px minmax(0,1fr) auto; gap:11px; align-items:center; min-height:60px; padding:9px 12px; border:1px solid rgba(255,255,255,.07); border-radius:12px; background:rgba(255,255,255,.018); }
+      .activation-check b { display:grid; place-items:center; width:34px; height:34px; border:1px solid rgba(114,230,160,.2); border-radius:9px; background:rgba(114,230,160,.075); color:#72e6a0; font-size:9px; }
+      .activation-check span { color:rgba(255,255,255,.67); font-size:10px; font-weight:700; }
+      .activation-check small { color:#72e6a0; font-size:7px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
+      .final-cta__button { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; min-height:62px; padding:0 19px; border-radius:14px; background:var(--yellow); color:#080808; font-size:11px; font-weight:800; transition:transform .2s ease,background .2s ease; }
+      .final-cta__button::after { font-size:19px; content:"↗"; }
+      .final-cta__button:hover { transform:translateY(-2px); background:#ffe04f; }
+      .activation-card__note { position:relative; z-index:1; margin:14px 0 0; color:rgba(255,255,255,.27); font-size:8px; line-height:1.55; text-align:center; }
+
+      .final-cta__metrics { position:relative; z-index:2; display:grid; grid-template-columns:repeat(3,1fr); min-height:108px; border-top:1px solid rgba(255,255,255,.09); background:rgba(7,8,12,.55); }
+      .final-cta__metric { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:24px 38px; border-right:1px solid rgba(255,255,255,.09); }
+      .final-cta__metric:last-child { border-right:0; }
+      .final-cta__metric strong { color:var(--yellow); font-size:27px; font-weight:600; letter-spacing:-.05em; }
+      .final-cta__metric span { max-width:145px; color:rgba(255,255,255,.31); font-size:8px; font-weight:800; line-height:1.45; letter-spacing:.08em; text-align:right; text-transform:uppercase; }
 
       .footer { width:min(1760px,calc(100% - 72px)); margin:auto; padding:66px 0 34px; background:#050505; }
       .footer__top { display:grid; grid-template-columns:1.5fr repeat(3,.5fr); gap:70px; padding-bottom:70px; }
@@ -708,6 +754,7 @@
         .faq__inner { grid-template-columns:minmax(350px,.76fr) minmax(0,1.24fr); gap:54px; }
         .faq h2 { font-size:64px; }
         .final-cta h2 { font-size:72px; }
+        .final-cta__content { grid-template-columns:minmax(0,1fr) minmax(400px,.8fr); gap:45px; padding-inline:40px; }
         .seller-hero__content { grid-template-columns:minmax(0,1fr) 480px; gap:24px; }
         .seller-hero h1 { font-size:53px; }
         .night-revenue strong { font-size:58px; }
@@ -760,10 +807,13 @@
         .faq__sticky { position:static; }
         .faq h2 { font-size:56px; }
         .launch-card,.faq__contact { max-width:none; }
-        .final-cta { min-height:650px; padding:36px; }
-        .final-cta__content { grid-template-columns:1fr; gap:50px; }
+        .final-cta { min-height:650px; }
+        .final-cta__content { grid-template-columns:1fr; gap:50px; padding:48px 36px; }
         .final-cta h2 { font-size:64px; }
-        .final-cta__action { max-width:520px; }
+        .activation-card { width:min(100%,620px); }
+        .final-cta__metrics { grid-template-columns:1fr 1fr; }
+        .final-cta__metric:nth-child(2) { border-right:0; }
+        .final-cta__metric:last-child { grid-column:1/-1; border-top:1px solid rgba(255,255,255,.09); }
         .footer { width:calc(100% - 32px); }
         .footer__top { grid-template-columns:1fr 1fr; }
         .seller-hero { min-height:1180px; }
@@ -856,10 +906,23 @@
         .launch-step { grid-template-columns:30px minmax(0,1fr); }
         .launch-step small { display:none; }
         .final-wrap { padding:0 10px 10px; }
-        .final-cta { min-height:620px; padding:26px 22px; border-radius:26px; }
-        .final-cta__top span:last-child { display:none; }
+        .final-cta { min-height:620px; border-radius:26px; }
+        .final-cta__top { min-height:66px; padding:0 20px; }
+        .final-cta__protocol { display:none; }
         .final-cta h2 { font-size:48px; }
-        .final-cta__content { gap:42px; }
+        .final-cta__content { gap:42px; padding:38px 20px 28px; }
+        .final-cta__lead { font-size:14px; }
+        .final-cta__signals { display:none; }
+        .activation-card { padding:16px; border-radius:20px; }
+        .activation-plan { grid-template-columns:46px minmax(0,1fr); padding:12px; }
+        .activation-plan__mark { width:46px; height:46px; }
+        .activation-plan__price { grid-column:1/-1; padding-top:11px; border-top:1px solid rgba(255,255,255,.07); text-align:left; }
+        .activation-check { grid-template-columns:32px minmax(0,1fr); }
+        .activation-check b { width:32px; height:32px; }
+        .activation-check small { display:none; }
+        .final-cta__metrics { grid-template-columns:1fr; }
+        .final-cta__metric,.final-cta__metric:last-child { grid-column:auto; min-height:86px; padding:20px; border-top:1px solid rgba(255,255,255,.09); border-right:0; }
+        .final-cta__metric:first-child { border-top:0; }
         .footer__top { grid-template-columns:1fr 1fr; gap:42px 28px; }
         .footer__brand { grid-column:1/-1; }
         .footer__bottom { align-items:flex-start; flex-direction:column; gap:12px; }
@@ -1199,11 +1262,36 @@
 
       <div class="final-wrap" id="cta">
         <section class="final-cta" aria-labelledby="cta-title">
-          <span class="final-cta__orbit final-cta__orbit--one" aria-hidden="true"></span><span class="final-cta__orbit final-cta__orbit--two" aria-hidden="true"></span>
-          <div class="final-cta__top"><span class="final-cta__status">ZenLot готов к запуску</span><span>Final protocol / 06</span></div>
+          <div class="final-cta__top"><span class="final-cta__status">ZenLot готов к запуску</span><span class="final-cta__protocol">Final protocol / 06 <b>System online</b></span></div>
           <div class="final-cta__content">
-            <h2 id="cta-title">Хватит выдавать<br>товары <span>руками.</span></h2>
-            <div class="final-cta__action"><p>Подключи магазин один раз — и освободи время от выдачи, сообщений и постоянного контроля лотов.</p><a class="final-cta__button" href="#">Начать автоматизацию</a></div>
+            <div class="final-cta__copy">
+              <div class="final-cta__eyebrow">Последний ручной заказ</div>
+              <h2 id="cta-title">Следующий заказ<br>может пройти<br><span>без тебя.</span></h2>
+              <p class="final-cta__lead">Подключи магазин один раз. ZenLot возьмёт на себя выдачу, сообщения и контроль лотов — а ты будешь видеть результат в панели.</p>
+              <div class="final-cta__signals" aria-label="Преимущества запуска"><span>Без установки</span><span>Работает в облаке</span><span>Настройки сохраняются</span></div>
+            </div>
+
+            <div class="activation-card" aria-label="Запуск выбранного тарифа ZenLot">
+              <div class="activation-card__top"><span>Activation console</span><span>Готово к запуску</span></div>
+              <div class="activation-plan">
+                <span class="activation-plan__mark" id="cta-plan-mark">PRO</span>
+                <div><span>Выбранный тариф</span><h3 id="cta-plan-name">Про</h3></div>
+                <div class="activation-plan__price"><strong id="cta-plan-price">349 ₽</strong><small>30 дней</small></div>
+              </div>
+              <div class="activation-checks">
+                <div class="activation-check"><b>✓</b><span>Магазин можно подключить</span><small>Шаг 01</small></div>
+                <div class="activation-check"><b>✓</b><span>Модули настраиваются в панели</span><small>Шаг 02</small></div>
+                <div class="activation-check"><b>✓</b><span>Автоматизация работает в облаке</span><small>Шаг 03</small></div>
+              </div>
+              <a class="final-cta__button" id="cta-plan-button" href="#">Начать с тарифом Про</a>
+              <p class="activation-card__note">Тариф можно изменить или отменить позже в панели ZenLot.</p>
+            </div>
+          </div>
+
+          <div class="final-cta__metrics" aria-label="Результат запуска ZenLot">
+            <div class="final-cta__metric"><strong>3 сек</strong><span>среднее время автовыдачи</span></div>
+            <div class="final-cta__metric"><strong>24 / 7</strong><span>магазин остаётся онлайн</span></div>
+            <div class="final-cta__metric"><strong>≈ 5 мин</strong><span>занимает базовый запуск</span></div>
           </div>
         </section>
       </div>
@@ -1252,6 +1340,10 @@
         const selectedPlanPrice = document.querySelector("#selected-plan-price");
         const selectedPlanCopy = document.querySelector("#selected-plan-copy");
         const selectedPlanMark = document.querySelector("#selected-plan-mark");
+        const ctaPlanName = document.querySelector("#cta-plan-name");
+        const ctaPlanPrice = document.querySelector("#cta-plan-price");
+        const ctaPlanMark = document.querySelector("#cta-plan-mark");
+        const ctaPlanButton = document.querySelector("#cta-plan-button");
 
         planButtons.forEach((button) => {
           button.addEventListener("click", () => {
@@ -1266,6 +1358,10 @@
             selectedPlanPrice.textContent = button.dataset.planPrice;
             selectedPlanCopy.textContent = button.dataset.planCopy;
             selectedPlanMark.textContent = button.dataset.planMark;
+            ctaPlanName.textContent = button.dataset.planName;
+            ctaPlanPrice.textContent = button.dataset.planPrice;
+            ctaPlanMark.textContent = button.dataset.planMark;
+            ctaPlanButton.textContent = `Начать с тарифом ${button.dataset.planName}`;
           });
         });
 
