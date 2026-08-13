@@ -382,51 +382,77 @@
 
       .plugins {
         position:relative;
-        padding:170px 0 190px;
+        padding:178px 0 190px;
         overflow:hidden;
         border-top:1px solid rgba(255,255,255,.06);
         background:
-          radial-gradient(circle at 8% 16%,rgba(132,88,255,.08),transparent 22%),
-          radial-gradient(circle at 92% 58%,rgba(255,210,28,.065),transparent 24%),
-          #080909;
+          radial-gradient(circle at 8% 12%,rgba(132,88,255,.12),transparent 25%),
+          radial-gradient(circle at 92% 47%,rgba(255,210,28,.075),transparent 25%),
+          #07080a;
       }
-      .plugins::before { position:absolute; inset:0; opacity:.26; background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px); background-size:96px 96px; mask-image:linear-gradient(to bottom,transparent,#000 20%,#000 80%,transparent); content:""; pointer-events:none; }
+      .plugins::before { position:absolute; inset:0; opacity:.25; background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px); background-size:96px 96px; mask-image:linear-gradient(to bottom,transparent,#000 12%,#000 91%,transparent); content:""; pointer-events:none; }
       .plugins__inner { position:relative; z-index:1; width:min(1760px,calc(100% - 72px)); margin:auto; }
-      .plugins__head { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:48px; align-items:end; }
-      .plugins h2 { max-width:980px; margin:24px 0 20px; font-size:86px; font-weight:500; line-height:.96; letter-spacing:-.06em; }
+      .plugins__head { display:grid; grid-template-columns:minmax(0,1fr) 390px; gap:76px; align-items:end; }
+      .plugins h2 { max-width:1080px; margin:24px 0 22px; font-size:86px; font-weight:500; line-height:.96; letter-spacing:-.06em; }
       .plugins h2 span { color:var(--yellow); }
-      .plugins__intro { max-width:700px; margin:0; color:var(--muted); font-size:17px; line-height:1.6; }
-      .plugins__summary { min-width:260px; padding:24px; border-top:1px solid rgba(255,255,255,.18); color:rgba(255,255,255,.48); font-size:11px; font-weight:700; line-height:1.65; letter-spacing:.1em; text-transform:uppercase; }
-      .plugins__summary strong { display:block; margin-bottom:8px; color:#fff; font-size:34px; font-weight:500; line-height:1; letter-spacing:-.05em; text-transform:none; }
-      .plugins-toolbar { display:flex; align-items:center; justify-content:space-between; margin-top:72px; padding:18px 0; border-block:1px solid rgba(255,255,255,.09); }
+      .plugins__intro { max-width:720px; margin:0; color:var(--muted); font-size:17px; line-height:1.6; }
+
+      .plugin-loadout { position:relative; overflow:hidden; padding:24px; border:1px solid rgba(255,255,255,.11); border-radius:22px; background:radial-gradient(circle at 100% 0,rgba(124,96,255,.2),transparent 42%),rgba(14,15,22,.88); box-shadow:0 28px 80px rgba(0,0,0,.26); }
+      .plugin-loadout::after { position:absolute; right:-42px; bottom:-76px; width:180px; height:180px; border:1px solid rgba(255,210,28,.16); border-radius:50%; content:""; }
+      .plugin-loadout__top { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; color:rgba(255,255,255,.38); font-size:8px; font-weight:800; letter-spacing:.11em; text-transform:uppercase; }
+      .plugin-loadout__top span:last-child { color:#72e6a0; }
+      .plugin-loadout strong { position:relative; z-index:1; display:block; max-width:280px; margin:26px 0 22px; font-size:25px; font-weight:600; line-height:1.08; letter-spacing:-.045em; }
+      .plugin-loadout__meter { position:relative; z-index:1; height:4px; overflow:hidden; border-radius:999px; background:rgba(255,255,255,.08); }
+      .plugin-loadout__meter i { display:block; width:60%; height:100%; border-radius:inherit; background:linear-gradient(90deg,var(--yellow),#a68cff); box-shadow:0 0 14px rgba(255,210,28,.22); }
+      .plugin-loadout__slots { position:relative; z-index:1; display:flex; align-items:center; gap:7px; margin-top:19px; }
+      .plugin-loadout__slots span { display:grid; place-items:center; width:34px; height:34px; border:1px solid rgba(255,255,255,.11); border-radius:9px; background:rgba(255,255,255,.035); color:rgba(255,255,255,.63); font-size:8px; font-weight:800; }
+      .plugin-loadout__slots span:first-child { border-color:rgba(255,210,28,.26); background:rgba(255,210,28,.1); color:var(--yellow); }
+      .plugin-loadout__slots span:last-child { border-style:dashed; color:rgba(255,255,255,.28); }
+
+      .plugins-toolbar { display:flex; align-items:center; justify-content:space-between; gap:28px; margin-top:74px; padding:16px 0; border-block:1px solid rgba(255,255,255,.09); }
       .plugin-filters { display:flex; flex-wrap:wrap; gap:8px; }
-      .plugin-filter { padding:9px 13px; border:1px solid rgba(255,255,255,.1); border-radius:999px; color:rgba(255,255,255,.48); font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
-      .plugin-filter--active { border-color:rgba(255,210,28,.38); background:rgba(255,210,28,.08); color:var(--yellow); }
-      .plugins-toolbar__note { color:rgba(255,255,255,.33); font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+      .plugin-filter { min-height:36px; padding:0 14px; border:1px solid rgba(255,255,255,.1); border-radius:999px; background:transparent; color:rgba(255,255,255,.46); cursor:pointer; font-size:9px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; transition:border-color .2s ease,background .2s ease,color .2s ease; }
+      .plugin-filter:hover { border-color:rgba(255,255,255,.24); color:#fff; }
+      .plugin-filter--active { border-color:rgba(255,210,28,.38); background:rgba(255,210,28,.09); color:var(--yellow); }
+      .plugins-toolbar__note { flex:0 0 auto; color:rgba(255,255,255,.32); font-size:9px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .plugins-toolbar__note strong { color:#fff; font-weight:800; }
       .plugin-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:12px; }
       .plugin {
         --accent:#ffd21c;
         --glow:255,210,28;
         position:relative;
-        min-height:244px;
+        display:flex;
+        flex-direction:column;
+        min-height:286px;
         overflow:hidden;
         padding:24px;
         border:1px solid rgba(255,255,255,.095);
         border-radius:20px;
-        background:radial-gradient(circle at 0 0,rgba(var(--glow),.1),transparent 38%),rgba(15,16,18,.82);
+        background:radial-gradient(circle at 0 0,rgba(var(--glow),.105),transparent 42%),rgba(14,15,20,.88);
         box-shadow:inset 0 1px rgba(255,255,255,.025);
-        transition:transform .3s ease,border-color .3s ease,background .3s ease;
+        transition:transform .28s ease,border-color .28s ease,background .28s ease;
       }
-      .plugin::before { position:absolute; top:0; right:22px; left:22px; height:1px; background:linear-gradient(90deg,transparent,var(--accent),transparent); opacity:.46; content:""; }
-      .plugin:hover { transform:translateY(-6px); border-color:rgba(var(--glow),.42); background:radial-gradient(circle at 0 0,rgba(var(--glow),.16),transparent 42%),#111215; }
+      .plugin[hidden] { display:none; }
+      .plugin::before { position:absolute; top:0; right:20px; left:20px; height:1px; background:linear-gradient(90deg,transparent,var(--accent),transparent); opacity:.46; content:""; }
+      .plugin::after { position:absolute; right:-84px; bottom:-110px; width:210px; height:210px; border:1px solid rgba(var(--glow),.09); border-radius:50%; content:""; pointer-events:none; }
+      .plugin:hover { z-index:2; transform:translateY(-5px); border-color:rgba(var(--glow),.38); background:radial-gradient(circle at 0 0,rgba(var(--glow),.17),transparent 44%),#111219; }
+      .plugin--wide { grid-column:span 2; min-height:318px; background:radial-gradient(circle at 0 0,rgba(var(--glow),.15),transparent 38%),radial-gradient(circle at 95% 20%,rgba(121,92,255,.1),transparent 36%),rgba(14,15,21,.92); }
       .plugin__top { display:flex; align-items:center; justify-content:space-between; }
-      .plugin__mark { display:grid; place-items:center; width:42px; height:42px; border:1px solid rgba(var(--glow),.32); border-radius:12px; background:rgba(var(--glow),.11); box-shadow:0 10px 36px rgba(var(--glow),.07); color:var(--accent); font-size:10px; font-style:normal; font-weight:800; letter-spacing:.08em; }
-      .plugin__state { display:flex; align-items:center; gap:7px; color:rgba(255,255,255,.3); font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+      .plugin__mark { display:grid; place-items:center; width:44px; height:44px; border:1px solid rgba(var(--glow),.3); border-radius:12px; background:rgba(var(--glow),.105); box-shadow:0 12px 38px rgba(var(--glow),.07); color:var(--accent); font-size:10px; font-style:normal; font-weight:800; letter-spacing:.08em; }
+      .plugin__index { color:rgba(255,255,255,.22); font-size:8px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .plugin__body { position:relative; z-index:1; margin-top:32px; }
+      .plugin__state { display:flex; align-items:center; gap:7px; margin-bottom:12px; color:var(--accent); font-size:8px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; }
       .plugin__state::before { width:5px; height:5px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px rgba(var(--glow),.6); content:""; }
-      .plugin h3 { margin:44px 0 10px; font-size:20px; font-weight:600; letter-spacing:-.035em; }
-      .plugin small { display:block; max-width:295px; color:rgba(255,255,255,.48); font-size:12px; line-height:1.55; }
-      .plugin__meta { position:absolute; right:24px; bottom:19px; left:24px; display:flex; justify-content:space-between; color:rgba(255,255,255,.24); font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
-      .plugin__meta span:last-child { color:var(--accent); }
+      .plugin h3 { margin:0 0 10px; font-size:21px; font-weight:600; letter-spacing:-.038em; }
+      .plugin p { max-width:320px; margin:0; color:rgba(255,255,255,.44); font-size:11px; line-height:1.55; }
+      .plugin--wide h3 { font-size:30px; }
+      .plugin--wide p { max-width:460px; font-size:12px; }
+      .plugin__result { position:relative; z-index:1; display:flex; align-items:baseline; gap:9px; margin-top:auto; padding-top:26px; }
+      .plugin__result strong { color:var(--accent); font-size:22px; font-weight:600; line-height:1; letter-spacing:-.045em; }
+      .plugin__result span { color:rgba(255,255,255,.27); font-size:8px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+      .plugin__meta { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:18px; padding-top:15px; border-top:1px solid rgba(255,255,255,.07); color:rgba(255,255,255,.24); font-size:8px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; }
+      .plugin__action { color:rgba(255,255,255,.62); }
+      .plugin:hover .plugin__action { color:var(--accent); }
 
       .pricing { position:relative; padding:190px 0; overflow:hidden; background:#050505; }
       .pricing::before { position:absolute; top:0; right:0; left:0; height:1px; background:linear-gradient(90deg,transparent,rgba(255,210,28,.32),transparent); content:""; }
@@ -637,7 +663,7 @@
         .automation-list { grid-column:1/-1; grid-template-columns:1fr 1fr; }
         .feature-proof { grid-template-columns:1fr 1fr; }
         .plugins__head { grid-template-columns:1fr; }
-        .plugins__summary { min-width:0; max-width:420px; }
+        .plugin-loadout { max-width:560px; }
         .plugins-toolbar { align-items:flex-start; gap:20px; }
         .plugin-grid { grid-template-columns:1fr 1fr; }
         .pricing__inner,.faq__inner { width:calc(100% - 32px); }
@@ -705,11 +731,14 @@
         .dashboard-grid { grid-template-columns:1fr; }
         .automation-rail { grid-column:1; }
         .plugins { padding:110px 0; }
-        .plugins__summary { padding:20px 0; }
-        .plugins-toolbar__note { display:none; }
-        .plugin-filters { gap:6px; }
-        .plugin-filter { padding:8px 10px; }
+        .plugins__head { gap:42px; }
+        .plugin-loadout { padding:20px; }
+        .plugins-toolbar { align-items:flex-start; flex-direction:column; margin-top:56px; }
+        .plugin-filters { width:100%; flex-wrap:nowrap; gap:6px; overflow-x:auto; padding-bottom:4px; }
+        .plugin-filter { flex:0 0 auto; min-height:34px; padding:0 11px; }
         .plugin-grid { grid-template-columns:1fr; }
+        .plugin--wide { grid-column:auto; min-height:300px; }
+        .plugin--wide h3 { font-size:25px; }
         .features__head { margin-bottom:48px; }
         .features__intro { font-size:15px; }
         .dashboard__head { align-items:flex-start; flex-direction:column; }
@@ -928,43 +957,57 @@
         <div class="plugins__inner">
           <div class="plugins__head">
             <div>
-              <div class="eyebrow">03 / Магазин модулей</div>
-              <h2>Каталог <span>автоматизаций</span></h2>
-              <p class="plugins__intro">Собери свою систему без лишнего: подключай отдельные сценарии для общения, ценообразования, выдачи и контроля магазина.</p>
+              <div class="eyebrow">03 / Маркетплейс модулей</div>
+              <h2>Собери магазин.<br><span>Под свой стиль.</span></h2>
+              <p class="plugins__intro">Подключай только то, что помогает твоему магазину: быструю выдачу, ответы покупателям, контроль цен или подробную аналитику. Каждый модуль включается отдельно.</p>
             </div>
-            <div class="plugins__summary"><strong>20 модулей</strong>Одна панель · единый контроль<br>Новые сценарии каждый месяц</div>
+
+            <div class="plugin-loadout" aria-label="Текущая сборка автоматизаций">
+              <div class="plugin-loadout__top"><span>Моя сборка</span><span>6 / 10 активно</span></div>
+              <strong>Магазин уже работает на автопилоте.</strong>
+              <div class="plugin-loadout__meter" aria-hidden="true"><i></i></div>
+              <div class="plugin-loadout__slots" aria-label="Подключённые модули"><span>DL</span><span>AI</span><span>UP</span><span>TG</span><span>ST</span><span>+1</span></div>
+            </div>
           </div>
 
           <div class="plugins-toolbar">
-            <div class="plugin-filters" aria-label="Категории плагинов"><span class="plugin-filter plugin-filter--active">Все</span><span class="plugin-filter">Продажи</span><span class="plugin-filter">Общение</span><span class="plugin-filter">Контроль</span><span class="plugin-filter">Аналитика</span></div>
-            <div class="plugins-toolbar__note">Module library / v.01</div>
+            <div class="plugin-filters" aria-label="Категории плагинов">
+              <button class="plugin-filter plugin-filter--active" type="button" data-filter="all" aria-pressed="true">Все</button>
+              <button class="plugin-filter" type="button" data-filter="sales" aria-pressed="false">Продажи</button>
+              <button class="plugin-filter" type="button" data-filter="communication" aria-pressed="false">Общение</button>
+              <button class="plugin-filter" type="button" data-filter="control" aria-pressed="false">Контроль</button>
+              <button class="plugin-filter" type="button" data-filter="analytics" aria-pressed="false">Аналитика</button>
+              <button class="plugin-filter" type="button" data-filter="security" aria-pressed="false">Безопасность</button>
+            </div>
+            <div class="plugins-toolbar__note" aria-live="polite"><strong id="plugin-count">20</strong> модулей найдено</div>
           </div>
 
           <div class="plugin-grid">
-            <article class="plugin" style="--accent:#9c7cff;--glow:156,124,255"><div class="plugin__top"><i class="plugin__mark">AI</i><span class="plugin__state">Online</span></div><h3>GPT Consultant</h3><small>Понимает вопрос покупателя и формирует точный ответ в стиле магазина.</small><div class="plugin__meta"><span>Communication / 01</span><span>↗</span></div></article>
-            <article class="plugin" style="--accent:#ffb52e;--glow:255,181,46"><div class="plugin__top"><i class="plugin__mark">AD</i><span class="plugin__state">Online</span></div><h3>Auto Dump</h3><small>Следит за конкурентами и корректирует цену по заданной стратегии.</small><div class="plugin__meta"><span>Pricing / 02</span><span>↗</span></div></article>
-            <article class="plugin" style="--accent:#ff5d91;--glow:255,93,145"><div class="plugin__top"><i class="plugin__mark">AR</i><span class="plugin__state">Online</span></div><h3>AI Reviews</h3><small>Готовит персональные ответы на отзывы и сохраняет тон бренда.</small><div class="plugin__meta"><span>Reputation / 03</span><span>↗</span></div></article>
-            <article class="plugin" style="--accent:#7298ff;--glow:114,152,255"><div class="plugin__top"><i class="plugin__mark">UP</i><span class="plugin__state">Online</span></div><h3>Auto Raise</h3><small>Поднимает лоты по расписанию, чтобы позиции не терялись ночью.</small><div class="plugin__meta"><span>Visibility / 04</span><span>↗</span></div></article>
+            <article class="plugin plugin--wide" data-category="sales" style="--accent:#ffd21c;--glow:255,210,28"><div class="plugin__top"><i class="plugin__mark">DL</i><span class="plugin__index">Core / 01</span></div><div class="plugin__body"><span class="plugin__state">Самый популярный</span><h3>Auto Delivery</h3><p>Выдаёт цифровой товар сразу после подтверждённой оплаты и сохраняет историю каждой операции.</p></div><div class="plugin__result"><strong>3 сек</strong><span>средняя выдача</span></div><div class="plugin__meta"><span>Продажи</span><span class="plugin__action">Добавить в сборку</span></div></article>
+            <article class="plugin plugin--wide" data-category="communication" style="--accent:#a58bff;--glow:165,139,255"><div class="plugin__top"><i class="plugin__mark">AI</i><span class="plugin__index">Core / 02</span></div><div class="plugin__body"><span class="plugin__state">AI-модуль</span><h3>GPT Consultant</h3><p>Понимает вопрос покупателя, учитывает правила магазина и отвечает в твоём стиле без шаблонных фраз.</p></div><div class="plugin__result"><strong>24 / 7</strong><span>магазин отвечает</span></div><div class="plugin__meta"><span>Общение</span><span class="plugin__action">Добавить в сборку</span></div></article>
 
-            <article class="plugin" style="--accent:#55c8ff;--glow:85,200,255"><div class="plugin__top"><i class="plugin__mark">TG</i><span class="plugin__state">Online</span></div><h3>Telegram Control</h3><small>Показывает продажи и важные события магазина прямо в Telegram.</small><div class="plugin__meta"><span>Control / 05</span><span>↗</span></div></article>
-            <article class="plugin" style="--accent:#ffd21c;--glow:255,210,28"><div class="plugin__top"><i class="plugin__mark">DL</i><span class="plugin__state">Online</span></div><h3>Auto Delivery</h3><small>Выдаёт цифровой товар сразу после подтверждённой оплаты.</small><div class="plugin__meta"><span>Delivery / 06</span><span>↗</span></div></article>
-            <article class="plugin" style="--accent:#47d8be;--glow:71,216,190"><div class="plugin__top"><i class="plugin__mark">RP</i><span class="plugin__state">Online</span></div><h3>Quick Replies</h3><small>Отвечает на частые вопросы по правилам и шаблонам продавца.</small><div class="plugin__meta"><span>Communication / 07</span><span>↗</span></div></article>
-            <article class="plugin" style="--accent:#ff785a;--glow:255,120,90"><div class="plugin__top"><i class="plugin__mark">AL</i><span class="plugin__state">Online</span></div><h3>Smart Alerts</h3><small>Отделяет важные ситуации от рутины и сообщает только о главном.</small><div class="plugin__meta"><span>Control / 08</span><span>↗</span></div></article>
+            <article class="plugin" data-category="sales" style="--accent:#7298ff;--glow:114,152,255"><div class="plugin__top"><i class="plugin__mark">UP</i><span class="plugin__index">03</span></div><div class="plugin__body"><span class="plugin__state">Продвижение</span><h3>Auto Raise</h3><p>Поднимает лоты по расписанию и не даёт позициям теряться ночью.</p></div><div class="plugin__result"><strong>45 мин</strong><span>цикл поднятия</span></div><div class="plugin__meta"><span>Продажи</span><span class="plugin__action">Добавить</span></div></article>
+            <article class="plugin" data-category="control" style="--accent:#55c8ff;--glow:85,200,255"><div class="plugin__top"><i class="plugin__mark">TG</i><span class="plugin__index">04</span></div><div class="plugin__body"><span class="plugin__state">Удалённый контроль</span><h3>Telegram Control</h3><p>Показывает заказы, выручку и важные события прямо в Telegram.</p></div><div class="plugin__result"><strong>Live</strong><span>события магазина</span></div><div class="plugin__meta"><span>Контроль</span><span class="plugin__action">Добавить</span></div></article>
+            <article class="plugin" data-category="sales analytics" style="--accent:#ffb52e;--glow:255,181,46"><div class="plugin__top"><i class="plugin__mark">AD</i><span class="plugin__index">05</span></div><div class="plugin__body"><span class="plugin__state">Умная цена</span><h3>Auto Dump</h3><p>Следит за конкурентами и меняет цену только по твоим правилам.</p></div><div class="plugin__result"><strong>Всегда</strong><span>цена в рынке</span></div><div class="plugin__meta"><span>Продажи</span><span class="plugin__action">Добавить</span></div></article>
+            <article class="plugin" data-category="communication" style="--accent:#ff6f9d;--glow:255,111,157"><div class="plugin__top"><i class="plugin__mark">AR</i><span class="plugin__index">06</span></div><div class="plugin__body"><span class="plugin__state">Репутация</span><h3>AI Reviews</h3><p>Готовит персональные ответы на отзывы и сохраняет тон магазина.</p></div><div class="plugin__result"><strong>5★</strong><span>фокус на рейтинге</span></div><div class="plugin__meta"><span>Общение</span><span class="plugin__action">Добавить</span></div></article>
 
-            <article class="plugin" style="--accent:#68a7ff;--glow:104,167,255"><div class="plugin__top"><i class="plugin__mark">ST</i><span class="plugin__state">Online</span></div><h3>Stock Sync</h3><small>Синхронизирует остатки и не позволяет продать отсутствующий товар.</small><div class="plugin__meta"><span>Inventory / 09</span><span>↗</span></div></article>
-            <article class="plugin" style="--accent:#58df7f;--glow:88,223,127"><div class="plugin__top"><i class="plugin__mark">DS</i><span class="plugin__state">Online</span></div><h3>Smart Discounts</h3><small>Запускает скидки для выбранных товаров, периодов и покупателей.</small><div class="plugin__meta"><span>Sales / 10</span><span>↗</span></div></article>
-            <article class="plugin" style="--accent:#ff6478;--glow:255,100,120"><div class="plugin__top"><i class="plugin__mark">AS</i><span class="plugin__state">Online</span></div><h3>Anti-Spam</h3><small>Фильтрует повторяющиеся сообщения и подозрительную активность.</small><div class="plugin__meta"><span>Security / 11</span><span>↗</span></div></article>
-            <article class="plugin" style="--accent:#61d8e8;--glow:97,216,232"><div class="plugin__top"><i class="plugin__mark">PX</i><span class="plugin__state">Online</span></div><h3>Profit Analytics</h3><small>Собирает продажи, маржу и динамику магазина в одном отчёте.</small><div class="plugin__meta"><span>Analytics / 12</span><span>↗</span></div></article>
+            <article class="plugin" data-category="communication" style="--accent:#47d8be;--glow:71,216,190"><div class="plugin__top"><i class="plugin__mark">RP</i><span class="plugin__index">07</span></div><div class="plugin__body"><span class="plugin__state">Мгновенный ответ</span><h3>Quick Replies</h3><p>Закрывает частые вопросы по готовым правилам и шаблонам продавца.</p></div><div class="plugin__result"><strong>&lt;1 сек</strong><span>до ответа</span></div><div class="plugin__meta"><span>Общение</span><span class="plugin__action">Добавить</span></div></article>
+            <article class="plugin" data-category="control" style="--accent:#68a7ff;--glow:104,167,255"><div class="plugin__top"><i class="plugin__mark">ST</i><span class="plugin__index">08</span></div><div class="plugin__body"><span class="plugin__state">Остатки</span><h3>Stock Sync</h3><p>Останавливает продажи, если товар закончился, и сообщает об этом.</p></div><div class="plugin__result"><strong>0</strong><span>лишних продаж</span></div><div class="plugin__meta"><span>Контроль</span><span class="plugin__action">Добавить</span></div></article>
+            <article class="plugin" data-category="sales" style="--accent:#58df7f;--glow:88,223,127"><div class="plugin__top"><i class="plugin__mark">DS</i><span class="plugin__index">09</span></div><div class="plugin__body"><span class="plugin__state">Конверсия</span><h3>Smart Discounts</h3><p>Запускает скидки для выбранных товаров, периодов и покупателей.</p></div><div class="plugin__result"><strong>Гибко</strong><span>свои условия</span></div><div class="plugin__meta"><span>Продажи</span><span class="plugin__action">Добавить</span></div></article>
+            <article class="plugin" data-category="control" style="--accent:#ff785a;--glow:255,120,90"><div class="plugin__top"><i class="plugin__mark">AL</i><span class="plugin__index">10</span></div><div class="plugin__body"><span class="plugin__state">Без шума</span><h3>Smart Alerts</h3><p>Отделяет важные ситуации от рутины и присылает только главное.</p></div><div class="plugin__result"><strong>Точно</strong><span>нужные уведомления</span></div><div class="plugin__meta"><span>Контроль</span><span class="plugin__action">Добавить</span></div></article>
 
-            <article class="plugin" style="--accent:#b284ff;--glow:178,132,255"><div class="plugin__top"><i class="plugin__mark">RT</i><span class="plugin__state">Online</span></div><h3>Auto Rent</h3><small>Ведёт сценарий аренды от выдачи аккаунта до завершения сессии.</small><div class="plugin__meta"><span>Delivery / 13</span><span>↗</span></div></article>
-            <article class="plugin" style="--accent:#52d2a3;--glow:82,210,163"><div class="plugin__top"><i class="plugin__mark">SG</i><span class="plugin__state">Online</span></div><h3>Steam Guard</h3><small>Управляет кодами доступа и событиями Steam в автоматическом режиме.</small><div class="plugin__meta"><span>Security / 14</span><span>↗</span></div></article>
-            <article class="plugin" style="--accent:#ff628e;--glow:255,98,142"><div class="plugin__top"><i class="plugin__mark">MA</i><span class="plugin__state">Online</span></div><h3>Multi Accounts</h3><small>Объединяет несколько магазинов в одном рабочем пространстве.</small><div class="plugin__meta"><span>Scale / 15</span><span>↗</span></div></article>
-            <article class="plugin" style="--accent:#57bfff;--glow:87,191,255"><div class="plugin__top"><i class="plugin__mark">EX</i><span class="plugin__state">Online</span></div><h3>Sales Export</h3><small>Готовит чистую выгрузку заказов для таблиц и внешнего учёта.</small><div class="plugin__meta"><span>Analytics / 16</span><span>↗</span></div></article>
+            <article class="plugin" data-category="analytics" style="--accent:#61d8e8;--glow:97,216,232"><div class="plugin__top"><i class="plugin__mark">PX</i><span class="plugin__index">11</span></div><div class="plugin__body"><span class="plugin__state">Финансы</span><h3>Profit Analytics</h3><p>Собирает продажи, маржу и динамику магазина в одном отчёте.</p></div><div class="plugin__result"><strong>1 экран</strong><span>вся прибыль</span></div><div class="plugin__meta"><span>Аналитика</span><span class="plugin__action">Добавить</span></div></article>
+            <article class="plugin" data-category="security" style="--accent:#ff6478;--glow:255,100,120"><div class="plugin__top"><i class="plugin__mark">AS</i><span class="plugin__index">12</span></div><div class="plugin__body"><span class="plugin__state">Защита чата</span><h3>Anti-Spam</h3><p>Фильтрует повторяющиеся сообщения и подозрительную активность.</p></div><div class="plugin__result"><strong>24 / 7</strong><span>фильтрация</span></div><div class="plugin__meta"><span>Безопасность</span><span class="plugin__action">Добавить</span></div></article>
+            <article class="plugin" data-category="sales" style="--accent:#b284ff;--glow:178,132,255"><div class="plugin__top"><i class="plugin__mark">RT</i><span class="plugin__index">13</span></div><div class="plugin__body"><span class="plugin__state">Аренда</span><h3>Auto Rent</h3><p>Ведёт заказ от выдачи аккаунта до завершения оплаченной сессии.</p></div><div class="plugin__result"><strong>Авто</strong><span>весь сценарий</span></div><div class="plugin__meta"><span>Продажи</span><span class="plugin__action">Добавить</span></div></article>
+            <article class="plugin" data-category="security" style="--accent:#52d2a3;--glow:82,210,163"><div class="plugin__top"><i class="plugin__mark">SG</i><span class="plugin__index">14</span></div><div class="plugin__body"><span class="plugin__state">Steam</span><h3>Steam Guard</h3><p>Управляет кодами доступа и событиями Steam без ручной проверки.</p></div><div class="plugin__result"><strong>Сразу</strong><span>код покупателю</span></div><div class="plugin__meta"><span>Безопасность</span><span class="plugin__action">Добавить</span></div></article>
 
-            <article class="plugin" style="--accent:#ff8b33;--glow:255,139,51"><div class="plugin__top"><i class="plugin__mark">BL</i><span class="plugin__state">Online</span></div><h3>Blacklist Guard</h3><small>Применяет правила магазина к нежелательным покупателям.</small><div class="plugin__meta"><span>Security / 17</span><span>↗</span></div></article>
-            <article class="plugin" style="--accent:#69a4ff;--glow:105,164,255"><div class="plugin__top"><i class="plugin__mark">NT</i><span class="plugin__state">Online</span></div><h3>Notify Engine</h3><small>Собирает собственные цепочки уведомлений по событиям магазина.</small><div class="plugin__meta"><span>Control / 18</span><span>↗</span></div></article>
-            <article class="plugin" style="--accent:#6bd568;--glow:107,213,104"><div class="plugin__top"><i class="plugin__mark">BS</i><span class="plugin__state">Online</span></div><h3>Buyer Segments</h3><small>Разделяет покупателей по активности и истории заказов.</small><div class="plugin__meta"><span>Sales / 19</span><span>↗</span></div></article>
-            <article class="plugin" style="--accent:#bd7cff;--glow:189,124,255"><div class="plugin__top"><i class="plugin__mark">API</i><span class="plugin__state">Online</span></div><h3>API Connector</h3><small>Связывает ZenLot с внешними сервисами и рабочими процессами.</small><div class="plugin__meta"><span>Integration / 20</span><span>↗</span></div></article>
+            <article class="plugin" data-category="control" style="--accent:#ff628e;--glow:255,98,142"><div class="plugin__top"><i class="plugin__mark">MA</i><span class="plugin__index">15</span></div><div class="plugin__body"><span class="plugin__state">Масштаб</span><h3>Multi Accounts</h3><p>Объединяет несколько магазинов в одном рабочем пространстве.</p></div><div class="plugin__result"><strong>Вместе</strong><span>все магазины</span></div><div class="plugin__meta"><span>Контроль</span><span class="plugin__action">Добавить</span></div></article>
+            <article class="plugin" data-category="analytics" style="--accent:#57bfff;--glow:87,191,255"><div class="plugin__top"><i class="plugin__mark">EX</i><span class="plugin__index">16</span></div><div class="plugin__body"><span class="plugin__state">Отчётность</span><h3>Sales Export</h3><p>Готовит чистую выгрузку заказов для таблиц и внешнего учёта.</p></div><div class="plugin__result"><strong>1 клик</strong><span>готовый отчёт</span></div><div class="plugin__meta"><span>Аналитика</span><span class="plugin__action">Добавить</span></div></article>
+            <article class="plugin" data-category="security" style="--accent:#ff8b33;--glow:255,139,51"><div class="plugin__top"><i class="plugin__mark">BL</i><span class="plugin__index">17</span></div><div class="plugin__body"><span class="plugin__state">Правила доступа</span><h3>Blacklist Guard</h3><p>Автоматически применяет правила магазина к нежелательным покупателям.</p></div><div class="plugin__result"><strong>Автоблок</strong><span>по правилам</span></div><div class="plugin__meta"><span>Безопасность</span><span class="plugin__action">Добавить</span></div></article>
+            <article class="plugin" data-category="control" style="--accent:#69a4ff;--glow:105,164,255"><div class="plugin__top"><i class="plugin__mark">NT</i><span class="plugin__index">18</span></div><div class="plugin__body"><span class="plugin__state">Сценарии</span><h3>Notify Engine</h3><p>Собирает собственные цепочки уведомлений по событиям магазина.</p></div><div class="plugin__result"><strong>Свои</strong><span>правила событий</span></div><div class="plugin__meta"><span>Контроль</span><span class="plugin__action">Добавить</span></div></article>
+
+            <article class="plugin plugin--wide" data-category="sales analytics" style="--accent:#6bd568;--glow:107,213,104"><div class="plugin__top"><i class="plugin__mark">BS</i><span class="plugin__index">Growth / 19</span></div><div class="plugin__body"><span class="plugin__state">Рост магазина</span><h3>Buyer Segments</h3><p>Разделяет покупателей по активности и истории заказов, чтобы возвращать самых ценных клиентов.</p></div><div class="plugin__result"><strong>Больше</strong><span>повторных продаж</span></div><div class="plugin__meta"><span>Продажи · Аналитика</span><span class="plugin__action">Добавить в сборку</span></div></article>
+            <article class="plugin plugin--wide" data-category="control" style="--accent:#bd7cff;--glow:189,124,255"><div class="plugin__top"><i class="plugin__mark">API</i><span class="plugin__index">Advanced / 20</span></div><div class="plugin__body"><span class="plugin__state">Интеграции</span><h3>API Connector</h3><p>Связывает ZenLot с внешними сервисами и твоими собственными рабочими процессами.</p></div><div class="plugin__result"><strong>Любой</strong><span>внешний сервис</span></div><div class="plugin__meta"><span>Контроль</span><span class="plugin__action">Добавить в сборку</span></div></article>
           </div>
         </div>
       </section>
@@ -1049,5 +1092,35 @@
       </div>
       <div class="footer__bottom"><span>© 2026 ZenLot · Автоматизация FunPay</span><span>Cloud commerce / Always online</span></div>
     </footer>
+
+    <script>
+      (() => {
+        const filters = [...document.querySelectorAll(".plugin-filter")];
+        const modules = [...document.querySelectorAll(".plugin")];
+        const counter = document.querySelector("#plugin-count");
+
+        filters.forEach((button) => {
+          button.addEventListener("click", () => {
+            const filter = button.dataset.filter;
+            let visible = 0;
+
+            filters.forEach((item) => {
+              const active = item === button;
+              item.classList.toggle("plugin-filter--active", active);
+              item.setAttribute("aria-pressed", String(active));
+            });
+
+            modules.forEach((module) => {
+              const categories = module.dataset.category.split(" ");
+              const show = filter === "all" || categories.includes(filter);
+              module.hidden = !show;
+              if (show) visible += 1;
+            });
+
+            counter.textContent = String(visible);
+          });
+        });
+      })();
+    </script>
   </body>
 </html>
