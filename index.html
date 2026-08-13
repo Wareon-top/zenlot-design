@@ -454,43 +454,84 @@
       .plugin__action { color:rgba(255,255,255,.62); }
       .plugin:hover .plugin__action { color:var(--accent); }
 
-      .pricing { position:relative; padding:190px 0; overflow:hidden; background:#050505; }
-      .pricing::before { position:absolute; top:0; right:0; left:0; height:1px; background:linear-gradient(90deg,transparent,rgba(255,210,28,.32),transparent); content:""; }
-      .pricing__inner { width:min(1760px,calc(100% - 72px)); margin:auto; }
-      .pricing__head { display:grid; grid-template-columns:.72fr 1.28fr; gap:60px; margin-bottom:78px; }
+      .pricing {
+        position:relative;
+        padding:184px 0 190px;
+        overflow:hidden;
+        background:
+          radial-gradient(circle at 72% 19%,rgba(255,210,28,.075),transparent 26%),
+          radial-gradient(circle at 16% 66%,rgba(115,87,255,.1),transparent 28%),
+          #050607;
+      }
+      .pricing::before { position:absolute; inset:0; opacity:.2; background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px); background-size:96px 96px; mask-image:linear-gradient(to bottom,transparent,#000 14%,#000 88%,transparent); content:""; pointer-events:none; }
+      .pricing__inner { position:relative; z-index:1; width:min(1760px,calc(100% - 72px)); margin:auto; }
+      .pricing__head { display:grid; grid-template-columns:.72fr 1.28fr; gap:60px; margin-bottom:80px; }
       .pricing__title-wrap { grid-column:2; }
-      .pricing h2 { max-width:1080px; margin:0; font-size:86px; font-weight:500; line-height:.97; letter-spacing:-.06em; }
+      .pricing h2 { max-width:1120px; margin:0; font-size:86px; font-weight:500; line-height:.97; letter-spacing:-.06em; }
       .pricing h2 span { color:var(--yellow); }
-      .pricing__copy { display:flex; align-items:flex-end; justify-content:space-between; gap:32px; margin-top:26px; }
-      .pricing__copy p { max-width:670px; margin:0; color:var(--muted); font-size:17px; line-height:1.6; }
-      .billing-chip { flex:0 0 auto; padding:11px 15px; border:1px solid rgba(255,255,255,.12); border-radius:999px; color:rgba(255,255,255,.48); font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
-      .plans { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-      .plan { position:relative; display:flex; flex-direction:column; min-height:660px; overflow:hidden; padding:34px; border-radius:28px; }
-      .plan--start { background:#e9e9e2; color:#090909; }
-      .plan--pro { background:linear-gradient(145deg,#ffe04d 0%,#ffd21c 55%,#efb900 100%); color:#080808; box-shadow:0 34px 110px rgba(255,210,28,.14); }
-      .plan--team { border:1px solid rgba(255,191,84,.25); background:radial-gradient(circle at 80% 4%,rgba(255,154,48,.19),transparent 32%),#111111; color:#fff; }
-      .plan::after { position:absolute; right:-30px; bottom:-100px; color:currentColor; font-size:300px; font-weight:800; line-height:1; letter-spacing:-.12em; opacity:.035; content:attr(data-plan); pointer-events:none; }
-      .plan__top { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; padding-bottom:30px; border-bottom:1px solid currentColor; }
-      .plan--start .plan__top,.plan--pro .plan__top { border-color:rgba(0,0,0,.15); }
-      .plan--team .plan__top { border-color:rgba(255,255,255,.15); }
-      .plan__name { font-size:13px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
-      .plan__tag { padding:7px 10px; border:1px solid currentColor; border-radius:999px; font-size:9px; font-weight:800; letter-spacing:.09em; opacity:.5; text-transform:uppercase; }
-      .plan--pro .plan__tag { border-color:#080808; background:#080808; color:var(--yellow); opacity:1; }
-      .plan__price { position:relative; z-index:1; margin:54px 0 12px; font-size:84px; font-weight:600; line-height:.82; letter-spacing:-.075em; }
-      .plan__price sup { margin-left:5px; font-size:28px; font-weight:700; vertical-align:top; letter-spacing:-.04em; }
-      .plan__period { position:relative; z-index:1; padding-bottom:30px; border-bottom:1px solid currentColor; font-size:11px; font-weight:700; letter-spacing:.08em; opacity:.5; text-transform:uppercase; }
-      .plan--start .plan__period,.plan--pro .plan__period { border-color:rgba(0,0,0,.15); }
-      .plan--team .plan__period { border-color:rgba(255,255,255,.15); }
-      .plan__features { position:relative; z-index:1; display:grid; gap:15px; margin:30px 0 36px; padding:0; list-style:none; font-size:13px; font-weight:600; line-height:1.4; }
-      .plan__features li { position:relative; padding-left:20px; }
-      .plan__features li::before { position:absolute; top:.55em; left:0; width:7px; height:1px; background:currentColor; content:""; }
-      .plan__button { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; min-height:58px; margin-top:auto; padding:0 18px; border:1px solid currentColor; border-radius:14px; font-size:12px; font-weight:800; }
-      .plan__button::after { font-size:18px; content:"↗"; }
-      .plan--start .plan__button { background:#101010; color:#fff; }
-      .plan--pro .plan__button { background:#080808; color:#fff; }
-      .plan--team .plan__button { border-color:#ffad36; background:#ffad36; color:#090909; }
-      .plan__button:hover { transform:translateY(-2px); }
-      .pricing__note { display:flex; justify-content:space-between; gap:40px; margin-top:20px; padding:22px 4px 0; border-top:1px solid rgba(255,255,255,.08); color:rgba(255,255,255,.3); font-size:10px; font-weight:700; line-height:1.5; letter-spacing:.08em; text-transform:uppercase; }
+      .pricing__copy { display:flex; align-items:flex-end; justify-content:space-between; gap:32px; margin-top:28px; }
+      .pricing__copy p { max-width:690px; margin:0; color:var(--muted); font-size:17px; line-height:1.6; }
+      .billing-chip { flex:0 0 auto; display:flex; align-items:center; gap:9px; padding:11px 15px; border:1px solid rgba(255,255,255,.12); border-radius:999px; color:rgba(255,255,255,.48); font-size:9px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .billing-chip::before { width:6px; height:6px; border-radius:50%; background:#72e6a0; box-shadow:0 0 12px rgba(114,230,160,.65); content:""; }
+
+      .plans { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; align-items:stretch; }
+      .plan {
+        --plan-accent:255,255,255;
+        position:relative;
+        display:flex;
+        flex-direction:column;
+        min-height:680px;
+        overflow:hidden;
+        padding:30px;
+        border:1px solid rgba(255,255,255,.1);
+        border-radius:27px;
+        background:radial-gradient(circle at 90% 0,rgba(var(--plan-accent),.1),transparent 36%),rgba(13,14,19,.93);
+        color:#fff;
+        box-shadow:inset 0 1px rgba(255,255,255,.02);
+        transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease;
+      }
+      .plan--start { --plan-accent:106,180,255; }
+      .plan--pro { --plan-accent:255,210,28; }
+      .plan--team { --plan-accent:173,121,255; }
+      .plan::before { position:absolute; top:0; right:24px; left:24px; height:1px; background:linear-gradient(90deg,transparent,rgba(var(--plan-accent),.9),transparent); opacity:.5; content:""; }
+      .plan::after { position:absolute; right:-42px; bottom:-82px; width:250px; height:250px; border:1px solid rgba(var(--plan-accent),.08); border-radius:50%; content:""; pointer-events:none; }
+      .plan--selected { z-index:2; transform:translateY(-12px); border-color:rgba(var(--plan-accent),.48); box-shadow:0 34px 100px rgba(0,0,0,.36),0 0 55px rgba(var(--plan-accent),.08); }
+      .plan__top { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; padding-bottom:24px; border-bottom:1px solid rgba(255,255,255,.09); }
+      .plan__name { font-size:12px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .plan__tag { padding:7px 10px; border:1px solid rgba(255,255,255,.12); border-radius:999px; color:rgba(255,255,255,.38); font-size:8px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+      .plan--selected .plan__tag { border-color:rgba(var(--plan-accent),.24); background:rgba(var(--plan-accent),.1); color:rgb(var(--plan-accent)); }
+      .plan__fit { position:relative; z-index:1; min-height:79px; padding-top:28px; }
+      .plan__fit span { color:rgb(var(--plan-accent)); font-size:8px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .plan__fit h3 { margin:9px 0 0; font-size:23px; font-weight:600; line-height:1.12; letter-spacing:-.04em; }
+      .plan__price { position:relative; z-index:1; display:flex; align-items:flex-start; margin:38px 0 11px; color:rgb(var(--plan-accent)); font-size:76px; font-weight:600; line-height:.82; letter-spacing:-.075em; }
+      .plan__price sup { margin:4px 0 0 5px; font-size:25px; font-weight:700; letter-spacing:-.04em; }
+      .plan__period { position:relative; z-index:1; color:rgba(255,255,255,.34); font-size:9px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; }
+      .plan__limits { position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; margin-top:28px; overflow:hidden; border:1px solid rgba(255,255,255,.08); border-radius:14px; }
+      .plan__limit { min-height:82px; padding:15px; border-right:1px solid rgba(255,255,255,.08); }
+      .plan__limit:last-child { border-right:0; }
+      .plan__limit strong { display:block; margin-bottom:7px; font-size:18px; font-weight:600; letter-spacing:-.04em; }
+      .plan__limit span { color:rgba(255,255,255,.28); font-size:7px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+      .plan__features { position:relative; z-index:1; display:grid; gap:13px; margin:27px 0 30px; padding:0; list-style:none; color:rgba(255,255,255,.58); font-size:11px; font-weight:600; line-height:1.45; }
+      .plan__features li { position:relative; padding-left:19px; }
+      .plan__features li::before { position:absolute; top:.52em; left:0; width:7px; height:7px; border:1px solid rgba(var(--plan-accent),.65); border-radius:50%; background:rgba(var(--plan-accent),.11); content:""; }
+      .plan__select { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; min-height:55px; margin-top:auto; padding:0 17px; border:1px solid rgba(255,255,255,.12); border-radius:13px; background:rgba(255,255,255,.035); color:#fff; cursor:pointer; font-size:11px; font-weight:800; transition:background .2s ease,border-color .2s ease,color .2s ease; }
+      .plan__select::after { font-size:17px; content:"+"; }
+      .plan__select:hover { border-color:rgba(var(--plan-accent),.42); }
+      .plan--selected .plan__select { border-color:rgb(var(--plan-accent)); background:rgb(var(--plan-accent)); color:#080808; }
+      .plan--selected .plan__select::after { content:"✓"; }
+
+      .pricing-choice { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:40px; align-items:center; min-height:126px; margin-top:12px; padding:24px 28px; border:1px solid rgba(255,255,255,.1); border-radius:21px; background:radial-gradient(circle at 74% 0,rgba(255,210,28,.08),transparent 32%),rgba(11,12,17,.88); }
+      .pricing-choice__info { display:flex; align-items:center; gap:22px; min-width:0; }
+      .pricing-choice__mark { display:grid; place-items:center; flex:0 0 auto; width:48px; height:48px; border:1px solid rgba(255,210,28,.28); border-radius:13px; background:rgba(255,210,28,.1); color:var(--yellow); font-size:9px; font-weight:800; }
+      .pricing-choice__info span { display:block; margin-bottom:7px; color:rgba(255,255,255,.29); font-size:8px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .pricing-choice__info strong { display:block; overflow:hidden; font-size:17px; font-weight:600; letter-spacing:-.025em; text-overflow:ellipsis; white-space:nowrap; }
+      .pricing-choice__action { display:flex; align-items:center; gap:26px; }
+      .pricing-choice__price { text-align:right; }
+      .pricing-choice__price strong { display:block; color:var(--yellow); font-size:25px; font-weight:600; line-height:1; letter-spacing:-.05em; }
+      .pricing-choice__price span { color:rgba(255,255,255,.28); font-size:7px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+      .pricing-choice__button { display:flex; align-items:center; justify-content:space-between; min-width:230px; min-height:58px; padding:0 18px; border-radius:14px; background:var(--yellow); color:#080808; font-size:11px; font-weight:800; }
+      .pricing-choice__button::after { font-size:18px; content:"↗"; }
+      .pricing__note { display:flex; justify-content:space-between; gap:40px; margin-top:20px; padding:20px 4px 0; border-top:1px solid rgba(255,255,255,.07); color:rgba(255,255,255,.28); font-size:9px; font-weight:800; line-height:1.5; letter-spacing:.08em; text-transform:uppercase; }
 
       .faq { padding:180px 0 200px; border-top:1px solid rgba(255,255,255,.07); background:#090a0a; }
       .faq__inner { display:grid; grid-template-columns:.82fr 1.18fr; gap:110px; width:min(1760px,calc(100% - 72px)); margin:auto; }
@@ -672,7 +713,10 @@
         .pricing h2 { font-size:56px; }
         .pricing__copy { align-items:flex-start; flex-direction:column; }
         .plans { grid-template-columns:1fr; }
-        .plan { min-height:600px; }
+        .plan { min-height:620px; }
+        .plan--selected { transform:none; }
+        .pricing-choice { grid-template-columns:1fr; gap:24px; }
+        .pricing-choice__action { justify-content:space-between; }
         .faq__inner { grid-template-columns:1fr; gap:70px; }
         .faq__sticky { position:static; }
         .faq h2 { font-size:56px; }
@@ -749,8 +793,15 @@
         .feature-proof { grid-template-columns:1fr; }
         .pricing { padding:110px 0; }
         .pricing h2,.faq h2 { font-size:45px; }
-        .plan { min-height:560px; padding:24px; }
+        .plan { min-height:580px; padding:24px; }
         .plan__price { font-size:62px; }
+        .plan__fit { min-height:0; }
+        .pricing-choice { padding:20px; }
+        .pricing-choice__info { align-items:flex-start; gap:14px; }
+        .pricing-choice__info strong { white-space:normal; }
+        .pricing-choice__action { align-items:stretch; flex-direction:column; gap:16px; }
+        .pricing-choice__price { text-align:left; }
+        .pricing-choice__button { min-width:0; }
         .pricing__note { flex-direction:column; gap:10px; }
         .faq { padding:110px 0 130px; }
         .faq-item summary { min-height:88px; padding-right:54px; font-size:18px; }
@@ -1017,37 +1068,49 @@
           <div class="pricing__head">
             <div class="section-index">04 / Тарифы</div>
             <div class="pricing__title-wrap">
-              <h2 id="pricing-title">Прозрачные тарифы.<br><span>Без лишних условий.</span></h2>
-              <div class="pricing__copy"><p>Начни с базовой автоматизации и расширяй систему вместе с магазином. Функции разделены понятно — ты платишь только за нужный масштаб.</p><span class="billing-chip">Стоимость за 30 дней</span></div>
+              <h2 id="pricing-title">Платишь за рост.<br><span>Не за лишнее.</span></h2>
+              <div class="pricing__copy"><p>Начни с основных процессов и подключай больше автоматизаций, когда магазин вырастет. Тариф можно поменять позже — настройки и история останутся на месте.</p><span class="billing-chip">Стоимость за 30 дней</span></div>
             </div>
           </div>
 
           <div class="plans">
-            <article class="plan plan--start" data-plan="01">
-              <div class="plan__top"><span class="plan__name">Стартовый</span><span class="plan__tag">Для первого запуска</span></div>
+            <article class="plan plan--start" data-plan="start">
+              <div class="plan__top"><span class="plan__name">Старт</span><span class="plan__tag">Базовый</span></div>
+              <div class="plan__fit"><span>Подойдёт, если</span><h3>Ты только запускаешь магазин</h3></div>
               <div class="plan__price">189<sup>₽</sup></div>
-              <div class="plan__period">Один месяц доступа</div>
-              <ul class="plan__features"><li>Один магазин FunPay</li><li>Автоматическая выдача товара</li><li>Поднятие лотов по расписанию</li><li>Базовая статистика продаж</li></ul>
-              <a class="plan__button" href="#cta">Выбрать стартовый</a>
+              <div class="plan__period">30 дней доступа</div>
+              <div class="plan__limits"><div class="plan__limit"><strong>1</strong><span>магазин FunPay</span></div><div class="plan__limit"><strong>3</strong><span>главных инструмента</span></div></div>
+              <ul class="plan__features"><li>Автоматическая выдача товара</li><li>Поднятие лотов по расписанию</li><li>Базовая статистика продаж</li><li>Облачная работа без компьютера</li></ul>
+              <button class="plan__select" type="button" data-plan-select="start" data-plan-name="Старт" data-plan-price="189 ₽" data-plan-copy="Основная автоматизация для первого магазина" data-plan-mark="ST" aria-pressed="false">Выбрать тариф</button>
             </article>
 
-            <article class="plan plan--pro" data-plan="02">
-              <div class="plan__top"><span class="plan__name">Продвинутый</span><span class="plan__tag">Выбор продавцов</span></div>
+            <article class="plan plan--pro plan--selected" data-plan="pro">
+              <div class="plan__top"><span class="plan__name">Про</span><span class="plan__tag">Рекомендуем</span></div>
+              <div class="plan__fit"><span>Подойдёт, если</span><h3>Продажи уже идут каждый день</h3></div>
               <div class="plan__price">349<sup>₽</sup></div>
-              <div class="plan__period">Один месяц доступа</div>
-              <ul class="plan__features"><li>Всё из тарифа «Стартовый»</li><li>До десяти активных плагинов</li><li>ИИ-ответы и работа с отзывами</li><li>Расширенная аналитика магазина</li><li>Приоритетная обработка событий</li></ul>
-              <a class="plan__button" href="#cta">Выбрать продвинутый</a>
+              <div class="plan__period">30 дней доступа</div>
+              <div class="plan__limits"><div class="plan__limit"><strong>1</strong><span>магазин FunPay</span></div><div class="plan__limit"><strong>до 10</strong><span>активных модулей</span></div></div>
+              <ul class="plan__features"><li>Всё из тарифа «Старт»</li><li>AI-ответы и работа с отзывами</li><li>Расширенная аналитика магазина</li><li>Приоритетная обработка событий</li></ul>
+              <button class="plan__select" type="button" data-plan-select="pro" data-plan-name="Про" data-plan-price="349 ₽" data-plan-copy="До 10 модулей для магазина с ежедневными продажами" data-plan-mark="PRO" aria-pressed="true">Тариф выбран</button>
             </article>
 
-            <article class="plan plan--team" data-plan="03">
-              <div class="plan__top"><span class="plan__name">Команда</span><span class="plan__tag">Для масштаба</span></div>
+            <article class="plan plan--team" data-plan="team">
+              <div class="plan__top"><span class="plan__name">Команда</span><span class="plan__tag">Максимум</span></div>
+              <div class="plan__fit"><span>Подойдёт, если</span><h3>У тебя несколько магазинов</h3></div>
               <div class="plan__price">499<sup>₽</sup></div>
-              <div class="plan__period">Один месяц доступа</div>
-              <ul class="plan__features"><li>Всё из тарифа «Продвинутый»</li><li>Несколько магазинов в панели</li><li>Полный каталог автоматизаций</li><li>Совместная работа команды</li><li>Помощь с настройкой сценариев</li></ul>
-              <a class="plan__button" href="#cta">Выбрать командный</a>
+              <div class="plan__period">30 дней доступа</div>
+              <div class="plan__limits"><div class="plan__limit"><strong>Несколько</strong><span>магазинов</span></div><div class="plan__limit"><strong>Все 20</strong><span>модулей каталога</span></div></div>
+              <ul class="plan__features"><li>Всё из тарифа «Про»</li><li>Единая панель для магазинов</li><li>Совместная работа команды</li><li>Помощь с настройкой сценариев</li></ul>
+              <button class="plan__select" type="button" data-plan-select="team" data-plan-name="Команда" data-plan-price="499 ₽" data-plan-copy="Все модули и несколько магазинов в одной панели" data-plan-mark="MAX" aria-pressed="false">Выбрать тариф</button>
             </article>
           </div>
-          <div class="pricing__note"><span>Все функции и лимиты видны до подключения тарифа</span><span>Отмена и смена тарифа — из панели</span></div>
+
+          <div class="pricing-choice" aria-live="polite">
+            <div class="pricing-choice__info"><span class="pricing-choice__mark" id="selected-plan-mark">PRO</span><div><span>Твой выбор · тариф <b id="selected-plan-name">Про</b></span><strong id="selected-plan-copy">До 10 модулей для магазина с ежедневными продажами</strong></div></div>
+            <div class="pricing-choice__action"><div class="pricing-choice__price"><strong id="selected-plan-price">349 ₽</strong><span>за 30 дней</span></div><a class="pricing-choice__button" href="#cta">Продолжить с тарифом</a></div>
+          </div>
+
+          <div class="pricing__note"><span>Все функции и лимиты видны до оплаты</span><span>Сменить или отменить тариф можно из панели</span></div>
         </div>
       </section>
 
@@ -1118,6 +1181,28 @@
             });
 
             counter.textContent = String(visible);
+          });
+        });
+
+        const planButtons = [...document.querySelectorAll(".plan__select")];
+        const selectedPlanName = document.querySelector("#selected-plan-name");
+        const selectedPlanPrice = document.querySelector("#selected-plan-price");
+        const selectedPlanCopy = document.querySelector("#selected-plan-copy");
+        const selectedPlanMark = document.querySelector("#selected-plan-mark");
+
+        planButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            planButtons.forEach((item) => {
+              const selected = item === button;
+              item.closest(".plan").classList.toggle("plan--selected", selected);
+              item.setAttribute("aria-pressed", String(selected));
+              item.textContent = selected ? "Тариф выбран" : "Выбрать тариф";
+            });
+
+            selectedPlanName.textContent = button.dataset.planName;
+            selectedPlanPrice.textContent = button.dataset.planPrice;
+            selectedPlanCopy.textContent = button.dataset.planCopy;
+            selectedPlanMark.textContent = button.dataset.planMark;
           });
         });
       })();
