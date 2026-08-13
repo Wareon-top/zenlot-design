@@ -272,25 +272,113 @@
       .scenario-card__note b { flex:0 0 auto; padding:7px 9px; border-radius:999px; background:rgba(255,255,255,.05); color:rgba(255,255,255,.58); font-size:8px; letter-spacing:.08em; text-transform:uppercase; }
       .scenario-card--auto .scenario-card__note b { background:rgba(114,230,160,.1); color:#72e6a0; }
 
-      .feature-lead {
+      .features {
         position:relative;
-        width:min(1760px,calc(100% - 72px));
-        min-height:510px;
-        margin:0 auto 18px;
         overflow:hidden;
-        border:1px solid var(--line);
-        border-radius:var(--radius);
+        padding:178px 0 190px;
+        border-top:1px solid rgba(255,255,255,.06);
         background:
-          linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px) 0 0/96px 100%,
-          radial-gradient(circle at 75% 30%,rgba(255,210,28,.13),transparent 30%),
-          #0b0c0c;
-        padding:70px;
+          radial-gradient(circle at 85% 22%,rgba(104,82,255,.11),transparent 27%),
+          radial-gradient(circle at 16% 76%,rgba(255,210,28,.055),transparent 25%),
+          #070808;
       }
-      .feature-lead::after { position:absolute; right:7%; bottom:-45%; width:520px; height:520px; border:1px solid rgba(255,210,28,.24); border-radius:50%; box-shadow:0 0 80px rgba(255,210,28,.08),inset 0 0 80px rgba(255,210,28,.05); content:""; }
+      .features::before { position:absolute; inset:0; opacity:.28; background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px); background-size:96px 96px; mask-image:linear-gradient(to bottom,transparent,#000 12%,#000 88%,transparent); content:""; pointer-events:none; }
+      .features::after { position:absolute; top:34%; right:-150px; width:460px; height:460px; border:1px solid rgba(255,210,28,.15); border-radius:50%; box-shadow:0 0 110px rgba(255,210,28,.06),inset 0 0 100px rgba(255,210,28,.04); content:""; pointer-events:none; }
+      .features__inner { position:relative; z-index:1; width:min(1760px,calc(100% - 72px)); margin:auto; }
+      .features__head { display:grid; grid-template-columns:.72fr 1.28fr; gap:60px; align-items:start; margin-bottom:78px; }
+      .features__title { grid-column:2; }
       .eyebrow { position:relative; z-index:2; color:var(--yellow); font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
-      .feature-lead h2 { position:relative; z-index:2; max-width:1000px; margin:52px 0 24px; font-size:72px; font-weight:500; line-height:1; letter-spacing:-.055em; }
-      .feature-lead h2 span { color:var(--yellow); }
-      .feature-lead p { position:relative; z-index:2; max-width:620px; margin:0; color:var(--muted); font-size:17px; line-height:1.6; }
+      .features h2 { max-width:1080px; margin:0; font-size:clamp(62px,4.45vw,86px); font-weight:500; line-height:.98; letter-spacing:-.058em; }
+      .features h2 span { color:var(--yellow); }
+      .features__intro { max-width:680px; margin:28px 0 0; color:var(--muted); font-size:17px; line-height:1.6; }
+
+      .control-room {
+        position:relative;
+        overflow:hidden;
+        border:1px solid rgba(255,255,255,.13);
+        border-radius:32px;
+        background:rgba(9,10,15,.95);
+        box-shadow:0 44px 140px rgba(0,0,0,.42),0 0 80px rgba(104,82,255,.06);
+      }
+      .control-room::before { position:absolute; inset:0; background:radial-gradient(circle at 78% 0,rgba(108,86,255,.13),transparent 34%); content:""; pointer-events:none; }
+      .control-topbar { position:relative; z-index:2; display:grid; grid-template-columns:190px 1fr auto; align-items:center; min-height:68px; padding:0 22px; border-bottom:1px solid rgba(255,255,255,.09); background:rgba(12,13,19,.86); }
+      .control-brand { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:800; letter-spacing:-.02em; }
+      .control-brand .brand__mark { width:24px; height:24px; border-radius:7px; }
+      .control-brand .brand__mark::after { inset:7px 6px; }
+      .control-breadcrumb { color:rgba(255,255,255,.28); font-size:9px; font-weight:800; letter-spacing:.11em; text-transform:uppercase; }
+      .control-status { display:flex; align-items:center; gap:9px; color:#72e6a0; font-size:9px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .control-status::before { width:7px; height:7px; border-radius:50%; background:#72e6a0; box-shadow:0 0 14px rgba(114,230,160,.72); content:""; }
+      .control-layout { position:relative; z-index:2; display:grid; grid-template-columns:190px minmax(0,1fr) 328px; min-height:710px; }
+
+      .control-sidebar { display:flex; flex-direction:column; padding:20px 12px; border-right:1px solid rgba(255,255,255,.08); background:rgba(8,9,13,.72); }
+      .control-sidebar__label { padding:0 12px 14px; color:rgba(255,255,255,.22); font-size:8px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+      .control-nav { display:grid; gap:5px; }
+      .control-nav span { display:flex; align-items:center; gap:12px; min-height:44px; padding:0 12px; border:1px solid transparent; border-radius:11px; color:rgba(255,255,255,.38); font-size:10px; font-weight:700; }
+      .control-nav b { display:grid; place-items:center; width:23px; height:23px; border:1px solid rgba(255,255,255,.09); border-radius:7px; color:rgba(255,255,255,.28); font-size:7px; letter-spacing:.05em; }
+      .control-nav span:first-child { border-color:rgba(255,210,28,.18); background:rgba(255,210,28,.075); color:#fff; }
+      .control-nav span:first-child b { border-color:rgba(255,210,28,.28); background:var(--yellow); color:#080808; }
+      .control-sidebar__system { margin-top:auto; padding:15px 12px 2px; border-top:1px solid rgba(255,255,255,.07); color:rgba(255,255,255,.28); font-size:8px; font-weight:700; line-height:1.7; letter-spacing:.07em; text-transform:uppercase; }
+      .control-sidebar__system strong { display:flex; align-items:center; gap:8px; margin-bottom:3px; color:rgba(255,255,255,.64); font-size:9px; }
+      .control-sidebar__system strong::before { width:6px; height:6px; border-radius:50%; background:#72e6a0; box-shadow:0 0 10px rgba(114,230,160,.6); content:""; }
+
+      .dashboard { min-width:0; padding:30px; }
+      .dashboard__head { display:flex; align-items:flex-start; justify-content:space-between; gap:28px; margin-bottom:26px; }
+      .dashboard__head h3 { margin:0 0 8px; font-size:24px; font-weight:600; letter-spacing:-.045em; }
+      .dashboard__head p { margin:0; color:rgba(255,255,255,.34); font-size:10px; line-height:1.5; }
+      .dashboard-date { padding:9px 12px; border:1px solid rgba(255,255,255,.09); border-radius:10px; color:rgba(255,255,255,.4); font-size:8px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+      .dashboard-summary { display:grid; grid-template-columns:1.15fr .85fr .85fr; gap:10px; }
+      .summary-card { position:relative; min-height:124px; overflow:hidden; padding:18px; border:1px solid rgba(255,255,255,.08); border-radius:16px; background:rgba(255,255,255,.025); }
+      .summary-card--main { border-color:rgba(255,210,28,.18); background:radial-gradient(circle at 95% 0,rgba(255,210,28,.11),transparent 45%),rgba(255,255,255,.025); }
+      .summary-card__label { display:flex; align-items:center; justify-content:space-between; color:rgba(255,255,255,.31); font-size:8px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; }
+      .summary-card__label i { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.22); }
+      .summary-card--main .summary-card__label i { background:var(--yellow); box-shadow:0 0 12px rgba(255,210,28,.6); }
+      .summary-card strong { display:block; margin:20px 0 7px; font-size:29px; font-weight:600; line-height:1; letter-spacing:-.055em; }
+      .summary-card small { color:#72e6a0; font-size:8px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+      .dashboard-grid { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(260px,.9fr); gap:10px; margin-top:10px; }
+      .dash-panel { min-height:328px; padding:20px; border:1px solid rgba(255,255,255,.08); border-radius:17px; background:rgba(255,255,255,.02); }
+      .dash-panel__top { display:flex; align-items:center; justify-content:space-between; gap:20px; }
+      .dash-panel__top b { font-size:10px; font-weight:800; letter-spacing:.03em; }
+      .dash-panel__top span { color:rgba(255,255,255,.25); font-size:7px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .revenue-total { margin:34px 0 24px; }
+      .revenue-total strong { font-size:35px; font-weight:600; line-height:1; letter-spacing:-.06em; }
+      .revenue-total span { margin-left:9px; color:#72e6a0; font-size:9px; font-weight:800; }
+      .revenue-chart { display:flex; align-items:flex-end; gap:8px; height:150px; padding-top:16px; border-bottom:1px solid rgba(255,255,255,.08); background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px); background-size:100% 50px; }
+      .revenue-chart i { position:relative; flex:1; height:var(--h); min-height:14px; border-radius:4px 4px 1px 1px; background:linear-gradient(180deg,rgba(255,210,28,.92),rgba(255,210,28,.12)); box-shadow:0 -8px 24px rgba(255,210,28,.08); }
+      .revenue-chart i:nth-child(3n) { background:linear-gradient(180deg,rgba(139,112,255,.9),rgba(139,112,255,.14)); }
+      .chart-labels { display:flex; justify-content:space-between; margin-top:10px; color:rgba(255,255,255,.2); font-size:7px; font-weight:700; }
+      .order-list { display:grid; margin-top:22px; }
+      .order-row { display:grid; grid-template-columns:30px minmax(0,1fr) auto; gap:10px; align-items:center; min-height:66px; border-bottom:1px solid rgba(255,255,255,.065); }
+      .order-row:last-child { border-bottom:0; }
+      .order-row__mark { display:grid; place-items:center; width:28px; height:28px; border-radius:8px; background:rgba(120,97,255,.13); color:#9d87ff; font-size:7px; font-weight:800; }
+      .order-row:nth-child(2) .order-row__mark { background:rgba(255,210,28,.1); color:var(--yellow); }
+      .order-row:nth-child(3) .order-row__mark { background:rgba(114,230,160,.1); color:#72e6a0; }
+      .order-row b { display:block; overflow:hidden; color:rgba(255,255,255,.7); font-size:9px; font-weight:700; text-overflow:ellipsis; white-space:nowrap; }
+      .order-row small { color:rgba(255,255,255,.26); font-size:7px; }
+      .order-row__price { color:#72e6a0; font-size:9px; font-weight:800; }
+
+      .automation-rail { padding:26px 20px; border-left:1px solid rgba(255,255,255,.08); background:rgba(13,14,21,.68); }
+      .automation-rail__head { display:flex; align-items:center; justify-content:space-between; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.075); }
+      .automation-rail__head b { font-size:11px; }
+      .automation-rail__head span { padding:6px 8px; border-radius:999px; background:rgba(114,230,160,.09); color:#72e6a0; font-size:7px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+      .automation-list { display:grid; gap:8px; margin-top:14px; }
+      .automation-item { display:grid; grid-template-columns:36px minmax(0,1fr) auto; gap:11px; align-items:center; min-height:78px; padding:12px; border:1px solid rgba(255,255,255,.07); border-radius:13px; background:rgba(255,255,255,.02); }
+      .automation-item__mark { display:grid; place-items:center; width:36px; height:36px; border:1px solid rgba(139,112,255,.24); border-radius:10px; background:rgba(139,112,255,.1); color:#a994ff; font-size:8px; font-weight:800; }
+      .automation-item:nth-child(2) .automation-item__mark { border-color:rgba(255,210,28,.24); background:rgba(255,210,28,.09); color:var(--yellow); }
+      .automation-item:nth-child(3) .automation-item__mark { border-color:rgba(114,230,160,.2); background:rgba(114,230,160,.08); color:#72e6a0; }
+      .automation-item:nth-child(4) .automation-item__mark { border-color:rgba(93,189,255,.2); background:rgba(93,189,255,.08); color:#70c8ff; }
+      .automation-item b { display:block; margin-bottom:4px; color:rgba(255,255,255,.75); font-size:9px; }
+      .automation-item small { display:block; color:rgba(255,255,255,.28); font-size:7px; line-height:1.45; }
+      .automation-toggle { position:relative; width:27px; height:16px; border-radius:999px; background:#72e6a0; box-shadow:0 0 14px rgba(114,230,160,.12); }
+      .automation-toggle::after { position:absolute; top:3px; right:3px; width:10px; height:10px; border-radius:50%; background:#071009; content:""; }
+      .automation-rail__foot { margin-top:16px; padding:18px 2px 0; border-top:1px solid rgba(255,255,255,.075); color:rgba(255,255,255,.28); font-size:8px; line-height:1.6; }
+      .automation-rail__foot strong { display:block; margin-top:8px; color:var(--yellow); font-size:9px; letter-spacing:.04em; }
+
+      .feature-proof { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:10px; }
+      .feature-proof__item { min-height:126px; padding:20px; border:1px solid rgba(255,255,255,.085); border-radius:17px; background:rgba(12,13,17,.76); }
+      .feature-proof__item span { color:rgba(255,255,255,.27); font-size:8px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .feature-proof__item strong { display:block; margin:23px 0 7px; font-size:25px; font-weight:600; letter-spacing:-.045em; }
+      .feature-proof__item small { color:rgba(255,255,255,.35); font-size:9px; line-height:1.5; }
+      .feature-proof__item:nth-child(2) strong,.feature-proof__item:nth-child(4) strong { color:var(--yellow); }
 
       .plugins {
         position:relative;
@@ -538,9 +626,16 @@
         .scenario-grid { grid-template-columns:1fr; }
         .scenario-vs { display:none; }
         .scenario-card { min-height:620px; }
-        .feature-lead,.plugins__inner { width:calc(100% - 32px); }
-        .feature-lead { min-height:440px; padding:46px 34px; }
-        .feature-lead h2,.plugins h2 { font-size:54px; }
+        .features__inner,.plugins__inner { width:calc(100% - 32px); }
+        .features__head { grid-template-columns:1fr; gap:28px; }
+        .features__title { grid-column:1; }
+        .features h2,.plugins h2 { font-size:54px; }
+        .control-topbar { grid-template-columns:160px 1fr auto; }
+        .control-layout { grid-template-columns:160px minmax(0,1fr); }
+        .automation-rail { grid-column:2; display:grid; grid-template-columns:1fr 1fr; gap:16px; border-top:1px solid rgba(255,255,255,.08); border-left:0; }
+        .automation-rail__head,.automation-rail__foot { grid-column:1/-1; }
+        .automation-list { grid-column:1/-1; grid-template-columns:1fr 1fr; }
+        .feature-proof { grid-template-columns:1fr 1fr; }
         .plugins__head { grid-template-columns:1fr; }
         .plugins__summary { min-width:0; max-width:420px; }
         .plugins-toolbar { align-items:flex-start; gap:20px; }
@@ -596,14 +691,33 @@
         .scenario-card__lead { min-height:0; }
         .scenario-result strong { font-size:25px; }
         .scenario-card__note { align-items:flex-start; flex-direction:column; gap:12px; }
-        .feature-lead h2,.plugins h2 { font-size:44px; }
-        .feature-lead { padding:38px 24px; }
+        .features { padding:110px 0; }
+        .features h2,.plugins h2 { font-size:44px; }
+        .control-room { border-radius:24px; }
+        .control-topbar { grid-template-columns:1fr auto; }
+        .control-breadcrumb { display:none; }
+        .control-layout { grid-template-columns:1fr; }
+        .control-sidebar { padding:12px; border-right:0; border-bottom:1px solid rgba(255,255,255,.08); }
+        .control-sidebar__label,.control-sidebar__system { display:none; }
+        .control-nav { display:flex; overflow-x:auto; }
+        .control-nav span { flex:0 0 auto; min-height:40px; }
+        .dashboard { padding:22px 18px; }
+        .dashboard-grid { grid-template-columns:1fr; }
+        .automation-rail { grid-column:1; }
         .plugins { padding:110px 0; }
         .plugins__summary { padding:20px 0; }
         .plugins-toolbar__note { display:none; }
         .plugin-filters { gap:6px; }
         .plugin-filter { padding:8px 10px; }
         .plugin-grid { grid-template-columns:1fr; }
+        .features__head { margin-bottom:48px; }
+        .features__intro { font-size:15px; }
+        .dashboard__head { align-items:flex-start; flex-direction:column; }
+        .dashboard-summary { grid-template-columns:1fr; }
+        .summary-card { min-height:112px; }
+        .automation-rail { display:block; padding:22px 18px; }
+        .automation-list { grid-template-columns:1fr; }
+        .feature-proof { grid-template-columns:1fr; }
         .pricing { padding:110px 0; }
         .pricing h2,.faq h2 { font-size:45px; }
         .plan { min-height:560px; padding:24px; }
@@ -726,10 +840,88 @@
         </div>
       </section>
 
-      <section class="feature-lead" id="features">
-        <div class="eyebrow">02 / Система возможностей</div>
-        <h2>Панель, в которой<br><span>рутина исчезает.</span></h2>
-        <p>Все инструменты продавца соединены в одну аккуратную систему: от первого сообщения покупателя до выдачи товара и аналитики результата.</p>
+      <section class="features" id="features">
+        <div class="features__inner">
+          <header class="features__head">
+            <div class="section-index">02 / Панель ZenLot</div>
+            <div class="features__title">
+              <h2>Весь магазин.<br><span>В одном экране.</span></h2>
+              <p class="features__intro">Не нужно держать открытыми десятки вкладок. Заказы, деньги, сообщения и автоматизации собраны в понятной панели, которая показывает только главное.</p>
+            </div>
+          </header>
+
+          <div class="control-room" aria-label="Интерфейс управления магазином ZenLot">
+            <div class="control-topbar">
+              <div class="control-brand"><span class="brand__mark" aria-hidden="true"></span>ZenLot</div>
+              <div class="control-breadcrumb">Workspace / FunPay Store #01</div>
+              <div class="control-status">Все системы работают</div>
+            </div>
+
+            <div class="control-layout">
+              <aside class="control-sidebar" aria-label="Разделы панели">
+                <div class="control-sidebar__label">Навигация</div>
+                <div class="control-nav">
+                  <span><b>01</b>Обзор</span>
+                  <span><b>02</b>Заказы</span>
+                  <span><b>03</b>Сообщения</span>
+                  <span><b>04</b>Лоты</span>
+                  <span><b>05</b>Аналитика</span>
+                </div>
+                <div class="control-sidebar__system"><strong>ZenLot online</strong>Последняя проверка<br>несколько секунд назад</div>
+              </aside>
+
+              <div class="dashboard">
+                <div class="dashboard__head">
+                  <div><h3>Доброе утро, продавец</h3><p>Магазин работал, пока тебя не было. Вот что изменилось.</p></div>
+                  <div class="dashboard-date">Сегодня · 08:42</div>
+                </div>
+
+                <div class="dashboard-summary">
+                  <div class="summary-card summary-card--main"><div class="summary-card__label">Выручка сегодня<i></i></div><strong>12 480 ₽</strong><small>↑ 18% к вчерашнему дню</small></div>
+                  <div class="summary-card"><div class="summary-card__label">Заказы<i></i></div><strong>18</strong><small>Все выданы</small></div>
+                  <div class="summary-card"><div class="summary-card__label">Рейтинг<i></i></div><strong>4.98</strong><small>+6 новых отзывов</small></div>
+                </div>
+
+                <div class="dashboard-grid">
+                  <section class="dash-panel" aria-label="График выручки">
+                    <div class="dash-panel__top"><b>Динамика продаж</b><span>Последние 7 дней</span></div>
+                    <div class="revenue-total"><strong>48 920 ₽</strong><span>+24.6%</span></div>
+                    <div class="revenue-chart" aria-hidden="true"><i style="--h:34%"></i><i style="--h:46%"></i><i style="--h:41%"></i><i style="--h:62%"></i><i style="--h:55%"></i><i style="--h:78%"></i><i style="--h:93%"></i><i style="--h:84%"></i><i style="--h:100%"></i></div>
+                    <div class="chart-labels"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
+                  </section>
+
+                  <section class="dash-panel" aria-label="Последние заказы">
+                    <div class="dash-panel__top"><b>Заказы сейчас</b><span>Live feed</span></div>
+                    <div class="order-list">
+                      <div class="order-row"><span class="order-row__mark">SW</span><span><b>Steam Wallet 1000</b><small>Выдан за 3 секунды</small></span><strong class="order-row__price">+1 290 ₽</strong></div>
+                      <div class="order-row"><span class="order-row__mark">FN</span><span><b>Fortnite · 1000 V-Bucks</b><small>Выдан автоматически</small></span><strong class="order-row__price">+690 ₽</strong></div>
+                      <div class="order-row"><span class="order-row__mark">TG</span><span><b>Telegram Premium</b><small>Покупатель получил ответ</small></span><strong class="order-row__price">+349 ₽</strong></div>
+                      <div class="order-row"><span class="order-row__mark">GP</span><span><b>Google Play Gift Card</b><small>Оплата подтверждена</small></span><strong class="order-row__price">+890 ₽</strong></div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+
+              <aside class="automation-rail" aria-label="Активные автоматизации">
+                <div class="automation-rail__head"><b>Автоматизация</b><span>4 активны</span></div>
+                <div class="automation-list">
+                  <div class="automation-item"><span class="automation-item__mark">DL</span><span><b>Автовыдача</b><small>Товар сразу после оплаты</small></span><i class="automation-toggle" aria-hidden="true"></i></div>
+                  <div class="automation-item"><span class="automation-item__mark">AI</span><span><b>AI-ответы</b><small>Покупатель не ждёт сообщения</small></span><i class="automation-toggle" aria-hidden="true"></i></div>
+                  <div class="automation-item"><span class="automation-item__mark">UP</span><span><b>Поднятие лотов</b><small>Каждые 45 минут</small></span><i class="automation-toggle" aria-hidden="true"></i></div>
+                  <div class="automation-item"><span class="automation-item__mark">ST</span><span><b>Контроль остатков</b><small>Защита от лишней продажи</small></span><i class="automation-toggle" aria-hidden="true"></i></div>
+                </div>
+                <div class="automation-rail__foot">ZenLot выполнил 46 действий за сегодня.<strong>Открыть журнал действий ↗</strong></div>
+              </aside>
+            </div>
+          </div>
+
+          <div class="feature-proof" aria-label="Ключевые возможности панели">
+            <div class="feature-proof__item"><span>01 / Автовыдача</span><strong>3 секунды</strong><small>между оплатой и получением товара</small></div>
+            <div class="feature-proof__item"><span>02 / Общение</span><strong>24 / 7</strong><small>покупатель получает ответ без ожидания</small></div>
+            <div class="feature-proof__item"><span>03 / Продвижение</span><strong>Лоты выше</strong><small>автоподнятие работает по расписанию</small></div>
+            <div class="feature-proof__item"><span>04 / Контроль</span><strong>0 пропусков</strong><small>все важные события остаются в панели</small></div>
+          </div>
+        </div>
       </section>
 
       <section class="plugins" id="plugins">
