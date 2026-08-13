@@ -425,6 +425,78 @@
       .footer__column a:hover { color:var(--yellow); }
       .footer__bottom { display:flex; align-items:center; justify-content:space-between; padding-top:26px; border-top:1px solid rgba(255,255,255,.09); color:rgba(255,255,255,.28); font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
 
+      .seller-hero {
+        height:940px;
+        background:
+          radial-gradient(circle at 78% 30%,rgba(91,77,255,.24),transparent 30%),
+          radial-gradient(circle at 63% 80%,rgba(255,210,28,.11),transparent 27%),
+          radial-gradient(circle at 12% 14%,rgba(51,179,255,.1),transparent 23%),
+          #07080d;
+      }
+      .seller-hero::before {
+        z-index:-1;
+        background:
+          linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
+          linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+        background-size:80px 80px;
+        mask-image:linear-gradient(to bottom,rgba(0,0,0,.72),#000 70%,transparent);
+      }
+      .seller-hero::after { background:linear-gradient(180deg,rgba(0,0,0,.08),transparent 68%,rgba(0,0,0,.5)); box-shadow:inset 0 0 120px rgba(0,0,0,.38); }
+      .seller-orbit { position:absolute; z-index:0; border:1px solid rgba(255,255,255,.09); border-radius:50%; pointer-events:none; }
+      .seller-orbit--one { top:-260px; right:4%; width:700px; height:700px; box-shadow:0 0 90px rgba(96,79,255,.08),inset 0 0 90px rgba(96,79,255,.04); }
+      .seller-orbit--two { right:33%; bottom:-390px; width:680px; height:680px; border-color:rgba(255,210,28,.13); }
+      .seller-hero__content { position:absolute; z-index:10; top:140px; right:60px; bottom:154px; left:60px; display:grid; grid-template-columns:minmax(0,1fr) minmax(520px,680px); gap:76px; align-items:center; }
+      .seller-copy { align-self:center; }
+      .seller-kicker { display:flex; align-items:center; gap:10px; width:max-content; margin-bottom:30px; padding:9px 13px; border:1px solid rgba(255,210,28,.28); border-radius:999px; background:rgba(255,210,28,.07); color:var(--yellow); font-size:10px; font-weight:800; letter-spacing:.11em; text-transform:uppercase; }
+      .seller-kicker::before { width:6px; height:6px; border-radius:50%; background:var(--yellow); box-shadow:0 0 13px rgba(255,210,28,.75); content:""; }
+      .seller-hero h1 { max-width:940px; font-size:clamp(68px,4.7vw,90px); line-height:.97; }
+      .seller-hero h1 .headline-line--accent { color:#fff; }
+      .seller-hero h1 em { color:var(--yellow); font-style:normal; }
+      .seller-lead { max-width:720px; margin:32px 0 0; color:rgba(255,255,255,.58); font-size:18px; line-height:1.6; }
+      .seller-actions { display:flex; gap:12px; max-width:580px; margin-top:38px; }
+      .seller-actions .btn { flex:1; }
+      .seller-tags { display:flex; flex-wrap:wrap; gap:9px; margin-top:28px; }
+      .seller-tag { padding:8px 11px; border:1px solid rgba(255,255,255,.1); border-radius:999px; color:rgba(255,255,255,.42); font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+
+      .night-wrap { position:relative; padding:24px; }
+      .night-wrap::before { position:absolute; inset:8% 4%; border-radius:50%; background:rgba(88,70,255,.32); filter:blur(100px); content:""; }
+      .night-panel { position:relative; z-index:2; overflow:hidden; border:1px solid rgba(255,255,255,.14); border-radius:28px; background:rgba(12,13,21,.87); box-shadow:0 36px 100px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.04); backdrop-filter:blur(24px); }
+      .night-panel__top { display:flex; align-items:center; justify-content:space-between; padding:24px 26px; border-bottom:1px solid rgba(255,255,255,.09); }
+      .night-panel__title { display:flex; align-items:center; gap:11px; font-size:13px; font-weight:800; }
+      .night-panel__moon { display:grid; place-items:center; width:30px; height:30px; border-radius:10px; background:linear-gradient(145deg,#7468ff,#4e40d8); color:#fff; font-size:15px; }
+      .night-panel__date { color:rgba(255,255,255,.3); font-size:9px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; }
+      .night-revenue { padding:30px 28px 27px; }
+      .night-revenue span { display:block; margin-bottom:12px; color:rgba(255,255,255,.36); font-size:9px; font-weight:800; letter-spacing:.11em; text-transform:uppercase; }
+      .night-revenue strong { display:block; font-size:68px; font-weight:600; line-height:.9; letter-spacing:-.07em; }
+      .night-revenue strong small { margin-left:5px; color:var(--yellow); font-size:25px; }
+      .night-revenue__delta { display:flex; align-items:center; gap:8px; margin-top:17px; color:#72e6a0; font-size:11px; font-weight:700; }
+      .night-revenue__delta::before { width:7px; height:7px; border-radius:50%; background:#72e6a0; box-shadow:0 0 12px rgba(114,230,160,.65); content:""; }
+      .night-stats { display:grid; grid-template-columns:repeat(3,1fr); margin:0 18px; border-block:1px solid rgba(255,255,255,.09); }
+      .night-stat { min-height:92px; padding:20px 10px; border-right:1px solid rgba(255,255,255,.09); }
+      .night-stat:last-child { border-right:0; }
+      .night-stat strong { display:block; margin-bottom:8px; font-size:23px; font-weight:600; letter-spacing:-.045em; }
+      .night-stat span { color:rgba(255,255,255,.32); font-size:8px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+      .night-feed { padding:20px 26px 24px; }
+      .night-feed__label { margin-bottom:11px; color:rgba(255,255,255,.28); font-size:8px; font-weight:800; letter-spacing:.11em; text-transform:uppercase; }
+      .night-event { display:grid; grid-template-columns:34px 1fr auto; gap:11px; align-items:center; padding:11px 0; border-bottom:1px solid rgba(255,255,255,.065); }
+      .night-event:last-child { border-bottom:0; }
+      .night-event__icon { display:grid; place-items:center; width:32px; height:32px; border-radius:10px; background:rgba(255,210,28,.1); color:var(--yellow); font-size:10px; font-weight:800; }
+      .night-event b { display:block; margin-bottom:3px; font-size:11px; font-weight:700; }
+      .night-event small { color:rgba(255,255,255,.31); font-size:9px; }
+      .night-event__sum { color:#72e6a0; font-size:11px; font-weight:800; }
+      .order-pop { position:absolute; z-index:4; top:-8px; right:-8px; min-width:210px; padding:14px 16px; border:1px solid rgba(255,255,255,.16); border-radius:15px; background:rgba(19,20,30,.95); box-shadow:0 18px 50px rgba(0,0,0,.4); }
+      .order-pop span { display:block; color:rgba(255,255,255,.38); font-size:8px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; }
+      .order-pop strong { display:flex; align-items:center; justify-content:space-between; margin-top:6px; font-size:12px; }
+      .order-pop strong em { color:#72e6a0; font-style:normal; }
+      .seller-metrics { position:absolute; z-index:10; right:28px; bottom:28px; left:28px; display:grid; grid-template-columns:repeat(4,1fr); overflow:hidden; border:1px solid rgba(255,255,255,.12); border-radius:20px; background:rgba(8,9,15,.72); backdrop-filter:blur(22px); }
+      .seller-metric { position:relative; min-height:94px; padding:21px 26px; border-right:1px solid rgba(255,255,255,.1); }
+      .seller-metric:last-child { border-right:0; }
+      .seller-metric strong { display:block; margin-bottom:8px; font-size:24px; font-weight:600; line-height:1; letter-spacing:-.05em; }
+      .seller-metric:first-child strong { color:var(--yellow); }
+      .seller-metric span { color:rgba(255,255,255,.35); font-size:9px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+      .seller-metric i { position:absolute; top:24px; right:24px; width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.22); }
+      .seller-metric:first-child i { background:#72e6a0; box-shadow:0 0 12px rgba(114,230,160,.65); }
+
       @media (max-width:1280px) {
         .hero { height:900px; }
         .hero h1 { font-size:72px; }
@@ -438,6 +510,9 @@
         .faq__inner { gap:70px; }
         .faq h2 { font-size:64px; }
         .final-cta h2 { font-size:72px; }
+        .seller-hero__content { grid-template-columns:minmax(0,1fr) minmax(430px,540px); gap:42px; }
+        .seller-hero h1 { font-size:66px; }
+        .night-revenue strong { font-size:58px; }
       }
 
       @media (max-width:980px) {
@@ -481,6 +556,15 @@
         .final-cta__action { max-width:520px; }
         .footer { width:calc(100% - 32px); }
         .footer__top { grid-template-columns:1fr 1fr; }
+        .seller-hero { min-height:1180px; }
+        .seller-hero__content { top:110px; right:26px; bottom:220px; left:26px; grid-template-columns:1fr; gap:42px; align-content:center; }
+        .seller-copy { padding-top:20px; }
+        .seller-hero h1 { font-size:clamp(48px,8vw,70px); }
+        .seller-lead { font-size:16px; }
+        .night-wrap { width:min(100%,650px); margin:auto; }
+        .seller-metrics { grid-template-columns:1fr 1fr; }
+        .seller-metric:nth-child(2) { border-right:0; }
+        .seller-metric:nth-child(-n+2) { border-bottom:1px solid rgba(255,255,255,.1); }
       }
 
       @media (max-width:620px) {
@@ -530,6 +614,26 @@
         .footer__top { grid-template-columns:1fr 1fr; gap:42px 28px; }
         .footer__brand { grid-column:1/-1; }
         .footer__bottom { align-items:flex-start; flex-direction:column; gap:12px; }
+        .seller-hero { min-height:1130px; background-position:center; }
+        .seller-hero__content { top:82px; right:16px; bottom:200px; left:16px; gap:24px; }
+        .seller-copy { padding-top:40px; }
+        .seller-kicker { margin-bottom:20px; }
+        .seller-hero h1 { font-size:43px; }
+        .seller-lead { margin-top:22px; font-size:14px; }
+        .seller-actions { flex-direction:column; margin-top:26px; }
+        .seller-tags { display:none; }
+        .night-wrap { padding:8px 0; }
+        .order-pop { display:none; }
+        .night-panel { border-radius:22px; }
+        .night-revenue { padding:24px 20px; }
+        .night-revenue strong { font-size:52px; }
+        .night-stat { padding:16px 7px; }
+        .night-stat strong { font-size:19px; }
+        .night-feed { padding:16px 20px 20px; }
+        .seller-metrics { right:12px; bottom:12px; left:12px; }
+        .seller-metric { min-height:82px; padding:17px; }
+        .seller-metric strong { font-size:20px; }
+        .seller-metric i { top:20px; right:17px; }
       }
 
       @media (prefers-reduced-motion:reduce) {
@@ -540,31 +644,36 @@
   </head>
   <body>
     <div class="page-shell">
-      <section class="hero" aria-labelledby="hero-title">
+      <section class="hero seller-hero" aria-labelledby="hero-title">
         <header class="header">
           <a class="brand" href="#" aria-label="ZenLot — на главную"><span class="brand__mark" aria-hidden="true"></span><span>ZenLot <small>FOR FUNPAY</small></span></a>
           <nav class="nav" aria-label="Основная навигация"><a href="#features">Возможности</a><a href="#plugins">Плагины</a><a href="#tariffs">Тарифы</a><a href="#faq">FAQ</a></nav>
           <div class="account"><a class="login" href="#">Войти</a><a class="reg" href="#">Начать бесплатно</a></div>
         </header>
 
-        <div class="hero__signal"><span class="signal-dot"></span><span>Автономная торговля включена</span><span class="hero__index">00 / Hero</span></div>
+        <span class="seller-orbit seller-orbit--one" aria-hidden="true"></span><span class="seller-orbit seller-orbit--two" aria-hidden="true"></span>
 
-        <div class="hero-panel">
-          <div class="hero-panel__main">
-            <div class="hero-panel__top"><div class="kicker">Облачная панель для FunPay</div><div class="availability">Система работает · 24 / 7 / 365</div></div>
-            <h1 id="hero-title"><span class="headline-line">Ты отдыхаешь —</span><span class="headline-line headline-line--accent">магазин Funpay работает</span></h1>
-            <div class="hero-panel__bottom">
-              <p class="hero-copy">ZenLot берёт на себя выдачу товара, поднятие лотов, ответы покупателям и контроль продаж. Подключение занимает 5 минут — включать компьютер больше не нужно.</p>
-              <div class="hero-actions"><a class="btn btn--primary" href="#">Начать бесплатно</a><a class="btn" href="#comparison">Смотреть сценарий</a></div>
+        <div class="seller-hero__content">
+          <div class="seller-copy">
+            <div class="seller-kicker">Автоматизация магазина FunPay</div>
+            <h1 id="hero-title"><span class="headline-line">Ты отдыхаешь —</span><span class="headline-line headline-line--accent">магазин Funpay <em>работает</em></span></h1>
+            <p class="seller-lead">ZenLot выдаёт товары, отвечает покупателям и поднимает лоты, пока ты учишься, играешь или спишь.</p>
+            <div class="seller-actions"><a class="btn btn--primary" href="#">Запустить магазин</a><a class="btn" href="#comparison">Как это работает</a></div>
+            <div class="seller-tags" aria-label="Функции ZenLot"><span class="seller-tag">Автовыдача</span><span class="seller-tag">Автоответы</span><span class="seller-tag">Поднятие лотов</span><span class="seller-tag">Без компьютера</span></div>
+          </div>
+
+          <div class="night-wrap" aria-label="Пример ночной статистики магазина">
+            <div class="order-pop"><span>Новый заказ · только что</span><strong>Steam Wallet <em>+690 ₽</em></strong></div>
+            <div class="night-panel">
+              <div class="night-panel__top"><div class="night-panel__title"><span class="night-panel__moon">◐</span><span>Пока ты спал</span></div><span class="night-panel__date">Сегодня · 00:00–08:00</span></div>
+              <div class="night-revenue"><span>Выручка за ночь</span><strong>8 460<small>₽</small></strong><div class="night-revenue__delta">Все заказы обработаны</div></div>
+              <div class="night-stats"><div class="night-stat"><strong>12</strong><span>заказов</span></div><div class="night-stat"><strong>12 / 12</strong><span>выдано</span></div><div class="night-stat"><strong>0</strong><span>ждут ответа</span></div></div>
+              <div class="night-feed"><div class="night-feed__label">Последние события</div><div class="night-event"><span class="night-event__icon">✓</span><span><b>Товар выдан автоматически</b><small>Steam Key · 3 секунды</small></span><span class="night-event__sum">+1 290 ₽</span></div><div class="night-event"><span class="night-event__icon">AI</span><span><b>Покупатель получил ответ</b><small>Сообщение обработал ZenLot</small></span><span class="night-event__sum">готово</span></div></div>
             </div>
           </div>
-          <div class="hero-metrics" aria-label="Ключевые показатели ZenLot">
-            <div class="metric metric--live"><strong>3 сек</strong><span>выдача товара</span><i></i></div>
-            <div class="metric"><strong>24 / 7</strong><span>без компьютера</span><i></i></div>
-            <div class="metric"><strong>30+</strong><span>умных плагинов</span><i></i></div>
-            <div class="metric"><strong>5 мин</strong><span>до запуска</span><i></i></div>
-          </div>
         </div>
+
+        <div class="seller-metrics" aria-label="Ключевые показатели ZenLot"><div class="seller-metric"><strong>3 сек</strong><span>товар у покупателя</span><i></i></div><div class="seller-metric"><strong>24 / 7</strong><span>магазин продаёт без тебя</span><i></i></div><div class="seller-metric"><strong>0</strong><span>заказов пропущено</span><i></i></div><div class="seller-metric"><strong>5 мин</strong><span>занимает подключение</span><i></i></div></div>
       </section>
 
       <div class="ticker" aria-hidden="true"><div class="ticker__track"><span>Автовыдача <b>●</b> Автоответы <b>●</b> Автоподнятие <b>●</b> Аналитика <b>●</b> Плагины <b>●</b></span><span>Автовыдача <b>●</b> Автоответы <b>●</b> Автоподнятие <b>●</b> Аналитика <b>●</b> Плагины <b>●</b></span></div></div>
