@@ -3,126 +3,472 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>ZenLot — FunPay</title>
+    <meta name="theme-color" content="#050505">
+    <title>ZenLot — автономный магазин на FunPay</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-      :root { --bg:#060606; --surface:#101010; --muted:#a8a8b3; --yellow:#ffc400; }
-      * { box-sizing:border-box; }
-      html { background:var(--bg); scroll-behavior:smooth; }
-      body { margin:0; background:var(--bg); color:#fff; font-family:Inter,Arial,sans-serif; }
-      button { font-family:inherit; }
-      .grid { min-height:100vh; background-image:linear-gradient(90deg,transparent calc(50% - .5px),rgba(255,255,255,.075) calc(50% - .5px),rgba(255,255,255,.075) calc(50% + .5px),transparent calc(50% + .5px)); background-position:center; background-size:160px 100%; }
-      .header { position:relative; z-index:2; height:80px; background:#0d0d0d; }
-      .header__inner { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; width:1488px; height:80px; margin:auto; }
-      .brand { font-size:16px; font-weight:700; letter-spacing:-.5px; }
-      .nav { display:flex; align-items:center; gap:42px; height:46px; padding:0 25px; border-radius:999px; background:rgba(255,255,255,.06); color:#b7b7bf; font-size:14px; }
-      .nav a,.login { color:inherit; text-decoration:none; }
-      .account { display:flex; align-items:center; justify-self:end; gap:28px; font-size:14px; font-weight:700; }
-      .reg { height:44px; padding:0 24px; border:0; border-radius:12px; background:#fff; color:#13131b; font-size:16px; font-weight:700; }
-      .hero { position:relative; width:1024px; height:850px; margin:auto; text-align:center; }
-      .hero__content { position:absolute; top:174px; width:100%; }
-      .cloud { display:inline-grid; place-items:center; width:221px; height:34px; transform:rotate(-2.51deg); border:1px solid rgba(255,255,255,.1); border-radius:999px; background:linear-gradient(90deg,#f8e21e,#ffbe0b); color:#050505; font-size:14px; font-weight:800; }
-      .hero h1 { position:relative; left:50%; width:1137px; margin:22px 0 0; transform:translateX(-50%); font-size:96px; font-weight:700; line-height:96px; letter-spacing:-4.8px; white-space:nowrap; }
-      .hero h1 .headline-line { display:block; white-space:nowrap; }
-      .hero h1 b { background:linear-gradient(90deg,#f8e01c,#fec00c); background-clip:text; color:transparent; font-weight:700; -webkit-background-clip:text; }
-      .hero p { width:749px; margin:34px auto 0; color:var(--muted); font-size:24px; line-height:32px; }
-      .buttons { display:flex; justify-content:center; gap:20px; margin-top:50px; }
-      .btn { min-width:278px; height:62px; padding:0 28px; border:1px solid rgba(255,255,255,.1); border-radius:16px; background:rgba(255,255,255,.05); color:#fff; font-size:18px; font-weight:700; }
-      .btn--white { min-width:256px; border:0; background:#fff; box-shadow:0 0 20px rgba(255,255,255,.3); color:#181922; }
-
-      .compare { padding:10px 0 174px; overflow:hidden; text-align:center; }
-      .compare h2 { margin:0 0 93px; font-size:48px; font-weight:700; line-height:48px; letter-spacing:-2.4px; }
-      .compare h2 span { background:linear-gradient(90deg,#f8df1c,#fec10c); background-clip:text; color:transparent; -webkit-background-clip:text; }
-      .compare__cards { display:flex; align-items:flex-start; justify-content:center; gap:164px; }
-      .compare-card { position:relative; width:605px; height:709px; padding:63px 74px 54px 81px; border:1px solid #818181; border-radius:43px; background:#0f0f0f; text-align:left; transform-origin:center; }
-      .compare-card--bad { transform:rotate(1.13deg); }
-      .compare-card--good { transform:rotate(-1.69deg); }
-      .compare-card__icon { display:grid; place-items:center; width:71px; height:71px; margin-bottom:43px; border-radius:11px; }
-      .compare-card__icon img { display:block; object-fit:contain; }
-      .compare-card--bad .compare-card__icon { background:rgba(255,7,7,.45); }
-      .compare-card--good .compare-card__icon { background:rgba(7,255,20,.45); }
-      .compare-card--bad .compare-card__icon img { width:39px; height:39px; }
-      .compare-card--good .compare-card__icon img { width:42px; height:42px; }
-      .compare-card h3 { margin:0 0 45px; color:#fff; font-size:35px; font-weight:700; line-height:32px; letter-spacing:-.5px; }
-      .compare-card__copy { display:grid; gap:37px; }
-      .compare-card p { margin:0; color:rgba(255,255,255,.79); font-size:27px; font-weight:500; line-height:32px; letter-spacing:-.25px; }
-      .compare-card .compare-card__accent { display:block; }
-      .compare-card--bad .compare-card__accent { color:#d10808; }
-      .compare-card--good .compare-card__accent { color:#00ff0e; }
-
-      .eyebrow { color:var(--yellow); font-size:13px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; }
-      .feature-lead { width:768px; margin:0 auto 160px; text-align:center; }
-      .feature-lead h2 { margin:12px 0; font-size:48px; letter-spacing:-2.4px; }
-      .feature-lead p { color:var(--muted); font-size:20px; }
-      .plugins { padding:110px 0; background:#0d0e14; }
-      .plugins__inner { width:1488px; margin:auto; }
-      .plugins h2 { margin:12px 0; font-size:48px; letter-spacing:-2.4px; }
-      .plugins p { max-width:660px; color:var(--muted); font-size:18px; }
-      .plugin-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; margin-top:52px; }
-      .plugin { min-height:242px; padding:21px; border:1px solid rgba(255,255,255,.06); border-radius:14px; background:#151620; }
-      .plugin i { display:grid; place-items:center; width:48px; height:48px; border-radius:12px; background:#6b4cff; font-size:23px; font-style:normal; }
-      .plugin h3 { margin:16px 0 8px; font-size:20px; }
-      .plugin small { display:block; color:var(--muted); font-size:14px; line-height:1.5; }
-
-      @media (max-width:1000px) {
-        .header__inner { grid-template-columns:1fr auto; width:auto; margin:0 20px; }
-        .nav,.login { display:none; }
-        .hero { width:auto; height:680px; margin:0 20px; }
-        .hero__content { position:static; padding-top:80px; }
-        .hero h1 { width:auto; margin-top:22px; font-size:54px; line-height:1.04; letter-spacing:-2.7px; white-space:normal; }
-        .hero h1 .headline-line { white-space:normal; }
-        .hero p { width:auto; font-size:18px; line-height:28px; }
-        .buttons { flex-direction:column; align-items:center; margin-top:34px; }
-        .btn { width:min(100%,360px); }
-        .compare { padding:10px 20px 100px; }
-        .compare h2 { margin-bottom:58px; font-size:38px; line-height:1.05; }
-        .compare__cards { flex-direction:column; align-items:center; gap:46px; }
-        .compare-card { width:min(100%,605px); height:auto; min-height:620px; padding:52px 48px; }
-        .compare-card--bad,.compare-card--good { transform:none; }
-        .plugins__inner { width:auto; margin:0 20px; }
-        .plugin-grid { grid-template-columns:1fr 1fr; }
-        .grid { background-size:80px 100%; }
+      :root {
+        --bg:#050505;
+        --surface:#0d0e0e;
+        --surface-2:#151616;
+        --paper:#ecece5;
+        --yellow:#ffd21c;
+        --yellow-soft:#f5c900;
+        --white:#f7f7f3;
+        --muted:rgba(247,247,243,.56);
+        --line:rgba(255,255,255,.12);
+        --radius:30px;
       }
 
-      @media (max-width:560px) {
-        .hero h1 { font-size:42px; }
-        .compare h2,.feature-lead h2,.plugins h2 { font-size:34px; }
-        .compare-card { min-height:0; padding:38px 30px 42px; border-radius:30px; }
-        .compare-card h3 { font-size:29px; line-height:30px; }
-        .compare-card p { font-size:21px; line-height:27px; }
+      * { box-sizing:border-box; }
+      html { background:var(--bg); scroll-behavior:smooth; }
+      body { margin:0; overflow-x:hidden; background:var(--bg); color:var(--white); font-family:Manrope,Arial,sans-serif; }
+      a { color:inherit; text-decoration:none; }
+      button { font:inherit; }
+      ::selection { background:var(--yellow); color:#050505; }
+
+      .page-shell { padding:20px 24px 0; }
+      .hero {
+        position:relative;
+        width:min(1840px,100%);
+        height:960px;
+        margin:0 auto;
+        overflow:hidden;
+        border:1px solid rgba(255,255,255,.16);
+        border-radius:36px;
+        background:#090909 url("assets/zenlot-hero-3d.webp") center/cover no-repeat;
+        isolation:isolate;
+      }
+      .hero::before {
+        position:absolute;
+        z-index:-1;
+        inset:0;
+        background:
+          linear-gradient(180deg,rgba(0,0,0,.12) 0%,rgba(0,0,0,.08) 38%,rgba(0,0,0,.64) 72%,rgba(0,0,0,.92) 100%),
+          radial-gradient(circle at 50% 35%,transparent 0%,rgba(0,0,0,.32) 72%);
+        content:"";
+      }
+      .hero::after {
+        position:absolute;
+        z-index:5;
+        inset:0;
+        border-radius:inherit;
+        box-shadow:inset 0 0 90px rgba(0,0,0,.42);
+        content:"";
+        pointer-events:none;
+      }
+
+      .header {
+        position:absolute;
+        z-index:20;
+        top:24px;
+        right:28px;
+        left:28px;
+        display:grid;
+        grid-template-columns:1fr auto 1fr;
+        align-items:center;
+        height:72px;
+        padding:0 14px 0 24px;
+        border:1px solid rgba(255,255,255,.14);
+        border-radius:20px;
+        background:rgba(8,8,8,.62);
+        box-shadow:0 16px 45px rgba(0,0,0,.28);
+        backdrop-filter:blur(22px);
+        -webkit-backdrop-filter:blur(22px);
+      }
+      .brand { display:flex; align-items:center; gap:12px; font-size:16px; font-weight:800; letter-spacing:-.5px; }
+      .brand__mark {
+        position:relative;
+        width:28px;
+        height:28px;
+        border-radius:8px;
+        background:var(--yellow);
+        box-shadow:0 0 24px rgba(255,210,28,.25);
+      }
+      .brand__mark::after { position:absolute; inset:8px 7px; border:2px solid #050505; border-top:0; transform:skew(-16deg); content:""; }
+      .brand small { color:rgba(255,255,255,.42); font-size:11px; font-weight:600; letter-spacing:.02em; }
+      .nav { display:flex; align-items:center; justify-content:center; gap:36px; color:rgba(255,255,255,.66); font-size:13px; font-weight:600; }
+      .nav a { transition:color .2s ease; }
+      .nav a:hover { color:#fff; }
+      .account { display:flex; align-items:center; justify-self:end; gap:22px; font-size:13px; font-weight:700; }
+      .login { color:rgba(255,255,255,.66); }
+      .reg {
+        display:grid;
+        place-items:center;
+        height:44px;
+        padding:0 22px;
+        border-radius:12px;
+        background:var(--white);
+        color:#090909;
+        transition:transform .2s ease,background .2s ease;
+      }
+      .reg:hover { transform:translateY(-2px); background:var(--yellow); }
+
+      .hero__signal {
+        position:absolute;
+        z-index:3;
+        top:140px;
+        left:60px;
+        display:flex;
+        align-items:center;
+        gap:12px;
+        color:rgba(255,255,255,.68);
+        font-size:11px;
+        font-weight:700;
+        letter-spacing:.16em;
+        text-transform:uppercase;
+      }
+      .signal-dot { width:8px; height:8px; border-radius:50%; background:var(--yellow); box-shadow:0 0 18px rgba(255,210,28,.95); }
+      .hero__index { margin-left:8px; color:rgba(255,255,255,.32); }
+
+      .hero-panel {
+        position:absolute;
+        z-index:10;
+        right:28px;
+        bottom:28px;
+        left:28px;
+        overflow:hidden;
+        border:1px solid rgba(255,255,255,.16);
+        border-radius:30px;
+        background:rgba(7,8,8,.78);
+        box-shadow:0 26px 80px rgba(0,0,0,.36);
+        backdrop-filter:blur(26px);
+        -webkit-backdrop-filter:blur(26px);
+      }
+      .hero-panel__main { padding:36px 40px 0; }
+      .hero-panel__top { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+      .kicker { display:flex; align-items:center; gap:10px; color:var(--yellow); font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
+      .kicker::before { width:28px; height:1px; background:currentColor; content:""; }
+      .availability { color:rgba(255,255,255,.46); font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; }
+      .hero h1 {
+        width:100%;
+        max-width:1400px;
+        margin:0;
+        font-size:clamp(72px,5vw,96px);
+        font-weight:600;
+        line-height:.96;
+        letter-spacing:-.057em;
+      }
+      .headline-line { display:block; white-space:nowrap; }
+      .headline-line--accent { color:var(--yellow); }
+      .hero-panel__bottom { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(420px,.65fr); gap:56px; align-items:end; padding:30px 0 34px; }
+      .hero-copy { max-width:790px; margin:0; color:rgba(255,255,255,.64); font-size:17px; line-height:1.55; }
+      .hero-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+      .btn {
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        min-height:58px;
+        padding:0 18px;
+        border:1px solid var(--line);
+        border-radius:15px;
+        background:rgba(255,255,255,.055);
+        color:#fff;
+        font-size:13px;
+        font-weight:700;
+        transition:transform .2s ease,border-color .2s ease,background .2s ease;
+      }
+      .btn::after { color:rgba(255,255,255,.52); font-size:18px; content:"↗"; }
+      .btn:hover { transform:translateY(-2px); border-color:rgba(255,255,255,.3); background:rgba(255,255,255,.1); }
+      .btn--primary { border-color:var(--yellow); background:var(--yellow); color:#050505; }
+      .btn--primary::after { color:#050505; }
+      .btn--primary:hover { background:#ffe04f; }
+
+      .hero-metrics { display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--line); }
+      .metric { position:relative; min-height:102px; padding:22px 40px; border-right:1px solid var(--line); }
+      .metric:last-child { border-right:0; }
+      .metric strong { display:block; margin-bottom:7px; font-size:26px; font-weight:600; line-height:1; letter-spacing:-.05em; }
+      .metric span { color:rgba(255,255,255,.44); font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; }
+      .metric i { position:absolute; top:26px; right:30px; width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.24); }
+      .metric--live i { background:var(--yellow); box-shadow:0 0 14px rgba(255,210,28,.7); }
+
+      .ticker { width:min(1840px,100%); margin:12px auto 0; overflow:hidden; border-block:1px solid rgba(255,255,255,.08); }
+      .ticker__track {
+        display:flex;
+        width:max-content;
+        padding:15px 0;
+        color:rgba(255,255,255,.3);
+        font-size:11px;
+        font-weight:700;
+        letter-spacing:.14em;
+        text-transform:uppercase;
+        animation:ticker 24s linear infinite;
+      }
+      .ticker__track span { padding-right:48px; }
+      .ticker__track b { padding:0 18px; color:var(--yellow); font-size:9px; }
+      @keyframes ticker { to { transform:translateX(-50%); } }
+
+      .compare {
+        position:relative;
+        width:min(1760px,calc(100% - 72px));
+        margin:0 auto;
+        padding:174px 0 190px;
+      }
+      .section-head { display:grid; grid-template-columns:.72fr 1.28fr; gap:60px; align-items:start; margin-bottom:76px; }
+      .section-index { display:flex; align-items:center; gap:18px; padding-top:14px; color:rgba(255,255,255,.4); font-size:11px; font-weight:700; letter-spacing:.13em; text-transform:uppercase; }
+      .section-index::before { width:52px; height:1px; background:rgba(255,255,255,.28); content:""; }
+      .section-head h2 { max-width:1080px; margin:0; font-size:clamp(62px,4.45vw,86px); font-weight:500; line-height:.98; letter-spacing:-.055em; }
+      .section-head h2 span { color:var(--yellow); }
+      .section-sub { grid-column:2; max-width:640px; margin:8px 0 0; color:var(--muted); font-size:17px; line-height:1.55; }
+
+      .compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+      .mode-card {
+        position:relative;
+        min-height:650px;
+        overflow:hidden;
+        border-radius:var(--radius);
+        padding:34px 36px 30px;
+      }
+      .mode-card--manual { background:var(--paper); color:#090909; }
+      .mode-card--auto {
+        border:1px solid rgba(255,210,28,.32);
+        background:
+          radial-gradient(circle at 82% 10%,rgba(255,210,28,.21),transparent 34%),
+          linear-gradient(145deg,#121309,#090a09 58%);
+        color:#fff;
+        box-shadow:0 40px 110px rgba(255,210,28,.07);
+      }
+      .mode-card::after {
+        position:absolute;
+        right:-45px;
+        bottom:-110px;
+        font-size:310px;
+        font-weight:800;
+        line-height:1;
+        letter-spacing:-.1em;
+        content:attr(data-number);
+        pointer-events:none;
+      }
+      .mode-card--manual::after { color:rgba(0,0,0,.045); }
+      .mode-card--auto::after { color:rgba(255,210,28,.045); }
+      .mode-card__top { position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; padding-bottom:28px; border-bottom:1px solid currentColor; }
+      .mode-card--manual .mode-card__top { border-color:rgba(0,0,0,.16); }
+      .mode-card--auto .mode-card__top { border-color:rgba(255,255,255,.14); }
+      .mode-label { display:flex; align-items:center; gap:12px; font-size:11px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; }
+      .mode-status { display:flex; align-items:center; gap:9px; font-size:11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; opacity:.55; }
+      .mode-status i { width:7px; height:7px; border-radius:50%; background:#be3838; }
+      .mode-card--auto .mode-status { color:var(--yellow); opacity:1; }
+      .mode-card--auto .mode-status i { background:var(--yellow); box-shadow:0 0 14px rgba(255,210,28,.75); }
+      .mode-card__icon { display:grid; place-items:center; width:42px; height:42px; border-radius:12px; }
+      .mode-card--manual .mode-card__icon { background:#c83838; }
+      .mode-card--auto .mode-card__icon { background:var(--yellow); }
+      .mode-card__icon img { display:block; width:22px; height:22px; object-fit:contain; filter:brightness(0) invert(1); }
+      .mode-card--auto .mode-card__icon img { filter:brightness(0); }
+      .mode-card__body { position:relative; z-index:2; padding-top:40px; }
+      .mode-card h3 { max-width:650px; margin:0; font-size:48px; font-weight:500; line-height:1.05; letter-spacing:-.045em; }
+      .mode-kpi { display:flex; align-items:flex-end; gap:14px; margin:46px 0 32px; }
+      .mode-kpi strong { font-size:82px; font-weight:600; line-height:.82; letter-spacing:-.07em; }
+      .mode-card--auto .mode-kpi strong { color:var(--yellow); }
+      .mode-kpi span { max-width:150px; font-size:12px; font-weight:700; line-height:1.3; letter-spacing:.04em; text-transform:uppercase; opacity:.5; }
+      .mode-list { position:relative; z-index:2; display:grid; grid-template-columns:repeat(3,1fr); margin-top:40px; border-top:1px solid currentColor; }
+      .mode-card--manual .mode-list { border-color:rgba(0,0,0,.16); }
+      .mode-card--auto .mode-list { border-color:rgba(255,255,255,.14); }
+      .mode-list div { min-height:112px; padding:22px 20px 10px 0; border-right:1px solid currentColor; font-size:13px; font-weight:600; line-height:1.45; }
+      .mode-card--manual .mode-list div { border-color:rgba(0,0,0,.16); }
+      .mode-card--auto .mode-list div { border-color:rgba(255,255,255,.14); }
+      .mode-list div + div { padding-left:20px; }
+      .mode-list div:last-child { border-right:0; }
+      .mode-list b { display:block; margin-bottom:10px; font-size:10px; letter-spacing:.12em; text-transform:uppercase; opacity:.42; }
+      .mode-card__footer { position:absolute; z-index:2; right:36px; bottom:28px; left:36px; display:flex; align-items:center; justify-content:space-between; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+      .mode-card__footer span:last-child { opacity:.45; }
+
+      .feature-lead {
+        position:relative;
+        width:min(1760px,calc(100% - 72px));
+        min-height:510px;
+        margin:0 auto 18px;
+        overflow:hidden;
+        border:1px solid var(--line);
+        border-radius:var(--radius);
+        background:
+          linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px) 0 0/96px 100%,
+          radial-gradient(circle at 75% 30%,rgba(255,210,28,.13),transparent 30%),
+          #0b0c0c;
+        padding:70px;
+      }
+      .feature-lead::after { position:absolute; right:7%; bottom:-45%; width:520px; height:520px; border:1px solid rgba(255,210,28,.24); border-radius:50%; box-shadow:0 0 80px rgba(255,210,28,.08),inset 0 0 80px rgba(255,210,28,.05); content:""; }
+      .eyebrow { position:relative; z-index:2; color:var(--yellow); font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
+      .feature-lead h2 { position:relative; z-index:2; max-width:1000px; margin:52px 0 24px; font-size:72px; font-weight:500; line-height:1; letter-spacing:-.055em; }
+      .feature-lead h2 span { color:var(--yellow); }
+      .feature-lead p { position:relative; z-index:2; max-width:620px; margin:0; color:var(--muted); font-size:17px; line-height:1.6; }
+
+      .plugins { padding:140px 0; background:#080909; }
+      .plugins__inner { width:min(1760px,calc(100% - 72px)); margin:auto; }
+      .plugins h2 { margin:22px 0 18px; font-size:72px; font-weight:500; line-height:1; letter-spacing:-.055em; }
+      .plugins__intro { max-width:680px; color:var(--muted); font-size:17px; line-height:1.6; }
+      .plugin-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:62px; }
+      .plugin { position:relative; min-height:300px; overflow:hidden; padding:28px; border:1px solid var(--line); border-radius:22px; background:#111212; transition:transform .25s ease,border-color .25s ease; }
+      .plugin:hover { transform:translateY(-5px); border-color:rgba(255,210,28,.4); }
+      .plugin__mark { display:grid; place-items:center; width:48px; height:48px; border:1px solid rgba(255,210,28,.32); border-radius:14px; background:rgba(255,210,28,.08); color:var(--yellow); font-size:12px; font-style:normal; font-weight:800; letter-spacing:.06em; }
+      .plugin h3 { margin:68px 0 12px; font-size:23px; font-weight:600; letter-spacing:-.03em; }
+      .plugin small { display:block; max-width:280px; color:var(--muted); font-size:13px; line-height:1.55; }
+      .plugin::after { position:absolute; top:28px; right:28px; color:rgba(255,255,255,.26); font-size:18px; content:"↗"; }
+
+      @media (max-width:1280px) {
+        .hero { height:900px; }
+        .hero h1 { font-size:72px; }
+        .hero-panel__bottom { grid-template-columns:1fr; gap:22px; }
+        .hero-actions { max-width:520px; }
+        .mode-card h3 { font-size:40px; }
+        .mode-kpi strong { font-size:68px; }
+      }
+
+      @media (max-width:980px) {
+        .page-shell { padding:10px 10px 0; }
+        .hero { height:auto; min-height:920px; border-radius:26px; }
+        .header { top:12px; right:12px; left:12px; grid-template-columns:1fr auto; }
+        .nav,.login,.brand small { display:none; }
+        .hero__signal { top:116px; left:26px; }
+        .hero-panel { right:12px; bottom:12px; left:12px; }
+        .hero-panel__main { padding:28px 24px 0; }
+        .hero h1 { font-size:clamp(43px,7vw,68px); line-height:1; }
+        .hero-panel__bottom { grid-template-columns:1fr; gap:24px; }
+        .hero-metrics { grid-template-columns:1fr 1fr; }
+        .metric:nth-child(2) { border-right:0; }
+        .metric:nth-child(-n+2) { border-bottom:1px solid var(--line); }
+        .compare { width:calc(100% - 32px); padding:110px 0; }
+        .section-head { grid-template-columns:1fr; gap:28px; }
+        .section-head h2,.section-sub { grid-column:1; }
+        .compare-grid { grid-template-columns:1fr; }
+        .mode-card { min-height:620px; }
+        .feature-lead,.plugins__inner { width:calc(100% - 32px); }
+        .feature-lead { min-height:440px; padding:46px 34px; }
+        .feature-lead h2,.plugins h2 { font-size:54px; }
+        .plugin-grid { grid-template-columns:1fr 1fr; }
+      }
+
+      @media (max-width:620px) {
+        .hero { min-height:850px; background-position:58% center; }
+        .header { height:62px; padding-left:16px; border-radius:16px; }
+        .reg { height:38px; padding:0 15px; }
+        .hero__signal { top:96px; left:22px; }
+        .hero-panel__top { align-items:flex-start; }
+        .availability { display:none; }
+        .hero h1 { font-size:41px; letter-spacing:-.055em; }
+        .headline-line { white-space:normal; }
+        .hero-copy { font-size:14px; }
+        .hero-actions { grid-template-columns:1fr; }
+        .hero-metrics { grid-template-columns:1fr 1fr; }
+        .metric { min-height:85px; padding:18px; }
+        .metric strong { font-size:22px; }
+        .metric i { top:22px; right:18px; }
+        .section-head h2 { font-size:47px; }
+        .mode-card { min-height:690px; padding:26px 22px; border-radius:24px; }
+        .mode-card h3 { font-size:35px; }
+        .mode-kpi strong { font-size:62px; }
+        .mode-list { grid-template-columns:1fr; }
+        .mode-list div,.mode-list div + div { min-height:auto; padding:15px 0; border-right:0; border-bottom:1px solid currentColor; }
+        .mode-list div:last-child { border-bottom:0; }
+        .mode-card__footer { right:22px; bottom:22px; left:22px; }
+        .feature-lead h2,.plugins h2 { font-size:44px; }
+        .feature-lead { padding:38px 24px; }
         .plugin-grid { grid-template-columns:1fr; }
-        .feature-lead { width:auto; margin:0 20px 80px; }
-        .brand { font-size:14px; }
+      }
+
+      @media (prefers-reduced-motion:reduce) {
+        html { scroll-behavior:auto; }
+        .ticker__track { animation:none; }
       }
     </style>
   </head>
   <body>
-    <div class="grid">
-      <header class="header"><div class="header__inner"><div class="brand">ZenLot - Funpay</div><nav class="nav"><a href="#features">Функции</a><a href="#plugins">Магазин</a><a href="#tariffs">Тарифы</a><a href="#setup">Настройка</a></nav><div class="account"><a class="login" href="#">Войти</a><button class="reg">Регистрация</button></div></div></header>
-      <main>
-        <section class="hero" data-node-id="4:51"><div class="hero__content"><div class="cloud">Облако - комп не нужен</div><h1><span class="headline-line">Ты отдыхаешь —</span><b class="headline-line">магазин Funpay работает</b></h1><p>ZenLot - панель автопродаж на FunPay: выдача товара за 3 секунды после оплаты, автоподнятие лотов, автоответы и живая статистика. Подключение за 5 минут.</p><div class="buttons"><button class="btn btn--white">Начать бесплатно</button><button class="btn">Посмотреть демо-панель</button></div></div></section>
+    <div class="page-shell">
+      <section class="hero" aria-labelledby="hero-title">
+        <header class="header">
+          <a class="brand" href="#" aria-label="ZenLot — на главную"><span class="brand__mark" aria-hidden="true"></span><span>ZenLot <small>FOR FUNPAY</small></span></a>
+          <nav class="nav" aria-label="Основная навигация"><a href="#features">Возможности</a><a href="#plugins">Плагины</a><a href="#tariffs">Тарифы</a><a href="#faq">FAQ</a></nav>
+          <div class="account"><a class="login" href="#">Войти</a><a class="reg" href="#">Начать бесплатно</a></div>
+        </header>
 
-        <section class="compare" id="comparison" aria-labelledby="compare-title">
-          <h2 id="compare-title">Ночь продавца <span>с ZenLot</span> и без<br>— выбор за тобой</h2>
-          <div class="compare__cards">
-            <article class="compare-card compare-card--bad" data-node-id="36:28">
-              <div class="compare-card__icon" aria-hidden="true"><img src="assets/compare-bad-mark.png" alt="" width="39" height="39"></div>
-              <h3>Самостоятельно<br>— трудно и затратно</h3>
-              <div class="compare-card__copy"><p>Покупатель ждал<br>ключ 40 минут <span class="compare-card__accent">— и поставил ★★</span></p><p>Пока ты спал,<br>лоты утонули на<br>третью страницу</p><p>„где мои<br>звёзды???“<br>в 3 часа ночи..</p></div>
-            </article>
-            <article class="compare-card compare-card--good" data-node-id="36:29">
-              <div class="compare-card__icon" aria-hidden="true"><img src="assets/compare-good-mark.png" alt="" width="42" height="42"></div>
-              <h3>С ZenLot<br>— быстро и 24/7</h3>
-              <div class="compare-card__copy"><p>Ключ выдан за 3<br>секунды <span class="compare-card__accent">— ★★★★★</span></p><p>Десятки плагинов<br>приносят результат<br>и клиентов</p><p>Автоматизация<br>и уровень магазина<br>на высоте</p></div>
-            </article>
+        <div class="hero__signal"><span class="signal-dot"></span><span>Автономная торговля включена</span><span class="hero__index">00 / Hero</span></div>
+
+        <div class="hero-panel">
+          <div class="hero-panel__main">
+            <div class="hero-panel__top"><div class="kicker">Облачная панель для FunPay</div><div class="availability">Система работает · 24 / 7 / 365</div></div>
+            <h1 id="hero-title"><span class="headline-line">Ты отдыхаешь —</span><span class="headline-line headline-line--accent">магазин Funpay работает</span></h1>
+            <div class="hero-panel__bottom">
+              <p class="hero-copy">ZenLot берёт на себя выдачу товара, поднятие лотов, ответы покупателям и контроль продаж. Подключение занимает 5 минут — включать компьютер больше не нужно.</p>
+              <div class="hero-actions"><a class="btn btn--primary" href="#">Начать бесплатно</a><a class="btn" href="#comparison">Смотреть сценарий</a></div>
+            </div>
           </div>
-        </section>
+          <div class="hero-metrics" aria-label="Ключевые показатели ZenLot">
+            <div class="metric metric--live"><strong>3 сек</strong><span>выдача товара</span><i></i></div>
+            <div class="metric"><strong>24 / 7</strong><span>без компьютера</span><i></i></div>
+            <div class="metric"><strong>30+</strong><span>умных плагинов</span><i></i></div>
+            <div class="metric"><strong>5 мин</strong><span>до запуска</span><i></i></div>
+          </div>
+        </div>
+      </section>
 
-        <section class="feature-lead" id="features"><div class="eyebrow">Базовые возможности</div><h2>Все возможности панели<br><span style="color:#ffc400">— то, что нужно продавцу</span></h2><p>Автоматизируйте рутину и держите магазин под контролем 24/7.</p></section>
-        <section class="plugins" id="plugins"><div class="plugins__inner"><div class="eyebrow">Магазин</div><h2>Каталог плагинов</h2><p>Расширяйте возможности бота под свои нужды. ИИ-сети, автоматизация SMM, умный демпинг цен и многое другое.</p><div class="plugin-grid"><article class="plugin"><i>✦</i><h3>GPT Consultant</h3><small>ИИ анализирует вопрос клиента и генерирует осмысленный продающий ответ.</small></article><article class="plugin"><i>↯</i><h3>Auto Dump</h3><small>Удерживает цены ниже конкурентов и помогает оставаться в топе.</small></article><article class="plugin"><i>★</i><h3>AI Reviews</h3><small>Персональные ответы на отзывы с помощью нейросети.</small></article><article class="plugin"><i>♟</i><h3>Auto Rent Steam</h3><small>Автоматизация аренды Steam-аккаунтов от выдачи до смены пароля.</small></article></div></div></section>
-      </main>
+      <div class="ticker" aria-hidden="true"><div class="ticker__track"><span>Автовыдача <b>●</b> Автоответы <b>●</b> Автоподнятие <b>●</b> Аналитика <b>●</b> Плагины <b>●</b></span><span>Автовыдача <b>●</b> Автоответы <b>●</b> Автоподнятие <b>●</b> Аналитика <b>●</b> Плагины <b>●</b></span></div></div>
     </div>
+
+    <main>
+      <section class="compare" id="comparison" aria-labelledby="compare-title">
+        <div class="section-head">
+          <div class="section-index">01 / Два режима</div>
+          <h2 id="compare-title">Один магазин.<br><span>Две разные ночи.</span></h2>
+          <p class="section-sub">Ручное управление требует твоего постоянного присутствия. ZenLot превращает магазин в автономную систему, которая не делает пауз.</p>
+        </div>
+
+        <div class="compare-grid">
+          <article class="mode-card mode-card--manual" data-number="01">
+            <div class="mode-card__top">
+              <div class="mode-label"><span class="mode-card__icon" aria-hidden="true"><img src="assets/compare-bad-mark.png" alt=""></span>Без ZenLot</div>
+              <div class="mode-status"><i></i>Ручной режим</div>
+            </div>
+            <div class="mode-card__body">
+              <h3>Ты всё время рядом с магазином.</h3>
+              <div class="mode-kpi"><strong>40 мин</strong><span>покупатель ждал свой ключ</span></div>
+              <div class="mode-list">
+                <div><b>Рейтинг</b>Задержка выдачи превращается в ★★</div>
+                <div><b>Позиции</b>Ночью лоты уходят на третью страницу</div>
+                <div><b>Фокус</b>«Где заказ?» приходит в 03:00</div>
+              </div>
+            </div>
+            <div class="mode-card__footer"><span>Цена паузы — рейтинг и продажи</span><span>Manual / Offline</span></div>
+          </article>
+
+          <article class="mode-card mode-card--auto" data-number="02">
+            <div class="mode-card__top">
+              <div class="mode-label"><span class="mode-card__icon" aria-hidden="true"><img src="assets/compare-good-mark.png" alt=""></span>С ZenLot</div>
+              <div class="mode-status"><i></i>Система активна</div>
+            </div>
+            <div class="mode-card__body">
+              <h3>Магазин работает, пока ты живёшь.</h3>
+              <div class="mode-kpi"><strong>3 сек</strong><span>автоматическая выдача товара</span></div>
+              <div class="mode-list">
+                <div><b>Рейтинг</b>Мгновенная выдача поддерживает ★★★★★</div>
+                <div><b>Позиции</b>Автоподнятие держит лоты в поле зрения</div>
+                <div><b>Масштаб</b>Плагины ведут десятки процессов</div>
+              </div>
+            </div>
+            <div class="mode-card__footer"><span>Результат — автономный рост</span><span>ZenLot / Online</span></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="feature-lead" id="features">
+        <div class="eyebrow">02 / Система возможностей</div>
+        <h2>Панель, в которой<br><span>рутина исчезает.</span></h2>
+        <p>Все инструменты продавца соединены в одну аккуратную систему: от первого сообщения покупателя до выдачи товара и аналитики результата.</p>
+      </section>
+
+      <section class="plugins" id="plugins">
+        <div class="plugins__inner">
+          <div class="eyebrow">03 / Магазин модулей</div>
+          <h2>Каталог плагинов</h2>
+          <p class="plugins__intro">Подключай только нужные сценарии: ИИ-консультант, умный демпинг, работа с отзывами и автоматизация аренды.</p>
+          <div class="plugin-grid">
+            <article class="plugin"><i class="plugin__mark">AI</i><h3>GPT Consultant</h3><small>Анализирует вопрос клиента и формирует точный продающий ответ.</small></article>
+            <article class="plugin"><i class="plugin__mark">AD</i><h3>Auto Dump</h3><small>Удерживает цену ниже конкурентов и помогает оставаться в топе.</small></article>
+            <article class="plugin"><i class="plugin__mark">AR</i><h3>AI Reviews</h3><small>Создаёт персональные ответы на отзывы с помощью нейросети.</small></article>
+            <article class="plugin"><i class="plugin__mark">SR</i><h3>Steam Rent</h3><small>Автоматизирует аренду аккаунтов от выдачи до смены пароля.</small></article>
+          </div>
+        </div>
+      </section>
+    </main>
   </body>
 </html>
