@@ -342,6 +342,89 @@
       .plugin__meta { position:absolute; right:24px; bottom:19px; left:24px; display:flex; justify-content:space-between; color:rgba(255,255,255,.24); font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
       .plugin__meta span:last-child { color:var(--accent); }
 
+      .pricing { position:relative; padding:190px 0; overflow:hidden; background:#050505; }
+      .pricing::before { position:absolute; top:0; right:0; left:0; height:1px; background:linear-gradient(90deg,transparent,rgba(255,210,28,.32),transparent); content:""; }
+      .pricing__inner { width:min(1760px,calc(100% - 72px)); margin:auto; }
+      .pricing__head { display:grid; grid-template-columns:.72fr 1.28fr; gap:60px; margin-bottom:78px; }
+      .pricing__title-wrap { grid-column:2; }
+      .pricing h2 { max-width:1080px; margin:0; font-size:86px; font-weight:500; line-height:.97; letter-spacing:-.06em; }
+      .pricing h2 span { color:var(--yellow); }
+      .pricing__copy { display:flex; align-items:flex-end; justify-content:space-between; gap:32px; margin-top:26px; }
+      .pricing__copy p { max-width:670px; margin:0; color:var(--muted); font-size:17px; line-height:1.6; }
+      .billing-chip { flex:0 0 auto; padding:11px 15px; border:1px solid rgba(255,255,255,.12); border-radius:999px; color:rgba(255,255,255,.48); font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+      .plans { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+      .plan { position:relative; display:flex; flex-direction:column; min-height:660px; overflow:hidden; padding:34px; border-radius:28px; }
+      .plan--start { background:#e9e9e2; color:#090909; }
+      .plan--pro { background:linear-gradient(145deg,#ffe04d 0%,#ffd21c 55%,#efb900 100%); color:#080808; box-shadow:0 34px 110px rgba(255,210,28,.14); }
+      .plan--team { border:1px solid rgba(255,191,84,.25); background:radial-gradient(circle at 80% 4%,rgba(255,154,48,.19),transparent 32%),#111111; color:#fff; }
+      .plan::after { position:absolute; right:-30px; bottom:-100px; color:currentColor; font-size:300px; font-weight:800; line-height:1; letter-spacing:-.12em; opacity:.035; content:attr(data-plan); pointer-events:none; }
+      .plan__top { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; padding-bottom:30px; border-bottom:1px solid currentColor; }
+      .plan--start .plan__top,.plan--pro .plan__top { border-color:rgba(0,0,0,.15); }
+      .plan--team .plan__top { border-color:rgba(255,255,255,.15); }
+      .plan__name { font-size:13px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .plan__tag { padding:7px 10px; border:1px solid currentColor; border-radius:999px; font-size:9px; font-weight:800; letter-spacing:.09em; opacity:.5; text-transform:uppercase; }
+      .plan--pro .plan__tag { border-color:#080808; background:#080808; color:var(--yellow); opacity:1; }
+      .plan__price { position:relative; z-index:1; margin:54px 0 12px; font-size:84px; font-weight:600; line-height:.82; letter-spacing:-.075em; }
+      .plan__price sup { margin-left:5px; font-size:28px; font-weight:700; vertical-align:top; letter-spacing:-.04em; }
+      .plan__period { position:relative; z-index:1; padding-bottom:30px; border-bottom:1px solid currentColor; font-size:11px; font-weight:700; letter-spacing:.08em; opacity:.5; text-transform:uppercase; }
+      .plan--start .plan__period,.plan--pro .plan__period { border-color:rgba(0,0,0,.15); }
+      .plan--team .plan__period { border-color:rgba(255,255,255,.15); }
+      .plan__features { position:relative; z-index:1; display:grid; gap:15px; margin:30px 0 36px; padding:0; list-style:none; font-size:13px; font-weight:600; line-height:1.4; }
+      .plan__features li { position:relative; padding-left:20px; }
+      .plan__features li::before { position:absolute; top:.55em; left:0; width:7px; height:1px; background:currentColor; content:""; }
+      .plan__button { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; min-height:58px; margin-top:auto; padding:0 18px; border:1px solid currentColor; border-radius:14px; font-size:12px; font-weight:800; }
+      .plan__button::after { font-size:18px; content:"↗"; }
+      .plan--start .plan__button { background:#101010; color:#fff; }
+      .plan--pro .plan__button { background:#080808; color:#fff; }
+      .plan--team .plan__button { border-color:#ffad36; background:#ffad36; color:#090909; }
+      .plan__button:hover { transform:translateY(-2px); }
+      .pricing__note { display:flex; justify-content:space-between; gap:40px; margin-top:20px; padding:22px 4px 0; border-top:1px solid rgba(255,255,255,.08); color:rgba(255,255,255,.3); font-size:10px; font-weight:700; line-height:1.5; letter-spacing:.08em; text-transform:uppercase; }
+
+      .faq { padding:180px 0 200px; border-top:1px solid rgba(255,255,255,.07); background:#090a0a; }
+      .faq__inner { display:grid; grid-template-columns:.82fr 1.18fr; gap:110px; width:min(1760px,calc(100% - 72px)); margin:auto; }
+      .faq__sticky { position:sticky; top:40px; align-self:start; }
+      .faq h2 { max-width:650px; margin:28px 0 30px; font-size:80px; font-weight:500; line-height:.98; letter-spacing:-.06em; }
+      .faq h2 span { color:var(--yellow); }
+      .faq__intro { max-width:530px; margin:0; color:var(--muted); font-size:16px; line-height:1.65; }
+      .faq__contact { display:flex; align-items:center; justify-content:space-between; max-width:530px; margin-top:54px; padding:22px 0; border-block:1px solid rgba(255,255,255,.1); color:rgba(255,255,255,.68); font-size:12px; font-weight:700; }
+      .faq__contact span:last-child { color:var(--yellow); font-size:18px; }
+      .faq-list { border-top:1px solid rgba(255,255,255,.14); }
+      .faq-item { border-bottom:1px solid rgba(255,255,255,.14); }
+      .faq-item summary { position:relative; display:flex; align-items:center; min-height:104px; padding:25px 74px 25px 0; cursor:pointer; list-style:none; font-size:21px; font-weight:500; letter-spacing:-.025em; }
+      .faq-item summary::-webkit-details-marker { display:none; }
+      .faq-item summary::before,.faq-item summary::after { position:absolute; top:50%; right:8px; width:20px; height:1px; background:rgba(255,255,255,.65); content:""; transition:transform .25s ease,background .25s ease; }
+      .faq-item summary::after { transform:rotate(90deg); }
+      .faq-item[open] summary { color:var(--yellow); }
+      .faq-item[open] summary::before { background:var(--yellow); }
+      .faq-item[open] summary::after { background:var(--yellow); transform:rotate(0); }
+      .faq-item__answer { max-width:720px; padding:0 74px 34px 0; color:rgba(255,255,255,.5); font-size:14px; line-height:1.7; }
+
+      .final-wrap { padding:0 24px 24px; background:#090a0a; }
+      .final-cta { position:relative; display:flex; flex-direction:column; justify-content:space-between; width:min(1840px,100%); min-height:600px; margin:auto; padding:48px; overflow:hidden; border:1px solid rgba(255,210,28,.22); border-radius:34px; background:linear-gradient(118deg,#11130b 0%,#2c2607 47%,#1a1024 100%); isolation:isolate; }
+      .final-cta::before { position:absolute; z-index:-1; inset:0; background:radial-gradient(circle at 22% 105%,rgba(255,210,28,.34),transparent 34%),radial-gradient(circle at 92% 15%,rgba(169,103,255,.22),transparent 31%); content:""; }
+      .final-cta__orbit { position:absolute; z-index:-1; width:520px; height:520px; border:1px solid rgba(255,210,28,.25); border-radius:50%; }
+      .final-cta__orbit--one { top:-235px; right:8%; box-shadow:0 0 80px rgba(255,210,28,.08),inset 0 0 80px rgba(255,210,28,.05); }
+      .final-cta__orbit--two { right:-80px; bottom:-360px; width:700px; height:700px; border-color:rgba(190,131,255,.2); }
+      .final-cta__top { display:flex; align-items:center; justify-content:space-between; color:rgba(255,255,255,.5); font-size:10px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+      .final-cta__status { display:flex; align-items:center; gap:9px; }
+      .final-cta__status::before { width:7px; height:7px; border-radius:50%; background:var(--yellow); box-shadow:0 0 14px rgba(255,210,28,.75); content:""; }
+      .final-cta__content { position:relative; z-index:2; display:grid; grid-template-columns:1.35fr .65fr; gap:80px; align-items:end; }
+      .final-cta h2 { max-width:1100px; margin:0; font-size:92px; font-weight:500; line-height:.94; letter-spacing:-.065em; }
+      .final-cta h2 span { color:var(--yellow); }
+      .final-cta__action p { margin:0 0 28px; color:rgba(255,255,255,.62); font-size:15px; line-height:1.65; }
+      .final-cta__button { display:flex; align-items:center; justify-content:space-between; min-height:64px; padding:0 22px; border-radius:16px; background:var(--white); color:#090909; font-size:13px; font-weight:800; }
+      .final-cta__button::after { font-size:20px; content:"↗"; }
+
+      .footer { width:min(1760px,calc(100% - 72px)); margin:auto; padding:66px 0 34px; background:#050505; }
+      .footer__top { display:grid; grid-template-columns:1.5fr repeat(3,.5fr); gap:70px; padding-bottom:70px; }
+      .footer__brand { max-width:470px; }
+      .footer__brand .brand { margin-bottom:24px; }
+      .footer__brand p { margin:0; color:rgba(255,255,255,.4); font-size:13px; line-height:1.65; }
+      .footer__column h3 { margin:0 0 20px; color:rgba(255,255,255,.34); font-size:9px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; }
+      .footer__column a { display:block; width:max-content; margin:12px 0; color:rgba(255,255,255,.68); font-size:12px; font-weight:600; }
+      .footer__column a:hover { color:var(--yellow); }
+      .footer__bottom { display:flex; align-items:center; justify-content:space-between; padding-top:26px; border-top:1px solid rgba(255,255,255,.09); color:rgba(255,255,255,.28); font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+
       @media (max-width:1280px) {
         .hero { height:900px; }
         .hero h1 { font-size:72px; }
@@ -349,6 +432,12 @@
         .hero-actions { max-width:520px; }
         .mode-card h3 { font-size:40px; }
         .mode-kpi strong { font-size:68px; }
+        .plugins h2,.pricing h2 { font-size:72px; }
+        .plan { min-height:620px; padding:28px; }
+        .plan__price { font-size:68px; }
+        .faq__inner { gap:70px; }
+        .faq h2 { font-size:64px; }
+        .final-cta h2 { font-size:72px; }
       }
 
       @media (max-width:980px) {
@@ -372,7 +461,26 @@
         .feature-lead,.plugins__inner { width:calc(100% - 32px); }
         .feature-lead { min-height:440px; padding:46px 34px; }
         .feature-lead h2,.plugins h2 { font-size:54px; }
+        .plugins__head { grid-template-columns:1fr; }
+        .plugins__summary { min-width:0; max-width:420px; }
+        .plugins-toolbar { align-items:flex-start; gap:20px; }
         .plugin-grid { grid-template-columns:1fr 1fr; }
+        .pricing__inner,.faq__inner { width:calc(100% - 32px); }
+        .pricing__head { grid-template-columns:1fr; gap:28px; }
+        .pricing__title-wrap { grid-column:1; }
+        .pricing h2 { font-size:56px; }
+        .pricing__copy { align-items:flex-start; flex-direction:column; }
+        .plans { grid-template-columns:1fr; }
+        .plan { min-height:600px; }
+        .faq__inner { grid-template-columns:1fr; gap:70px; }
+        .faq__sticky { position:static; }
+        .faq h2 { font-size:56px; }
+        .final-cta { min-height:650px; padding:36px; }
+        .final-cta__content { grid-template-columns:1fr; gap:50px; }
+        .final-cta h2 { font-size:64px; }
+        .final-cta__action { max-width:520px; }
+        .footer { width:calc(100% - 32px); }
+        .footer__top { grid-template-columns:1fr 1fr; }
       }
 
       @media (max-width:620px) {
@@ -400,7 +508,28 @@
         .mode-card__footer { right:22px; bottom:22px; left:22px; }
         .feature-lead h2,.plugins h2 { font-size:44px; }
         .feature-lead { padding:38px 24px; }
+        .plugins { padding:110px 0; }
+        .plugins__summary { padding:20px 0; }
+        .plugins-toolbar__note { display:none; }
+        .plugin-filters { gap:6px; }
+        .plugin-filter { padding:8px 10px; }
         .plugin-grid { grid-template-columns:1fr; }
+        .pricing { padding:110px 0; }
+        .pricing h2,.faq h2 { font-size:45px; }
+        .plan { min-height:560px; padding:24px; }
+        .plan__price { font-size:62px; }
+        .pricing__note { flex-direction:column; gap:10px; }
+        .faq { padding:110px 0 130px; }
+        .faq-item summary { min-height:88px; padding-right:54px; font-size:18px; }
+        .faq-item__answer { padding-right:44px; }
+        .final-wrap { padding:0 10px 10px; }
+        .final-cta { min-height:620px; padding:26px 22px; border-radius:26px; }
+        .final-cta__top span:last-child { display:none; }
+        .final-cta h2 { font-size:48px; }
+        .final-cta__content { gap:42px; }
+        .footer__top { grid-template-columns:1fr 1fr; gap:42px 28px; }
+        .footer__brand { grid-column:1/-1; }
+        .footer__bottom { align-items:flex-start; flex-direction:column; gap:12px; }
       }
 
       @media (prefers-reduced-motion:reduce) {
@@ -536,6 +665,86 @@
           </div>
         </div>
       </section>
+
+      <section class="pricing" id="tariffs" aria-labelledby="pricing-title">
+        <div class="pricing__inner">
+          <div class="pricing__head">
+            <div class="section-index">04 / Тарифы</div>
+            <div class="pricing__title-wrap">
+              <h2 id="pricing-title">Прозрачные тарифы.<br><span>Без лишних условий.</span></h2>
+              <div class="pricing__copy"><p>Начни с базовой автоматизации и расширяй систему вместе с магазином. Функции разделены понятно — ты платишь только за нужный масштаб.</p><span class="billing-chip">Стоимость за 30 дней</span></div>
+            </div>
+          </div>
+
+          <div class="plans">
+            <article class="plan plan--start" data-plan="01">
+              <div class="plan__top"><span class="plan__name">Стартовый</span><span class="plan__tag">Для первого запуска</span></div>
+              <div class="plan__price">189<sup>₽</sup></div>
+              <div class="plan__period">Один месяц доступа</div>
+              <ul class="plan__features"><li>Один магазин FunPay</li><li>Автоматическая выдача товара</li><li>Поднятие лотов по расписанию</li><li>Базовая статистика продаж</li></ul>
+              <a class="plan__button" href="#cta">Выбрать стартовый</a>
+            </article>
+
+            <article class="plan plan--pro" data-plan="02">
+              <div class="plan__top"><span class="plan__name">Продвинутый</span><span class="plan__tag">Выбор продавцов</span></div>
+              <div class="plan__price">349<sup>₽</sup></div>
+              <div class="plan__period">Один месяц доступа</div>
+              <ul class="plan__features"><li>Всё из тарифа «Стартовый»</li><li>До десяти активных плагинов</li><li>ИИ-ответы и работа с отзывами</li><li>Расширенная аналитика магазина</li><li>Приоритетная обработка событий</li></ul>
+              <a class="plan__button" href="#cta">Выбрать продвинутый</a>
+            </article>
+
+            <article class="plan plan--team" data-plan="03">
+              <div class="plan__top"><span class="plan__name">Команда</span><span class="plan__tag">Для масштаба</span></div>
+              <div class="plan__price">499<sup>₽</sup></div>
+              <div class="plan__period">Один месяц доступа</div>
+              <ul class="plan__features"><li>Всё из тарифа «Продвинутый»</li><li>Несколько магазинов в панели</li><li>Полный каталог автоматизаций</li><li>Совместная работа команды</li><li>Помощь с настройкой сценариев</li></ul>
+              <a class="plan__button" href="#cta">Выбрать командный</a>
+            </article>
+          </div>
+          <div class="pricing__note"><span>Рабочие цены из дизайн-референса · условия уточняются перед запуском</span><span>Отмена и смена тарифа — из панели</span></div>
+        </div>
+      </section>
+
+      <section class="faq" id="faq" aria-labelledby="faq-title">
+        <div class="faq__inner">
+          <div class="faq__sticky">
+            <div class="eyebrow">05 / Частые вопросы</div>
+            <h2 id="faq-title">Всё важное —<br><span>до подключения.</span></h2>
+            <p class="faq__intro">Коротко о запуске, тарифах и работе облачной панели. Если вопрос останется — поддержка поможет собрать подходящий сценарий.</p>
+            <a class="faq__contact" href="#cta"><span>Задать свой вопрос</span><span>↗</span></a>
+          </div>
+
+          <div class="faq-list">
+            <details class="faq-item" open><summary>Нужно ли держать компьютер включённым?</summary><div class="faq-item__answer">Нет. ZenLot работает в облаке: после настройки сценарии продолжают выполняться независимо от твоего компьютера.</div></details>
+            <details class="faq-item"><summary>Сколько времени занимает подключение?</summary><div class="faq-item__answer">Базовое подключение рассчитано примерно на пять минут. После авторизации ты выбираешь нужные модули и задаёшь правила работы.</div></details>
+            <details class="faq-item"><summary>Можно ли изменить тариф позже?</summary><div class="faq-item__answer">Да, архитектура тарифов рассчитана на постепенный рост: перейти на другой объём автоматизации можно без повторной настройки магазина.</div></details>
+            <details class="faq-item"><summary>Что происходит, если товар закончился?</summary><div class="faq-item__answer">Модуль контроля остатков останавливает автоматическую выдачу для пустой позиции и сообщает об этом владельцу магазина.</div></details>
+            <details class="faq-item"><summary>Можно ли подключить несколько магазинов?</summary><div class="faq-item__answer">Для работы с несколькими магазинами предусмотрен командный сценарий: единый обзор событий, продаж и подключённых модулей.</div></details>
+            <details class="faq-item"><summary>Нужны ли технические знания?</summary><div class="faq-item__answer">Нет. Основные процессы собираются из готовых модулей и понятных правил; для сложных сценариев можно обратиться к поддержке.</div></details>
+          </div>
+        </div>
+      </section>
+
+      <div class="final-wrap" id="cta">
+        <section class="final-cta" aria-labelledby="cta-title">
+          <span class="final-cta__orbit final-cta__orbit--one" aria-hidden="true"></span><span class="final-cta__orbit final-cta__orbit--two" aria-hidden="true"></span>
+          <div class="final-cta__top"><span class="final-cta__status">ZenLot готов к запуску</span><span>Final protocol / 06</span></div>
+          <div class="final-cta__content">
+            <h2 id="cta-title">Хватит выдавать<br>товары <span>руками.</span></h2>
+            <div class="final-cta__action"><p>Подключи магазин один раз — и освободи время от выдачи, сообщений и постоянного контроля лотов.</p><a class="final-cta__button" href="#">Начать автоматизацию</a></div>
+          </div>
+        </section>
+      </div>
     </main>
+
+    <footer class="footer">
+      <div class="footer__top">
+        <div class="footer__brand"><a class="brand" href="#" aria-label="ZenLot — на главную"><span class="brand__mark" aria-hidden="true"></span><span>ZenLot <small>FOR FUNPAY</small></span></a><p>Облачная система автоматизации для продавцов FunPay. Магазин остаётся активным, даже когда ты не у экрана.</p></div>
+        <nav class="footer__column" aria-label="Продукт"><h3>Продукт</h3><a href="#features">Возможности</a><a href="#plugins">Плагины</a><a href="#tariffs">Тарифы</a></nav>
+        <nav class="footer__column" aria-label="Помощь"><h3>Помощь</h3><a href="#faq">Вопросы и ответы</a><a href="#cta">Поддержка</a><a href="#">Документация</a></nav>
+        <nav class="footer__column" aria-label="Аккаунт"><h3>Аккаунт</h3><a href="#">Войти</a><a href="#cta">Регистрация</a><a href="#">Статус системы</a></nav>
+      </div>
+      <div class="footer__bottom"><span>© 2026 ZenLot · Автоматизация FunPay</span><span>Cloud commerce / Always online</span></div>
+    </footer>
   </body>
 </html>
