@@ -533,24 +533,63 @@
       .pricing-choice__button::after { font-size:18px; content:"↗"; }
       .pricing__note { display:flex; justify-content:space-between; gap:40px; margin-top:20px; padding:20px 4px 0; border-top:1px solid rgba(255,255,255,.07); color:rgba(255,255,255,.28); font-size:9px; font-weight:800; line-height:1.5; letter-spacing:.08em; text-transform:uppercase; }
 
-      .faq { padding:180px 0 200px; border-top:1px solid rgba(255,255,255,.07); background:#090a0a; }
-      .faq__inner { display:grid; grid-template-columns:.82fr 1.18fr; gap:110px; width:min(1760px,calc(100% - 72px)); margin:auto; }
-      .faq__sticky { position:sticky; top:40px; align-self:start; }
-      .faq h2 { max-width:650px; margin:28px 0 30px; font-size:80px; font-weight:500; line-height:.98; letter-spacing:-.06em; }
+      .faq {
+        position:relative;
+        padding:184px 0 200px;
+        overflow:hidden;
+        border-top:1px solid rgba(255,255,255,.07);
+        background:
+          radial-gradient(circle at 13% 27%,rgba(97,79,255,.12),transparent 27%),
+          radial-gradient(circle at 88% 76%,rgba(255,210,28,.06),transparent 25%),
+          #08090b;
+      }
+      .faq::before { position:absolute; inset:0; opacity:.22; background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px); background-size:96px 96px; mask-image:linear-gradient(to bottom,transparent,#000 14%,#000 88%,transparent); content:""; pointer-events:none; }
+      .faq__inner { position:relative; z-index:1; display:grid; grid-template-columns:minmax(400px,.76fr) minmax(0,1.24fr); gap:92px; width:min(1760px,calc(100% - 72px)); margin:auto; }
+      .faq__sticky { position:sticky; top:34px; align-self:start; }
+      .faq h2 { max-width:690px; margin:28px 0 28px; font-size:80px; font-weight:500; line-height:.98; letter-spacing:-.06em; }
       .faq h2 span { color:var(--yellow); }
-      .faq__intro { max-width:530px; margin:0; color:var(--muted); font-size:16px; line-height:1.65; }
-      .faq__contact { display:flex; align-items:center; justify-content:space-between; max-width:530px; margin-top:54px; padding:22px 0; border-block:1px solid rgba(255,255,255,.1); color:rgba(255,255,255,.68); font-size:12px; font-weight:700; }
+      .faq__intro { max-width:560px; margin:0; color:var(--muted); font-size:16px; line-height:1.65; }
+
+      .launch-card { position:relative; max-width:590px; margin-top:44px; overflow:hidden; padding:22px; border:1px solid rgba(255,255,255,.11); border-radius:22px; background:radial-gradient(circle at 100% 0,rgba(112,89,255,.17),transparent 39%),rgba(13,14,20,.88); box-shadow:0 28px 90px rgba(0,0,0,.25); }
+      .launch-card::after { position:absolute; right:-82px; bottom:-112px; width:230px; height:230px; border:1px solid rgba(255,210,28,.11); border-radius:50%; content:""; pointer-events:none; }
+      .launch-card__top { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; padding-bottom:18px; border-bottom:1px solid rgba(255,255,255,.08); color:rgba(255,255,255,.32); font-size:8px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .launch-card__top span:last-child { display:flex; align-items:center; gap:8px; color:#72e6a0; }
+      .launch-card__top span:last-child::before { width:6px; height:6px; border-radius:50%; background:#72e6a0; box-shadow:0 0 12px rgba(114,230,160,.65); content:""; }
+      .launch-card__title { position:relative; z-index:1; display:flex; align-items:flex-end; justify-content:space-between; gap:30px; margin:24px 0; }
+      .launch-card__title h3 { max-width:300px; margin:0; font-size:24px; font-weight:600; line-height:1.12; letter-spacing:-.045em; }
+      .launch-card__title strong { color:var(--yellow); font-size:36px; font-weight:600; line-height:1; letter-spacing:-.06em; }
+      .launch-card__title strong small { display:block; margin-top:5px; color:rgba(255,255,255,.28); font-size:7px; font-weight:800; letter-spacing:.09em; text-align:right; text-transform:uppercase; }
+      .launch-steps { position:relative; z-index:1; display:grid; gap:7px; }
+      .launch-step { display:grid; grid-template-columns:30px minmax(0,1fr) auto; gap:11px; align-items:center; min-height:58px; padding:9px 12px; border:1px solid rgba(255,255,255,.07); border-radius:12px; background:rgba(255,255,255,.02); }
+      .launch-step b { display:grid; place-items:center; width:30px; height:30px; border:1px solid rgba(255,210,28,.2); border-radius:9px; background:rgba(255,210,28,.07); color:var(--yellow); font-size:8px; }
+      .launch-step span { color:rgba(255,255,255,.67); font-size:10px; font-weight:700; }
+      .launch-step small { color:rgba(255,255,255,.25); font-size:7px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; }
+      .faq__contact { display:flex; align-items:center; justify-content:space-between; max-width:590px; min-height:70px; margin-top:10px; padding:0 20px; border:1px solid rgba(255,255,255,.1); border-radius:17px; background:rgba(12,13,17,.72); color:rgba(255,255,255,.67); font-size:11px; font-weight:700; transition:border-color .2s ease,background .2s ease; }
+      .faq__contact:hover { border-color:rgba(255,210,28,.3); background:rgba(255,210,28,.045); }
+      .faq__contact small { display:block; margin-top:4px; color:rgba(255,255,255,.28); font-size:8px; font-weight:600; }
       .faq__contact span:last-child { color:var(--yellow); font-size:18px; }
-      .faq-list { border-top:1px solid rgba(255,255,255,.14); }
-      .faq-item { border-bottom:1px solid rgba(255,255,255,.14); }
-      .faq-item summary { position:relative; display:flex; align-items:center; min-height:104px; padding:25px 74px 25px 0; cursor:pointer; list-style:none; font-size:21px; font-weight:500; letter-spacing:-.025em; }
+
+      .faq-content { min-width:0; }
+      .faq-content__top { display:flex; align-items:flex-end; justify-content:space-between; gap:30px; min-height:88px; margin-bottom:26px; padding-bottom:22px; border-bottom:1px solid rgba(255,255,255,.09); }
+      .faq-content__top h3 { margin:0; font-size:28px; font-weight:600; line-height:1.1; letter-spacing:-.045em; }
+      .faq-content__top span { flex:0 0 auto; color:rgba(255,255,255,.3); font-size:8px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .faq-list { display:grid; gap:9px; }
+      .faq-item { --faq-accent:255,210,28; overflow:hidden; border:1px solid rgba(255,255,255,.09); border-radius:17px; background:rgba(13,14,19,.78); transition:border-color .25s ease,background .25s ease; }
+      .faq-item:nth-child(2),.faq-item:nth-child(5) { --faq-accent:124,104,255; }
+      .faq-item:nth-child(3),.faq-item:nth-child(6) { --faq-accent:96,208,255; }
+      .faq-item[open] { border-color:rgba(var(--faq-accent),.32); background:radial-gradient(circle at 100% 0,rgba(var(--faq-accent),.08),transparent 38%),rgba(15,16,22,.94); }
+      .faq-item summary { position:relative; display:grid; grid-template-columns:42px minmax(0,1fr) 38px; gap:16px; align-items:center; min-height:94px; padding:15px 17px; cursor:pointer; list-style:none; font-size:17px; font-weight:600; letter-spacing:-.025em; }
       .faq-item summary::-webkit-details-marker { display:none; }
-      .faq-item summary::before,.faq-item summary::after { position:absolute; top:50%; right:8px; width:20px; height:1px; background:rgba(255,255,255,.65); content:""; transition:transform .25s ease,background .25s ease; }
-      .faq-item summary::after { transform:rotate(90deg); }
-      .faq-item[open] summary { color:var(--yellow); }
-      .faq-item[open] summary::before { background:var(--yellow); }
-      .faq-item[open] summary::after { background:var(--yellow); transform:rotate(0); }
-      .faq-item__answer { max-width:720px; padding:0 74px 34px 0; color:rgba(255,255,255,.5); font-size:14px; line-height:1.7; }
+      .faq-item__number { display:grid; place-items:center; width:42px; height:42px; border:1px solid rgba(var(--faq-accent),.19); border-radius:11px; background:rgba(var(--faq-accent),.07); color:rgb(var(--faq-accent)); font-size:8px; font-weight:800; letter-spacing:.08em; }
+      .faq-item__toggle { position:relative; width:38px; height:38px; border:1px solid rgba(255,255,255,.1); border-radius:11px; background:rgba(255,255,255,.025); }
+      .faq-item__toggle::before,.faq-item__toggle::after { position:absolute; top:50%; left:50%; width:14px; height:1px; background:rgba(255,255,255,.66); content:""; transform:translate(-50%,-50%); transition:transform .25s ease,background .25s ease; }
+      .faq-item__toggle::after { transform:translate(-50%,-50%) rotate(90deg); }
+      .faq-item[open] summary { color:#fff; }
+      .faq-item[open] .faq-item__toggle { border-color:rgba(var(--faq-accent),.28); background:rgba(var(--faq-accent),.08); }
+      .faq-item[open] .faq-item__toggle::before { background:rgb(var(--faq-accent)); }
+      .faq-item[open] .faq-item__toggle::after { background:rgb(var(--faq-accent)); transform:translate(-50%,-50%) rotate(0); }
+      .faq-item__answer { margin:0 17px 17px 75px; padding:0 58px 25px 0; color:rgba(255,255,255,.48); font-size:13px; line-height:1.7; }
+      .faq-item__answer strong { color:rgb(var(--faq-accent)); font-weight:700; }
 
       .final-wrap { padding:0 24px 24px; background:#090a0a; }
       .final-cta { position:relative; display:flex; flex-direction:column; justify-content:space-between; width:min(1840px,100%); min-height:600px; margin:auto; padding:48px; overflow:hidden; border:1px solid rgba(255,210,28,.22); border-radius:34px; background:linear-gradient(118deg,#11130b 0%,#2c2607 47%,#1a1024 100%); isolation:isolate; }
@@ -666,7 +705,7 @@
         .plugins h2,.pricing h2 { font-size:72px; }
         .plan { min-height:620px; padding:28px; }
         .plan__price { font-size:68px; }
-        .faq__inner { gap:70px; }
+        .faq__inner { grid-template-columns:minmax(350px,.76fr) minmax(0,1.24fr); gap:54px; }
         .faq h2 { font-size:64px; }
         .final-cta h2 { font-size:72px; }
         .seller-hero__content { grid-template-columns:minmax(0,1fr) 480px; gap:24px; }
@@ -720,6 +759,7 @@
         .faq__inner { grid-template-columns:1fr; gap:70px; }
         .faq__sticky { position:static; }
         .faq h2 { font-size:56px; }
+        .launch-card,.faq__contact { max-width:none; }
         .final-cta { min-height:650px; padding:36px; }
         .final-cta__content { grid-template-columns:1fr; gap:50px; }
         .final-cta h2 { font-size:64px; }
@@ -804,8 +844,17 @@
         .pricing-choice__button { min-width:0; }
         .pricing__note { flex-direction:column; gap:10px; }
         .faq { padding:110px 0 130px; }
-        .faq-item summary { min-height:88px; padding-right:54px; font-size:18px; }
-        .faq-item__answer { padding-right:44px; }
+        .faq__inner { gap:54px; }
+        .faq-content__top { align-items:flex-start; flex-direction:column; min-height:0; }
+        .faq-item summary { grid-template-columns:36px minmax(0,1fr) 34px; gap:11px; min-height:88px; padding:12px; font-size:15px; }
+        .faq-item__number { width:36px; height:36px; }
+        .faq-item__toggle { width:34px; height:34px; }
+        .faq-item__answer { margin:0 12px 14px 59px; padding:0 42px 20px 0; font-size:12px; }
+        .launch-card { padding:18px; }
+        .launch-card__title { align-items:flex-start; flex-direction:column; gap:18px; }
+        .launch-card__title strong small { text-align:left; }
+        .launch-step { grid-template-columns:30px minmax(0,1fr); }
+        .launch-step small { display:none; }
         .final-wrap { padding:0 10px 10px; }
         .final-cta { min-height:620px; padding:26px 22px; border-radius:26px; }
         .final-cta__top span:last-child { display:none; }
@@ -1117,19 +1166,33 @@
       <section class="faq" id="faq" aria-labelledby="faq-title">
         <div class="faq__inner">
           <div class="faq__sticky">
-            <div class="eyebrow">05 / Частые вопросы</div>
-            <h2 id="faq-title">Всё важное —<br><span>до подключения.</span></h2>
-            <p class="faq__intro">Коротко о запуске, тарифах и работе облачной панели. Если вопрос останется — поддержка поможет собрать подходящий сценарий.</p>
-            <a class="faq__contact" href="#cta"><span>Задать свой вопрос</span><span>↗</span></a>
+            <div class="eyebrow">05 / Перед запуском</div>
+            <h2 id="faq-title">Ответы без<br><span>мелкого шрифта.</span></h2>
+            <p class="faq__intro">Собрали главное о подключении, тарифах и работе облачной панели. Сразу и нормальным языком.</p>
+
+            <div class="launch-card" aria-label="Быстрый запуск ZenLot">
+              <div class="launch-card__top"><span>Launch protocol</span><span>Система готова</span></div>
+              <div class="launch-card__title"><h3>Первый сценарий можно запустить быстро.</h3><strong>≈ 5 мин<small>базовое подключение</small></strong></div>
+              <div class="launch-steps">
+                <div class="launch-step"><b>01</b><span>Подключить магазин</span><small>Авторизация</small></div>
+                <div class="launch-step"><b>02</b><span>Выбрать нужные модули</span><small>Настройка</small></div>
+                <div class="launch-step"><b>03</b><span>Включить автоматизацию</span><small>ZenLot online</small></div>
+              </div>
+            </div>
+
+            <a class="faq__contact" href="#cta"><span>Остался свой вопрос?<small>Поддержка поможет разобраться со сценарием.</small></span><span>↗</span></a>
           </div>
 
-          <div class="faq-list">
-            <details class="faq-item" open><summary>Нужно ли держать компьютер включённым?</summary><div class="faq-item__answer">Нет. ZenLot работает в облаке: после настройки сценарии продолжают выполняться независимо от твоего компьютера.</div></details>
-            <details class="faq-item"><summary>Сколько времени занимает подключение?</summary><div class="faq-item__answer">Базовое подключение рассчитано примерно на пять минут. После авторизации ты выбираешь нужные модули и задаёшь правила работы.</div></details>
-            <details class="faq-item"><summary>Можно ли изменить тариф позже?</summary><div class="faq-item__answer">Да, архитектура тарифов рассчитана на постепенный рост: перейти на другой объём автоматизации можно без повторной настройки магазина.</div></details>
-            <details class="faq-item"><summary>Что происходит, если товар закончился?</summary><div class="faq-item__answer">Модуль контроля остатков останавливает автоматическую выдачу для пустой позиции и сообщает об этом владельцу магазина.</div></details>
-            <details class="faq-item"><summary>Можно ли подключить несколько магазинов?</summary><div class="faq-item__answer">Для работы с несколькими магазинами предусмотрен командный сценарий: единый обзор событий, продаж и подключённых модулей.</div></details>
-            <details class="faq-item"><summary>Нужны ли технические знания?</summary><div class="faq-item__answer">Нет. Основные процессы собираются из готовых модулей и понятных правил; для сложных сценариев можно обратиться к поддержке.</div></details>
+          <div class="faq-content">
+            <div class="faq-content__top"><h3>Что важно знать до оплаты</h3><span>6 коротких ответов</span></div>
+            <div class="faq-list">
+              <details class="faq-item" open><summary><span class="faq-item__number">01</span><span>Нужно ли держать компьютер включённым?</span><i class="faq-item__toggle" aria-hidden="true"></i></summary><div class="faq-item__answer"><strong>Нет.</strong> ZenLot работает в облаке: после настройки сценарии продолжают выполняться независимо от твоего компьютера.</div></details>
+              <details class="faq-item"><summary><span class="faq-item__number">02</span><span>Сколько времени занимает подключение?</span><i class="faq-item__toggle" aria-hidden="true"></i></summary><div class="faq-item__answer">Базовое подключение рассчитано примерно на <strong>пять минут</strong>. После авторизации ты выбираешь нужные модули и задаёшь правила работы.</div></details>
+              <details class="faq-item"><summary><span class="faq-item__number">03</span><span>Можно ли изменить тариф позже?</span><i class="faq-item__toggle" aria-hidden="true"></i></summary><div class="faq-item__answer"><strong>Да.</strong> Перейти на другой объём автоматизации можно без повторной настройки магазина — история и созданные правила сохранятся.</div></details>
+              <details class="faq-item"><summary><span class="faq-item__number">04</span><span>Что происходит, если товар закончился?</span><i class="faq-item__toggle" aria-hidden="true"></i></summary><div class="faq-item__answer">Модуль контроля остатков <strong>останавливает автоматическую выдачу</strong> для пустой позиции и сообщает владельцу магазина.</div></details>
+              <details class="faq-item"><summary><span class="faq-item__number">05</span><span>Можно ли подключить несколько магазинов?</span><i class="faq-item__toggle" aria-hidden="true"></i></summary><div class="faq-item__answer"><strong>Да, на тарифе «Команда».</strong> События, продажи и подключённые модули нескольких магазинов отображаются в единой панели.</div></details>
+              <details class="faq-item"><summary><span class="faq-item__number">06</span><span>Нужны ли технические знания?</span><i class="faq-item__toggle" aria-hidden="true"></i></summary><div class="faq-item__answer"><strong>Нет.</strong> Основные процессы собираются из готовых модулей и понятных правил; со сложным сценарием поможет поддержка.</div></details>
+            </div>
           </div>
         </div>
       </section>
@@ -1203,6 +1266,17 @@
             selectedPlanPrice.textContent = button.dataset.planPrice;
             selectedPlanCopy.textContent = button.dataset.planCopy;
             selectedPlanMark.textContent = button.dataset.planMark;
+          });
+        });
+
+        const faqItems = [...document.querySelectorAll(".faq-item")];
+
+        faqItems.forEach((item) => {
+          item.addEventListener("toggle", () => {
+            if (!item.open) return;
+            faqItems.forEach((otherItem) => {
+              if (otherItem !== item) otherItem.open = false;
+            });
           });
         });
       })();
