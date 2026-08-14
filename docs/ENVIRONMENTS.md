@@ -30,6 +30,7 @@ npm run serve
 - Current surface: marketing-only GitHub Pages site.
 - Public URL: `https://wareon-top.github.io/zenlot-design/`.
 - Data: no customer data exists in the current static site.
+- Source: private repository; only the reviewed site artefact is public.
 
 ## Promotion
 
@@ -50,7 +51,8 @@ Hotfixes start from `main`, pass validation, then are merged back into `staging`
 - Real credentials belong in the deployment platform's secret store.
 - Production secrets must never be reused in staging or development.
 - Logs must redact tokens, cookies, authorization headers, and personal data.
+- Databases, exports, user uploads, and backups are never stored in the source repository.
 
 ## Current limitation
 
-Only the production marketing URL is deployed today. Staging receives a public URL when Stage 3 provisions the product application; inventing a placeholder service during Stage 0 would create a false operational dependency.
+Only the production marketing URL is deployed today. If changing repository visibility affects the current GitHub Pages plan, the same reviewed static artefact must be moved to a deployment service that supports private source. Staging receives a URL when Stage 3 provisions the product application; inventing a placeholder service during Stage 0 would create a false operational dependency.

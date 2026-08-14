@@ -51,3 +51,10 @@ Decisions are append-only. A replaced decision remains in this file and points t
 - Status: accepted
 - Decision: the MVP contains read-only visibility and a small set of verified modules; catalogue presence does not equal availability.
 - Consequence: pricing entitlements and marketing copy must distinguish released and planned modules.
+
+## ADR-008 — Private source, public deployment artefacts
+
+- Date: 2026-08-14
+- Status: accepted
+- Decision: the ZenLot source repository is private. Only reviewed build artefacts intended for customers may be publicly deployed.
+- Consequence: repository visibility never authorizes committing secrets or customer data. Credentials, FunPay session material, databases, exports, uploads, logs with personal data, and backups use dedicated secret or data storage outside Git.

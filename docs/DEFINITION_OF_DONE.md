@@ -6,6 +6,7 @@
 - [ ] The change is implemented in the correct environment branch.
 - [ ] `npm run validate` passes.
 - [ ] No secrets or production personal data are committed.
+- [ ] The secret scan in `npm run validate` passes.
 - [ ] Desktop and mobile behaviour are checked when UI changes.
 - [ ] Accessibility names and keyboard behaviour are checked.
 - [ ] Logs and errors are understandable without exposing secrets.

@@ -12,6 +12,7 @@ The roadmap is ordered by dependency. A later stage cannot start as a production
 - [x] Create an architecture decision log.
 - [x] Define development, staging, and production.
 - [x] Add automated repository validation.
+- [x] Define the private-repository and secret-handling boundary.
 - [x] Define project and module completion criteria.
 
 Exit gate: documentation, environment configuration, validation, production baseline, and recoverable style checkpoint are present in Git.

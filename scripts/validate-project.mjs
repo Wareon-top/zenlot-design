@@ -1,11 +1,16 @@
 import { readFile, access } from "node:fs/promises";
+import { execFile } from "node:child_process";
 import process from "node:process";
+import { promisify } from "node:util";
+
+const execFileAsync = promisify(execFile);
 
 const requiredFiles = [
   "index.html",
   "PRODUCT.md",
   "ROADMAP.md",
   "ARCHITECTURE.md",
+  "SECURITY.md",
   "docs/DECISIONS.md",
   "docs/ENVIRONMENTS.md",
   "docs/DEFINITION_OF_DONE.md"
@@ -14,6 +19,15 @@ const requiredFiles = [
 const requiredSections = ["comparison", "features", "plugins", "tariffs", "faq", "cta"];
 const environments = ["development", "staging", "production"];
 const errors = [];
+const forbiddenTrackedFiles = /(^|\/)(?:\.env(?:\..+)?|.+\.(?:pem|key|p12|pfx|db|sqlite|sqlite3))$/i;
+const secretPatterns = [
+  { name: "private key", pattern: /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/ },
+  { name: "GitHub token", pattern: /\b(?:ghp_|github_pat_)[A-Za-z0-9_]{20,}\b/ },
+  { name: "OpenAI-style secret", pattern: /\bsk-[A-Za-z0-9_-]{20,}\b/ },
+  { name: "Slack token", pattern: /\bxox[baprs]-[A-Za-z0-9-]{20,}\b/ },
+  { name: "AWS access key", pattern: /\bAKIA[0-9A-Z]{16}\b/ },
+  { name: "FunPay session cookie", pattern: /\b(?:PHPSESSID|golden_key)=[^\s;]{8,}/i }
+];
 
 for (const file of requiredFiles) {
   try {
@@ -59,10 +73,26 @@ for (const environment of environments) {
   if (typeof config.allowTestData !== "boolean") errors.push(`${path}: allowTestData must be boolean`);
 }
 
+const { stdout: trackedOutput } = await execFileAsync("git", ["ls-files", "-z"], { encoding: "utf8" });
+const trackedFiles = trackedOutput.split("\0").filter(Boolean);
+const textFiles = trackedFiles.filter((file) => !/\.(?:png|jpe?g|webp|gif|ico|woff2?|pdf|zip)$/i.test(file));
+
+for (const file of trackedFiles) {
+  if (file === ".env.example") continue;
+  if (forbiddenTrackedFiles.test(file)) errors.push(`Sensitive file type must not be tracked: ${file}`);
+}
+
+for (const file of textFiles) {
+  const content = await readFile(file, "utf8");
+  for (const secret of secretPatterns) {
+    if (secret.pattern.test(content)) errors.push(`Possible ${secret.name} detected in ${file}`);
+  }
+}
+
 if (errors.length) {
   console.error("ZenLot validation failed:\n");
   for (const error of errors) console.error(`- ${error}`);
   process.exit(1);
 }
 
-console.log(`ZenLot validation passed: ${requiredFiles.length} required files, ${ids.length} unique ids, ${environments.length} environments.`);
+console.log(`ZenLot validation passed: ${requiredFiles.length} required files, ${ids.length} unique ids, ${environments.length} environments, ${trackedFiles.length} tracked files scanned.`);

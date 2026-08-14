@@ -66,6 +66,7 @@ Every store-owned row carries a workspace identifier. Authorization is enforced 
 
 ## Security rules
 
+- Keep source private; publish only reviewed deployment artefacts.
 - Never store raw FunPay passwords.
 - Treat session material as a credential: encrypt, scope, rotate, and never log it.
 - Separate secrets from repository configuration.
@@ -74,6 +75,8 @@ Every store-owned row carries a workspace identifier. Authorization is enforced 
 - Immutable security and automation audit trail.
 - Data minimization and explicit retention periods.
 - No CAPTCHA, anti-bot, or platform-control bypass.
+
+Repository privacy is only an access-control layer. Secrets, production databases, buyer messages, exports, logs with personal data, and backups remain outside Git and follow `SECURITY.md`.
 
 ## Environment model
 
