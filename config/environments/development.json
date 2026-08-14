@@ -1,0 +1,11 @@
+{
+  "name": "development",
+  "branch": "development",
+  "publicUrl": "http://localhost:8080",
+  "apiBaseUrl": "http://localhost:3000",
+  "dataClass": "synthetic-only",
+  "debug": true,
+  "telemetry": false,
+  "allowTestData": true,
+  "currentCapability": "marketing-site"
+}

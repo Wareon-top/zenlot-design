@@ -1,0 +1,11 @@
+{
+  "name": "production",
+  "branch": "main",
+  "publicUrl": "https://wareon-top.github.io/zenlot-design/",
+  "apiBaseUrl": null,
+  "dataClass": "production",
+  "debug": false,
+  "telemetry": true,
+  "allowTestData": false,
+  "currentCapability": "marketing-site"
+}

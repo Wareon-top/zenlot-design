@@ -1,0 +1,11 @@
+{
+  "name": "staging",
+  "branch": "staging",
+  "publicUrl": null,
+  "apiBaseUrl": null,
+  "dataClass": "dedicated-test-data",
+  "debug": false,
+  "telemetry": true,
+  "allowTestData": true,
+  "currentCapability": "configuration-ready"
+}
