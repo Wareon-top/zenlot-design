@@ -653,15 +653,50 @@
       .final-cta__metric strong { color:var(--yellow); font-size:27px; font-weight:600; letter-spacing:-.05em; }
       .final-cta__metric span { max-width:145px; color:rgba(255,255,255,.31); font-size:8px; font-weight:800; line-height:1.45; letter-spacing:.08em; text-align:right; text-transform:uppercase; }
 
-      .footer { width:min(1760px,calc(100% - 72px)); margin:auto; padding:66px 0 34px; background:#050505; }
-      .footer__top { display:grid; grid-template-columns:1.5fr repeat(3,.5fr); gap:70px; padding-bottom:70px; }
-      .footer__brand { max-width:470px; }
-      .footer__brand .brand { margin-bottom:24px; }
-      .footer__brand p { margin:0; color:rgba(255,255,255,.4); font-size:13px; line-height:1.65; }
-      .footer__column h3 { margin:0 0 20px; color:rgba(255,255,255,.34); font-size:9px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; }
-      .footer__column a { display:block; width:max-content; margin:12px 0; color:rgba(255,255,255,.68); font-size:12px; font-weight:600; }
-      .footer__column a:hover { color:var(--yellow); }
-      .footer__bottom { display:flex; align-items:center; justify-content:space-between; padding-top:26px; border-top:1px solid rgba(255,255,255,.09); color:rgba(255,255,255,.28); font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; }
+      .footer { position:relative; width:min(1840px,calc(100% - 48px)); margin:0 auto 24px; overflow:hidden; border:1px solid rgba(255,255,255,.11); border-radius:35px; background:radial-gradient(circle at 86% 18%,rgba(112,86,255,.14),transparent 27%),radial-gradient(circle at 7% 74%,rgba(255,210,28,.085),transparent 26%),#08090d; isolation:isolate; }
+      .footer::before { position:absolute; z-index:-2; inset:0; opacity:.34; background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px); background-size:80px 80px; mask-image:linear-gradient(to bottom,#000,transparent 82%); content:""; }
+      .footer::after { position:absolute; z-index:-1; top:-390px; right:-170px; width:720px; height:720px; border:1px solid rgba(155,131,255,.13); border-radius:50%; box-shadow:0 0 100px rgba(112,86,255,.055),inset 0 0 100px rgba(112,86,255,.035); content:""; }
+      .footer__statusbar { position:relative; z-index:2; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; min-height:72px; padding:0 38px; border-bottom:1px solid rgba(255,255,255,.085); background:rgba(7,8,12,.48); color:rgba(255,255,255,.29); font-size:8px; font-weight:800; letter-spacing:.11em; text-transform:uppercase; }
+      .footer__statusbar > span:nth-child(2) { justify-self:center; }
+      .footer__statusbar > span:last-child { justify-self:end; }
+      .footer__live { display:flex; align-items:center; gap:10px; color:rgba(255,255,255,.62); }
+      .footer__live::before { width:7px; height:7px; border-radius:50%; background:#72e6a0; box-shadow:0 0 14px rgba(114,230,160,.72); content:""; animation:footerPulse 2.4s ease-in-out infinite; }
+      @keyframes footerPulse { 50% { opacity:.42; box-shadow:0 0 5px rgba(114,230,160,.3); } }
+      .footer__main { position:relative; z-index:2; display:grid; grid-template-columns:minmax(0,1.12fr) minmax(360px,.9fr) minmax(330px,.58fr); gap:72px; padding:66px 54px 58px; }
+      .footer__identity { max-width:570px; }
+      .footer__identity .brand { width:max-content; margin-bottom:35px; font-size:22px; }
+      .footer__identity .brand__mark { width:34px; height:34px; border-radius:10px; }
+      .footer__eyebrow { display:flex; align-items:center; gap:10px; width:max-content; margin-bottom:19px; color:var(--yellow); font-size:8px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+      .footer__eyebrow::before { width:30px; height:1px; background:currentColor; content:""; }
+      .footer__identity p { max-width:520px; margin:0; color:rgba(255,255,255,.47); font-size:14px; line-height:1.72; }
+      .footer__chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:27px; }
+      .footer__chips span { min-height:30px; padding:8px 10px; border:1px solid rgba(255,255,255,.08); border-radius:999px; background:rgba(255,255,255,.022); color:rgba(255,255,255,.34); font-size:7px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+      .footer__links { display:grid; grid-template-columns:1fr 1fr; gap:42px; padding-top:3px; }
+      .footer__column h3 { margin:0 0 23px; color:rgba(255,255,255,.29); font-size:8px; font-weight:800; letter-spacing:.13em; text-transform:uppercase; }
+      .footer__column a { display:flex; align-items:center; justify-content:space-between; width:min(100%,170px); min-height:34px; border-bottom:1px solid rgba(255,255,255,.055); color:rgba(255,255,255,.63); font-size:11px; font-weight:650; transition:border-color .2s ease,color .2s ease,transform .2s ease; }
+      .footer__column a::after { color:rgba(255,255,255,.18); font-size:13px; content:"↗"; transition:color .2s ease; }
+      .footer__column a:hover { border-color:rgba(255,210,28,.25); color:var(--yellow); transform:translateX(3px); }
+      .footer__column a:hover::after { color:var(--yellow); }
+      .footer-console { position:relative; overflow:hidden; padding:19px; border:1px solid rgba(255,255,255,.12); border-radius:22px; background:radial-gradient(circle at 100% 0,rgba(112,86,255,.14),transparent 42%),rgba(12,13,20,.86); box-shadow:0 28px 80px rgba(0,0,0,.26),inset 0 1px rgba(255,255,255,.025); }
+      .footer-console::after { position:absolute; right:-66px; bottom:-90px; width:190px; height:190px; border:1px solid rgba(255,210,28,.1); border-radius:50%; content:""; pointer-events:none; }
+      .footer-console__top { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; padding-bottom:17px; border-bottom:1px solid rgba(255,255,255,.075); color:rgba(255,255,255,.28); font-size:7px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+      .footer-console__top span:last-child { display:flex; align-items:center; gap:7px; color:#72e6a0; }
+      .footer-console__top span:last-child::before { width:5px; height:5px; border-radius:50%; background:#72e6a0; box-shadow:0 0 10px rgba(114,230,160,.62); content:""; }
+      .footer-console__core { position:relative; z-index:1; display:grid; grid-template-columns:48px 1fr; gap:13px; align-items:center; padding:19px 0 17px; }
+      .footer-console__mark { display:grid; place-items:center; width:48px; height:48px; border:1px solid rgba(255,210,28,.26); border-radius:13px; background:rgba(255,210,28,.1); color:var(--yellow); font-size:9px; font-weight:800; letter-spacing:.08em; }
+      .footer-console__core small { display:block; margin-bottom:5px; color:rgba(255,255,255,.27); font-size:7px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; }
+      .footer-console__core strong { display:block; font-size:14px; font-weight:650; letter-spacing:-.025em; }
+      .footer-console__rows { position:relative; z-index:1; display:grid; gap:6px; }
+      .footer-console__row { display:flex; align-items:center; justify-content:space-between; min-height:38px; padding:0 11px; border:1px solid rgba(255,255,255,.06); border-radius:10px; background:rgba(255,255,255,.017); color:rgba(255,255,255,.43); font-size:8px; font-weight:700; }
+      .footer-console__row b { color:#72e6a0; font-size:7px; font-weight:800; letter-spacing:.08em; }
+      .footer-console__launch { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; min-height:52px; margin-top:14px; padding:0 15px; border-radius:12px; background:var(--yellow); color:#080808; font-size:10px; font-weight:800; transition:transform .2s ease,background .2s ease; }
+      .footer-console__launch::after { font-size:17px; content:"↗"; }
+      .footer-console__launch:hover { background:#ffe04f; transform:translateY(-2px); }
+      .footer__wordmark { position:relative; z-index:2; display:flex; align-items:flex-end; min-height:238px; padding:0 50px; overflow:hidden; border-top:1px solid rgba(255,255,255,.075); }
+      .footer__wordmark strong { position:relative; bottom:-25px; color:rgba(255,255,255,.935); font-size:clamp(118px,13.8vw,252px); font-weight:800; line-height:.74; letter-spacing:-.09em; white-space:nowrap; }
+      .footer__wordmark strong span { color:var(--yellow); }
+      .footer__wordmark > span { position:absolute; top:32px; right:52px; max-width:175px; color:rgba(255,255,255,.27); font-size:8px; font-weight:800; line-height:1.55; letter-spacing:.1em; text-align:right; text-transform:uppercase; }
+      .footer__bottom { position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; min-height:72px; padding:0 38px; border-top:1px solid rgba(255,255,255,.075); background:rgba(7,8,12,.44); color:rgba(255,255,255,.25); font-size:8px; font-weight:800; letter-spacing:.095em; text-transform:uppercase; }
 
       .seller-hero {
         height:940px;
@@ -814,8 +849,12 @@
         .final-cta__metrics { grid-template-columns:1fr 1fr; }
         .final-cta__metric:nth-child(2) { border-right:0; }
         .final-cta__metric:last-child { grid-column:1/-1; border-top:1px solid rgba(255,255,255,.09); }
-        .footer { width:calc(100% - 32px); }
-        .footer__top { grid-template-columns:1fr 1fr; }
+        .footer { width:calc(100% - 20px); border-radius:28px; }
+        .footer__main { grid-template-columns:1fr 1fr; gap:54px 42px; padding:54px 36px 48px; }
+        .footer__identity { grid-column:1/-1; max-width:680px; }
+        .footer__links { align-self:start; }
+        .footer__wordmark { min-height:190px; padding:0 34px; }
+        .footer__wordmark strong { bottom:-18px; font-size:15.2vw; }
         .seller-hero { min-height:1180px; }
         .seller-hero__content { top:110px; right:26px; bottom:220px; left:26px; grid-template-columns:1fr; gap:42px; align-content:center; }
         .seller-copy { padding-top:20px; }
@@ -923,9 +962,20 @@
         .final-cta__metrics { grid-template-columns:1fr; }
         .final-cta__metric,.final-cta__metric:last-child { grid-column:auto; min-height:86px; padding:20px; border-top:1px solid rgba(255,255,255,.09); border-right:0; }
         .final-cta__metric:first-child { border-top:0; }
-        .footer__top { grid-template-columns:1fr 1fr; gap:42px 28px; }
-        .footer__brand { grid-column:1/-1; }
-        .footer__bottom { align-items:flex-start; flex-direction:column; gap:12px; }
+        .footer { margin-bottom:10px; border-radius:26px; }
+        .footer__statusbar { grid-template-columns:1fr auto; min-height:62px; padding:0 20px; }
+        .footer__statusbar > span:nth-child(2) { display:none; }
+        .footer__main { grid-template-columns:1fr; gap:44px; padding:40px 20px 36px; }
+        .footer__identity { grid-column:auto; }
+        .footer__identity .brand { margin-bottom:28px; }
+        .footer__identity p { font-size:13px; }
+        .footer__links { gap:28px; }
+        .footer__column a { width:100%; }
+        .footer-console { border-radius:20px; }
+        .footer__wordmark { min-height:126px; padding:0 18px; }
+        .footer__wordmark strong { bottom:-10px; font-size:20.5vw; }
+        .footer__wordmark > span { display:none; }
+        .footer__bottom { align-items:flex-start; flex-direction:column; gap:10px; min-height:90px; padding:22px 20px; line-height:1.5; }
         .seller-hero { min-height:1130px; background-position:center; }
         .seller-hero__content { top:82px; right:16px; bottom:200px; left:16px; gap:24px; }
         .seller-copy { padding-top:40px; }
@@ -1298,13 +1348,51 @@
     </main>
 
     <footer class="footer">
-      <div class="footer__top">
-        <div class="footer__brand"><a class="brand" href="#" aria-label="ZenLot — на главную"><span class="brand__mark" aria-hidden="true"></span><span>ZenLot <small>FOR FUNPAY</small></span></a><p>Облачная система автоматизации для продавцов FunPay. Магазин остаётся активным, даже когда ты не у экрана.</p></div>
-        <nav class="footer__column" aria-label="Продукт"><h3>Продукт</h3><a href="#features">Возможности</a><a href="#plugins">Плагины</a><a href="#tariffs">Тарифы</a></nav>
-        <nav class="footer__column" aria-label="Помощь"><h3>Помощь</h3><a href="#faq">Вопросы и ответы</a><a href="#cta">Поддержка</a><a href="#">Документация</a></nav>
-        <nav class="footer__column" aria-label="Аккаунт"><h3>Аккаунт</h3><a href="#">Войти</a><a href="#cta">Регистрация</a><a href="#">Статус системы</a></nav>
+      <div class="footer__statusbar">
+        <span class="footer__live">ZenLot cloud network</span>
+        <span>Seller system / Final node</span>
+        <span>All systems online</span>
       </div>
-      <div class="footer__bottom"><span>© 2026 ZenLot · Автоматизация FunPay</span><span>Cloud commerce / Always online</span></div>
+
+      <div class="footer__main">
+        <div class="footer__identity">
+          <a class="brand" href="#" aria-label="ZenLot — на главную"><span class="brand__mark" aria-hidden="true"></span><span>ZenLot <small>FOR FUNPAY</small></span></a>
+          <div class="footer__eyebrow">Магазин продолжает работать</div>
+          <p>Облачная система для продавцов FunPay: выдаёт товары, отвечает покупателям и следит за лотами, пока ты занимаешься своими делами.</p>
+          <div class="footer__chips" aria-label="Принципы ZenLot"><span>Без установки</span><span>Настройка ≈ 5 минут</span><span>Контроль из панели</span></div>
+        </div>
+
+        <div class="footer__links">
+          <nav class="footer__column" aria-label="Продукт">
+            <h3>Продукт</h3>
+            <a href="#features">Возможности</a>
+            <a href="#plugins">Модули</a>
+            <a href="#tariffs">Тарифы</a>
+            <a href="#faq">FAQ</a>
+          </nav>
+          <nav class="footer__column" aria-label="Начало работы">
+            <h3>Начало работы</h3>
+            <a href="#comparison">Как работает</a>
+            <a href="#cta">Подключение</a>
+            <a href="#faq">Поддержка</a>
+            <a href="#">Наверх</a>
+          </nav>
+        </div>
+
+        <aside class="footer-console" aria-label="Состояние ZenLot">
+          <div class="footer-console__top"><span>System console</span><span>Online</span></div>
+          <div class="footer-console__core"><span class="footer-console__mark">ZL</span><div><small>Режим магазина</small><strong>Автопилот готов</strong></div></div>
+          <div class="footer-console__rows">
+            <div class="footer-console__row"><span>Автовыдача</span><b>READY</b></div>
+            <div class="footer-console__row"><span>Сообщения</span><b>READY</b></div>
+            <div class="footer-console__row"><span>Контроль лотов</span><b>READY</b></div>
+          </div>
+          <a class="footer-console__launch" href="#cta">Открыть ZenLot</a>
+        </aside>
+      </div>
+
+      <div class="footer__wordmark"><strong>ZENLOT<span>.</span></strong><span>FunPay seller automation<br>Cloud based / 2026</span></div>
+      <div class="footer__bottom"><span>© 2026 ZenLot · Автоматизация FunPay</span><span>ZenLot не является официальным сервисом FunPay</span></div>
     </footer>
 
     <script>
