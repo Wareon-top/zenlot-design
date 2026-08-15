@@ -61,7 +61,8 @@ const state = {
 const viewTitles = {
   dashboard: 'Обзор', orders: 'Заказы', messages: 'Сообщения', lots: 'Лоты',
   automations: 'Автоматизации', plugins: 'Плагины', telegram: 'Telegram',
-  analytics: 'Аналитика', events: 'Журнал событий', billing: 'Тариф', security: 'Безопасность',
+  analytics: 'Аналитика', events: 'Журнал', billing: 'Финансы', security: 'Безопасность',
+  guide: 'База знаний',
 };
 
 const iconNames = {
@@ -177,6 +178,7 @@ function setView(viewName, updateHash = true) {
     const active = item.dataset.viewTarget === resolvedView;
     item.classList.toggle('is-active', active);
     item.setAttribute('aria-current', active ? 'page' : 'false');
+    if (active) item.closest('.nav-group')?.setAttribute('open', '');
   });
   const label = byId('current-view-label');
   if (label) label.textContent = viewTitles[resolvedView];
@@ -206,11 +208,63 @@ function showToast(message, tone = 'default') {
   }, 3100);
 }
 
+let connectionStep = 0;
+const connectionDemoSteps = [
+  {
+    icon: 'card',
+    title: 'Тариф активен',
+    text: 'Подключение магазина доступно после покупки любого тарифа. В демонстрации активирован тариф «Про».',
+    points: ['Проверка подписки на backend', 'Лимиты модулей из тарифа', 'Один магазин в первом MVP'],
+    action: 'Перейти к Telegram',
+  },
+  {
+    icon: 'send',
+    title: 'Привязка Telegram-бота',
+    text: 'Bot Token добавляется на защищённом сайте. После /start бот принимает одноразовый код из кабинета и привязывается к workspace.',
+    points: ['Создание бота через BotFather', 'Одноразовый код с коротким сроком', 'Никаких FunPay-секретов в сообщениях'],
+    action: 'Смоделировать привязку',
+  },
+  {
+    icon: 'lock',
+    title: 'FunPay и закреплённый прокси',
+    text: 'Golden Key и прокси вводятся по очереди только в защищённом кабинете. В публичном прототипе реальные поля намеренно отключены.',
+    points: ['Шифрование до сохранения', 'Read-only проверка через прокси', 'Остановка при CAPTCHA или потере авторизации'],
+    action: 'Запустить демо-проверку',
+  },
+  {
+    icon: 'check',
+    title: 'Магазин подключён',
+    text: 'Магазин FunPay успешно подключён к сервису и боту. Приятного пользования.',
+    points: ['Доступен безопасный режим чтения', 'Управление на сайте и в Telegram', 'Автоматические действия пока заблокированы'],
+    action: 'Открыть управление',
+  },
+];
+
+function renderConnectionDemo() {
+  const modal = document.querySelector('.connect-modal');
+  if (!modal) return;
+  const step = connectionDemoSteps[connectionStep];
+  const body = modal.querySelector('.connect-modal__body');
+  const action = modal.querySelector('[data-connect-next]');
+  modal.querySelectorAll('.connect-progress > span').forEach((item, index) => {
+    item.classList.toggle('is-active', index === connectionStep);
+    item.classList.toggle('is-complete', index < connectionStep);
+  });
+  if (body) {
+    body.innerHTML = `<span class="connect-illustration${connectionStep === 3 ? ' connect-illustration--success' : ''}">${icon(step.icon)}<i></i></span><h3>${step.title}</h3><p>${step.text}</p><ul>${step.points.map((point) => `<li>${icon('check')} ${point}</li>`).join('')}</ul>`;
+  }
+  if (action) action.innerHTML = `${step.action} ${icon('chevron-right')}`;
+}
+
 function setModal(open) {
   const modal = document.querySelector('.connect-modal');
   const backdrop = document.querySelector('.modal-backdrop');
   if (!modal) return;
-  if (open) modal.hidden = false;
+  if (open) {
+    modal.hidden = false;
+    connectionStep = 0;
+    renderConnectionDemo();
+  }
   requestAnimationFrame(() => {
     modal.classList.toggle('is-open', open);
     backdrop?.classList.toggle('is-open', open);
@@ -248,6 +302,18 @@ function bindInteractions() {
     }
     if (event.target.closest('[data-close-connect]') || event.target.matches('.modal-backdrop')) {
       setModal(false);
+      return;
+    }
+
+    const guideTab = event.target.closest('[data-guide-target]');
+    if (guideTab) {
+      const target = guideTab.dataset.guideTarget;
+      document.querySelectorAll('[data-guide-target]').forEach((button) => button.classList.toggle('is-active', button === guideTab));
+      document.querySelectorAll('[data-guide-panel]').forEach((panel) => {
+        const active = panel.dataset.guidePanel === target;
+        panel.hidden = !active;
+        panel.classList.toggle('is-active', active);
+      });
       return;
     }
 
@@ -313,8 +379,14 @@ function bindInteractions() {
   });
 
   document.querySelector('[data-connect-next]')?.addEventListener('click', () => {
+    if (connectionStep < connectionDemoSteps.length - 1) {
+      connectionStep += 1;
+      renderConnectionDemo();
+      showToast(`Шаг ${connectionStep + 1} из ${connectionDemoSteps.length}`);
+      return;
+    }
     setModal(false);
-    showToast('Мастер подготовлен. Реальные ключи будут приниматься только защищённым backend-контуром.', 'success');
+    showToast('Демо-магазин подключён в безопасном read-only режиме.', 'success');
   });
 
   byId('send-message')?.addEventListener('click', () => {
