@@ -7,13 +7,15 @@ The source repository is private. Public deployment contains only the built mark
 ## Project status
 
 - Stage 0 — foundation and governance: complete.
-- Stage 1 — FunPay integration feasibility: next gate.
+- Personal cabinet — interactive frontend prototype in `development`.
+- Stage 1 — FunPay integration feasibility: next backend gate.
 - Production currently contains the marketing site only.
 - No backend, billing, user accounts, or live FunPay automation is present yet.
 
 ## Repository map
 
 - `index.html` — production marketing site.
+- `app/` — isolated personal-cabinet prototype with demo data; no secrets or live integrations.
 - `assets/` — landing page assets.
 - `config/environments/` — non-secret environment definitions.
 - `docs/` — decisions, environments, and definition of done.
@@ -32,7 +34,10 @@ npm run validate
 npm run serve
 ```
 
-Then open `http://localhost:8080`.
+Then open:
+
+- `http://localhost:8080` — approved marketing site.
+- `http://localhost:8080/app/` — interactive personal-cabinet prototype.
 
 ## Branch and promotion model
 

@@ -17,7 +17,7 @@ const mime = {
 createServer(async (request, response) => {
   const pathname = new URL(request.url, `http://${request.headers.host}`).pathname;
   const relative = pathname === "/" ? "index.html" : decodeURIComponent(pathname.slice(1));
-  const filePath = normalize(join(root, relative));
+  let filePath = normalize(join(root, relative));
 
   if (!filePath.startsWith(root)) {
     response.writeHead(403).end("Forbidden");
@@ -25,7 +25,11 @@ createServer(async (request, response) => {
   }
 
   try {
-    const fileStat = await stat(filePath);
+    let fileStat = await stat(filePath);
+    if (fileStat.isDirectory()) {
+      filePath = join(filePath, "index.html");
+      fileStat = await stat(filePath);
+    }
     if (!fileStat.isFile()) throw new Error("Not a file");
     response.writeHead(200, { "Content-Type": mime[extname(filePath)] || "application/octet-stream" });
     createReadStream(filePath).pipe(response);

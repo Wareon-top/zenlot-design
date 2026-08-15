@@ -7,6 +7,9 @@ const execFileAsync = promisify(execFile);
 
 const requiredFiles = [
   "index.html",
+  "app/index.html",
+  "app/styles.css",
+  "app/app.js",
   "PRODUCT.md",
   "ROADMAP.md",
   "ARCHITECTURE.md",
@@ -56,6 +59,20 @@ const localAnchors = [...html.matchAll(/href="#([^"]+)"/g)].map((match) => match
 const missingAnchors = [...new Set(localAnchors.filter((anchor) => !idSet.has(anchor)))];
 if (missingAnchors.length) errors.push(`Broken local anchors: ${missingAnchors.join(", ")}`);
 
+const appHtml = await readFile("app/index.html", "utf8");
+if (!/^<!doctype html>/i.test(appHtml.trimStart())) errors.push("app/index.html must start with a doctype");
+if (!/<html\s+lang="ru"/i.test(appHtml)) errors.push("app/index.html must declare lang=ru");
+if (!/<title>[^<]+<\/title>/i.test(appHtml)) errors.push("app/index.html must contain a title");
+
+const appIds = [...appHtml.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]);
+const duplicateAppIds = [...new Set(appIds.filter((id, index) => appIds.indexOf(id) !== index))];
+if (duplicateAppIds.length) errors.push(`Duplicate app HTML ids: ${duplicateAppIds.join(", ")}`);
+
+const appIdSet = new Set(appIds);
+const appAnchors = [...appHtml.matchAll(/href="#([^"]+)"/g)].map((match) => match[1]);
+const missingAppAnchors = [...new Set(appAnchors.filter((anchor) => !appIdSet.has(anchor)))];
+if (missingAppAnchors.length) errors.push(`Broken app local anchors: ${missingAppAnchors.join(", ")}`);
+
 for (const environment of environments) {
   const path = `config/environments/${environment}.json`;
   let config;
@@ -95,4 +112,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`ZenLot validation passed: ${requiredFiles.length} required files, ${ids.length} unique ids, ${environments.length} environments, ${trackedFiles.length} tracked files scanned.`);
+console.log(`ZenLot validation passed: ${requiredFiles.length} required files, ${ids.length + appIds.length} unique ids across two surfaces, ${environments.length} environments, ${trackedFiles.length} tracked files scanned.`);
