@@ -74,6 +74,120 @@ const iconNames = {
 };
 const icon = (name) => `<svg aria-hidden="true"><use href="#i-${iconNames[name] || name}"></use></svg>`;
 const byId = (id) => document.getElementById(id);
+const API_BASE_URL = (window.ZENLOT_API_BASE_URL || document.querySelector('meta[name="zenlot-api-base-url"]')?.content || '').replace(/\/$/, '');
+const authState = { mode: 'login', token: sessionStorage.getItem('zenlot_session') || '', user: null };
+
+async function apiRequest(path, { method = 'GET', body, authenticated = false } = {}) {
+  if (!API_BASE_URL) throw new Error('API_URL_MISSING');
+  const headers = { accept: 'application/json' };
+  if (body) headers['content-type'] = 'application/json';
+  if (authenticated && authState.token) headers.authorization = `Bearer ${authState.token}`;
+  const response = await fetch(`${API_BASE_URL}${path}`, { method, headers, body: body ? JSON.stringify(body) : undefined });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const error = new Error(payload.error?.message || 'Запрос отклонён');
+    error.code = payload.error?.code || `HTTP_${response.status}`;
+    throw error;
+  }
+  return payload.data;
+}
+
+function accountInitials(email = '') {
+  return email.split('@')[0].slice(0, 2).toUpperCase() || 'ZL';
+}
+
+function renderAuthState() {
+  const email = authState.user?.email || '';
+  document.querySelectorAll('[data-auth-name]').forEach((node) => { node.textContent = email || 'Войти'; });
+  document.querySelectorAll('[data-auth-avatar]').forEach((node) => { node.textContent = accountInitials(email); });
+  const sidebar = document.querySelector('.user-card');
+  if (sidebar) {
+    sidebar.querySelector('strong').textContent = email || 'Гостевой режим';
+    sidebar.querySelector('small').textContent = email ? 'Защищённая сессия' : 'Войти в ZenLot';
+    sidebar.querySelector('.user-card__avatar').textContent = accountInitials(email);
+  }
+  const form = document.querySelector('[data-auth-form]');
+  const session = document.querySelector('[data-auth-session]');
+  if (form) form.hidden = Boolean(email);
+  if (session) {
+    session.hidden = !email;
+    session.querySelector('[data-auth-session-email]').textContent = email;
+    session.querySelector('[data-auth-session-avatar]').textContent = accountInitials(email);
+  }
+}
+
+function setAuthMode(mode) {
+  authState.mode = mode === 'register' ? 'register' : 'login';
+  document.querySelectorAll('[data-auth-mode]').forEach((button) => button.classList.toggle('is-active', button.dataset.authMode === authState.mode));
+  const title = byId('auth-modal-title');
+  const submit = document.querySelector('[data-auth-submit]');
+  const password = document.querySelector('[data-auth-form] input[name="password"]');
+  if (title) title.textContent = authState.mode === 'register' ? 'Создать аккаунт' : 'Вход в кабинет';
+  if (submit) submit.textContent = authState.mode === 'register' ? 'Зарегистрироваться' : 'Войти';
+  if (password) password.autocomplete = authState.mode === 'register' ? 'new-password' : 'current-password';
+  const message = document.querySelector('[data-auth-message]');
+  if (message) { message.textContent = ''; message.className = 'auth-message'; }
+}
+
+function setAuthModal(open) {
+  const modal = document.querySelector('.auth-modal');
+  const backdrop = document.querySelector('.auth-backdrop');
+  if (!modal) return;
+  if (open) {
+    modal.hidden = false;
+    renderAuthState();
+  }
+  requestAnimationFrame(() => {
+    modal.classList.toggle('is-open', open);
+    backdrop?.classList.toggle('is-open', open);
+  });
+  document.body.classList.toggle('modal-open', open);
+  if (!open) window.setTimeout(() => { if (!modal.classList.contains('is-open')) modal.hidden = true; }, 220);
+}
+
+async function submitAuth(form) {
+  const message = form.querySelector('[data-auth-message]');
+  const submit = form.querySelector('[data-auth-submit]');
+  const body = Object.fromEntries(new FormData(form));
+  message.className = 'auth-message';
+  message.textContent = 'Проверяем данные…';
+  submit.disabled = true;
+  try {
+    if (authState.mode === 'register') {
+      await apiRequest('/api/v1/auth/register', { method: 'POST', body });
+      message.classList.add('is-success');
+      message.textContent = 'Аккаунт создан. Подтвердите email, затем выполните вход.';
+      form.reset();
+      return;
+    }
+    const session = await apiRequest('/api/v1/auth/login', { method: 'POST', body });
+    authState.token = session.token;
+    authState.user = session.user;
+    sessionStorage.setItem('zenlot_session', session.token);
+    renderAuthState();
+    showToast('Вход выполнен через защищённый API', 'success');
+  } catch (error) {
+    message.classList.add('is-error');
+    message.textContent = error.message === 'Failed to fetch' || error.message === 'API_URL_MISSING'
+      ? 'API пока недоступен. Запустите локальный backend или укажите адрес сервера.'
+      : error.message;
+  } finally {
+    submit.disabled = false;
+  }
+}
+
+async function restoreSession() {
+  document.querySelector('[data-api-state]').textContent = API_BASE_URL || 'не настроен';
+  if (!authState.token) { renderAuthState(); return; }
+  try {
+    const context = await apiRequest('/api/v1/me', { authenticated: true });
+    authState.user = context.user;
+  } catch {
+    authState.token = '';
+    sessionStorage.removeItem('zenlot_session');
+  }
+  renderAuthState();
+}
 
 function renderOrders() {
   const target = byId('orders-table-body');
@@ -281,6 +395,16 @@ function setModal(open) {
 
 function bindInteractions() {
   document.addEventListener('click', (event) => {
+    const authMode = event.target.closest('[data-auth-mode]');
+    if (authMode) { setAuthMode(authMode.dataset.authMode); return; }
+    if (event.target.closest('[data-auth-open]')) { setAuthModal(true); return; }
+    if (event.target.closest('[data-auth-close]')) { setAuthModal(false); return; }
+    if (event.target.closest('[data-auth-logout]')) {
+      apiRequest('/api/v1/auth/logout', { method: 'POST', authenticated: true }).catch(() => {}).finally(() => {
+        authState.token = ''; authState.user = null; sessionStorage.removeItem('zenlot_session'); renderAuthState(); setAuthMode('login');
+      });
+      return;
+    }
     const viewButton = event.target.closest('[data-view-target], [data-view-link]');
     if (viewButton) {
       event.preventDefault();
@@ -429,6 +553,11 @@ function init() {
   const securityToggle = document.querySelector('.security-row .toggle');
   if (securityToggle) securityToggle.dataset.toggle = 'two-factor';
   bindInteractions();
+  document.querySelector('[data-auth-form]')?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    submitAuth(event.currentTarget);
+  });
+  restoreSession();
   setView(location.hash.slice(1) || 'dashboard', false);
   updateClock();
   window.setInterval(updateClock, 1000);
