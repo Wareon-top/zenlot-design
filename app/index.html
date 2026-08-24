@@ -246,14 +246,26 @@
               <div class="plugin-lab__heading"><div><span class="eyebrow">Безопасная песочница</span><h2 id="plugin-lab-title">Настрой и проверь плагин</h2><p>Событие обрабатывается в симуляторе: никаких сообщений в FunPay не отправляется.</p></div><span class="health-pill health-pill--waiting"><i></i> Только симуляция</span></div>
               <div class="plugin-lab__grid">
                 <form class="plugin-form" data-plugin-settings>
-                  <div><span class="panel-label">Автоответчик</span><h3>Текст первого ответа</h3><p>Будет предложен покупателю через безопасную очередь, а не отправлен сразу.</p></div>
+                  <div><span class="panel-label">Автоответчик</span><h3>Сценарий ответа</h3><p>Условия проверяются до постановки ответа в безопасную очередь.</p></div>
+                  <label>Когда отвечать<select name="scenario"><option value="all">На каждое входящее сообщение</option><option value="keywords">Только по ключевым словам</option><option value="first_message">Только на первое сообщение</option></select></label>
+                  <label>Ключевые слова<input name="keywords" maxlength="500" placeholder="в наличии, цена, доставка"></label>
+                  <label>Не отвечать, если есть<input name="excludeKeywords" maxlength="500" placeholder="оператор, не отвечать"></label>
                   <label>Шаблон ответа<textarea name="replyText" maxlength="1000" placeholder="Здравствуйте! Сообщение получено — скоро вернёмся с ответом."></textarea></label>
+                  <fieldset class="quiet-hours"><legend>Тихие часы</legend>
+                    <label class="plugin-check"><input type="checkbox" name="quietEnabled"> Использовать расписание</label>
+                    <div class="plugin-time-grid"><label>Начало<input type="time" name="quietStart" value="22:00"></label><label>Окончание<input type="time" name="quietEnd" value="08:00"></label></div>
+                    <label>Часовой пояс<select name="timeZone"><option value="Asia/Almaty">Алматы (UTC+5)</option><option value="Europe/Moscow">Москва (UTC+3)</option><option value="Europe/Helsinki">Хельсинки</option><option value="Europe/Berlin">Берлин</option><option value="UTC">UTC</option></select></label>
+                    <label>В тихие часы<select name="quietBehavior"><option value="pause">Не отвечать</option><option value="alternate">Отправлять отдельный текст</option></select></label>
+                    <label>Ночной ответ<textarea name="quietText" maxlength="1000" placeholder="Сейчас мы офлайн. Ответим утром."></textarea></label>
+                  </fieldset>
                   <button class="button button--primary" type="submit">Сохранить настройки</button>
                 </form>
                 <form class="plugin-form" data-plugin-simulator>
                   <div><span class="panel-label">Тестовый сигнал</span><h3>Проверка цепочки событий</h3><p>Покажет, какие включённые плагины предложат действие.</p></div>
                   <label>Тип события<select name="type"><option value="message.received">Новое сообщение покупателя</option><option value="order.paid">Оплаченный заказ</option></select></label>
                   <label>Текст или номер заказа<input name="value" maxlength="300" value="Здравствуйте, товар в наличии?"></label>
+                  <label>Время сообщения<input type="datetime-local" name="occurredAt"></label>
+                  <label class="plugin-check"><input type="checkbox" name="isFirstMessage" checked> Это первое сообщение покупателя</label>
                   <button class="button button--ghost" type="submit">Запустить симуляцию</button>
                   <output class="plugin-simulation-output" data-plugin-simulation-output>Войдите и включите плагин, чтобы выполнить проверку.</output>
                 </form>
