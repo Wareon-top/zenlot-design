@@ -29,12 +29,12 @@ const state = {
     { icon: 'alert-triangle', name: 'Эскалация спорного заказа', description: 'Уведомляет владельца и ставит автоматизацию на паузу', runs: '3 запуска', active: false },
   ],
   plugins: [
-    { icon: 'zap', name: 'Smart Reply', vendor: 'ZenLot Labs', description: 'Предлагает оператору быстрые ответы с учётом контекста заказа.', installs: '2.4k', active: true },
-    { icon: 'shield', name: 'Fraud Watch', vendor: 'ZenLot Labs', description: 'Отмечает подозрительные заказы до автоматической выдачи.', installs: '1.8k', active: true },
-    { icon: 'trending-up', name: 'Price Pilot', vendor: 'Kite Studio', description: 'Помогает сравнивать цену и позицию активного лота.', installs: '940', active: false },
-    { icon: 'clock', name: 'Quiet Hours', vendor: 'Northbyte', description: 'Меняет сценарии ответов и выдачи в ночное время.', installs: '612', active: false },
-    { icon: 'file-text', name: 'Order Notes', vendor: 'ZenLot Labs', description: 'Добавляет внутренние заметки к покупателям и заказам.', installs: '1.1k', active: false },
-    { icon: 'users', name: 'Team Queue', vendor: 'Orbit Tools', description: 'Распределяет обращения между операторами по очереди.', installs: '486', active: false },
+    { id: 'zenlot.auto-reply', icon: 'zap', name: 'Автоответчик', vendor: 'ZenLot Core', description: 'Безопасно ставит ответ покупателю в очередь и защищён от циклических сообщений.', permissions: ['Сообщения', 'Очередь ответов'], installed: false, active: false },
+    { id: 'zenlot.telegram-notifications', icon: 'send', name: 'Telegram-уведомления', vendor: 'ZenLot Core', description: 'Сообщает владельцу о новых сообщениях и оплаченных заказах.', permissions: ['Сообщения', 'Заказы', 'Telegram'], installed: false, active: false },
+    { id: 'planned.fraud-watch', icon: 'shield', name: 'Fraud Watch', vendor: 'Планируется', description: 'Отмечает подозрительные заказы до автоматической выдачи.', permissions: ['Заказы'], planned: true },
+    { id: 'planned.price-pilot', icon: 'trending-up', name: 'Price Pilot', vendor: 'Планируется', description: 'Помогает сравнивать цену и позицию активного лота.', permissions: ['Лоты', 'Аналитика'], planned: true },
+    { id: 'planned.quiet-hours', icon: 'clock', name: 'Quiet Hours', vendor: 'Планируется', description: 'Меняет сценарии ответов в заданное владельцем время.', permissions: ['Расписание'], planned: true },
+    { id: 'planned.order-notes', icon: 'file-text', name: 'Order Notes', vendor: 'Планируется', description: 'Добавляет внутренние заметки к покупателям и заказам.', permissions: ['Заказы'], planned: true },
   ],
   analytics: [
     { day: 'Пн', revenue: 42, orders: 26 }, { day: 'Вт', revenue: 58, orders: 36 },
@@ -165,6 +165,7 @@ async function submitAuth(form) {
     authState.user = session.user;
     sessionStorage.setItem('zenlot_session', session.token);
     renderAuthState();
+    await loadPluginCatalog().catch(() => {});
     showToast('Вход выполнен через защищённый API', 'success');
   } catch (error) {
     message.classList.add('is-error');
@@ -187,6 +188,29 @@ async function restoreSession() {
     sessionStorage.removeItem('zenlot_session');
   }
   renderAuthState();
+  if (authState.user) await loadPluginCatalog().catch(() => {});
+}
+
+function resetPluginCatalog() {
+  state.plugins = state.plugins.map((plugin) => plugin.planned ? plugin : { ...plugin, installed: false, active: false });
+  renderPlugins();
+}
+
+async function loadPluginCatalog() {
+  if (!authState.token || !API_BASE_URL) return;
+  const catalog = await apiRequest('/api/v1/plugins', { authenticated: true });
+  const byPluginId = new Map(catalog.map((plugin) => [plugin.id, plugin]));
+  state.plugins = state.plugins.map((plugin) => {
+    const backend = byPluginId.get(plugin.id);
+    if (!backend) return plugin;
+    return {
+      ...plugin,
+      permissionsRaw: backend.permissions,
+      installed: Boolean(backend.installation),
+      active: Boolean(backend.installation?.enabled)
+    };
+  });
+  renderPlugins();
 }
 
 function renderOrders() {
@@ -252,12 +276,45 @@ function renderPlugins() {
   const target = byId('plugin-grid');
   if (!target) return;
   const colors = ['255,210,28', '143,114,255', '109,157,255', '112,223,160', '255,138,78', '203,128,255'];
+  const installed = state.plugins.filter((plugin) => plugin.installed).length;
+  const total = state.plugins.filter((plugin) => !plugin.planned).length;
+  if (byId('plugin-total')) byId('plugin-total').textContent = `${total} доступно`;
+  if (byId('plugin-installed')) byId('plugin-installed').textContent = `${installed} установлено`;
   target.innerHTML = state.plugins.map((plugin, index) => `
-    <article class="plugin-card" style="--plugin-rgb:${colors[index % colors.length]}">
+    <article class="plugin-card${plugin.planned ? ' is-planned' : ''}" style="--plugin-rgb:${colors[index % colors.length]}">
       <div class="plugin-card__top"><span class="plugin-card__mark">${icon(plugin.icon)}</span><small>${plugin.vendor}</small></div>
       <h3>${plugin.name}</h3><p>${plugin.description}</p>
-      <div class="plugin-card__bottom"><span>${plugin.installs} установок</span><button data-plugin="${plugin.name}" data-active="${plugin.active}">${plugin.active ? 'Установлен' : 'Установить'}</button></div>
+      <div class="plugin-permissions">${plugin.permissions.map((permission) => `<span>${permission}</span>`).join('')}</div>
+      <div class="plugin-card__bottom"><span>${plugin.planned ? 'Следующий этап' : plugin.active ? 'Работает' : plugin.installed ? 'На паузе' : 'Не установлен'}</span><button data-plugin-id="${plugin.id}" ${plugin.planned ? 'disabled' : ''}>${plugin.planned ? 'Скоро' : plugin.active ? 'Отключить' : plugin.installed ? 'Включить' : 'Установить'}</button></div>
     </article>`).join('');
+}
+
+async function changePluginState(pluginId) {
+  const plugin = state.plugins.find((item) => item.id === pluginId);
+  if (!plugin || plugin.planned) return;
+  if (!authState.token) {
+    setAuthModal(true);
+    showToast('Войдите, чтобы управлять плагинами');
+    return;
+  }
+  try {
+    if (!plugin.installed) {
+      await apiRequest(`/api/v1/plugins/${encodeURIComponent(plugin.id)}/install`, {
+        method: 'POST', authenticated: true, body: { permissions: plugin.permissionsRaw || (plugin.id === 'zenlot.auto-reply' ? ['messages:read', 'replies:queue'] : ['messages:read', 'orders:read', 'telegram:send']), config: {} }
+      });
+      await apiRequest(`/api/v1/plugins/${encodeURIComponent(plugin.id)}/enable`, { method: 'POST', authenticated: true });
+      showToast(`${plugin.name} установлен и включён`, 'success');
+    } else if (plugin.active) {
+      await apiRequest(`/api/v1/plugins/${encodeURIComponent(plugin.id)}/disable`, { method: 'POST', authenticated: true });
+      showToast(`${plugin.name} остановлен`);
+    } else {
+      await apiRequest(`/api/v1/plugins/${encodeURIComponent(plugin.id)}/enable`, { method: 'POST', authenticated: true });
+      showToast(`${plugin.name} включён`, 'success');
+    }
+    await loadPluginCatalog();
+  } catch (error) {
+    showToast(error.code === 'PLAN_REQUIRED' ? 'Для установки нужен активный тариф' : error.message);
+  }
 }
 
 function renderAnalytics() {
@@ -401,7 +458,7 @@ function bindInteractions() {
     if (event.target.closest('[data-auth-close]')) { setAuthModal(false); return; }
     if (event.target.closest('[data-auth-logout]')) {
       apiRequest('/api/v1/auth/logout', { method: 'POST', authenticated: true }).catch(() => {}).finally(() => {
-        authState.token = ''; authState.user = null; sessionStorage.removeItem('zenlot_session'); renderAuthState(); setAuthMode('login');
+        authState.token = ''; authState.user = null; sessionStorage.removeItem('zenlot_session'); resetPluginCatalog(); renderAuthState(); setAuthMode('login');
       });
       return;
     }
@@ -458,14 +515,9 @@ function bindInteractions() {
       return;
     }
 
-    const plugin = event.target.closest('[data-plugin]');
+    const plugin = event.target.closest('[data-plugin-id]');
     if (plugin) {
-      const active = plugin.dataset.active === 'true';
-      plugin.dataset.active = String(!active);
-      plugin.classList.toggle('button--outline', active);
-      plugin.classList.toggle('button--subtle', !active);
-      plugin.textContent = active ? 'Установить' : 'Установлен';
-      showToast(active ? `${plugin.dataset.plugin} удалён из демо-набора` : `${plugin.dataset.plugin} добавлен в демо-набор`, active ? 'default' : 'success');
+      changePluginState(plugin.dataset.pluginId);
       return;
     }
 
