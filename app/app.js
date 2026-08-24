@@ -29,7 +29,7 @@ const state = {
     { icon: 'alert-triangle', name: 'Эскалация спорного заказа', description: 'Уведомляет владельца и ставит автоматизацию на паузу', runs: '3 запуска', active: false },
   ],
   plugins: [
-    { id: 'zenlot.auto-reply', icon: 'zap', name: 'Автоответчик', vendor: 'ZenLot Core', description: 'Безопасно ставит ответ покупателю в очередь и защищён от циклических сообщений.', permissions: ['Сообщения', 'Очередь ответов'], installed: false, active: false },
+    { id: 'zenlot.auto-reply', icon: 'zap', name: 'Автоответчик', vendor: 'ZenLot Core', description: 'Безопасно ставит ответ покупателю в очередь и защищён от циклических сообщений.', permissions: ['Сообщения', 'Очередь ответов'], installed: false, active: false, config: { text: 'Здравствуйте! Сообщение получено — скоро вернёмся с ответом.' } },
     { id: 'zenlot.telegram-notifications', icon: 'send', name: 'Telegram-уведомления', vendor: 'ZenLot Core', description: 'Сообщает владельцу о новых сообщениях и оплаченных заказах.', permissions: ['Сообщения', 'Заказы', 'Telegram'], installed: false, active: false },
     { id: 'planned.fraud-watch', icon: 'shield', name: 'Fraud Watch', vendor: 'Планируется', description: 'Отмечает подозрительные заказы до автоматической выдачи.', permissions: ['Заказы'], planned: true },
     { id: 'planned.price-pilot', icon: 'trending-up', name: 'Price Pilot', vendor: 'Планируется', description: 'Помогает сравнивать цену и позицию активного лота.', permissions: ['Лоты', 'Аналитика'], planned: true },
@@ -207,10 +207,14 @@ async function loadPluginCatalog() {
       ...plugin,
       permissionsRaw: backend.permissions,
       installed: Boolean(backend.installation),
-      active: Boolean(backend.installation?.enabled)
+      active: Boolean(backend.installation?.enabled),
+      config: backend.installation?.config || plugin.config
     };
   });
   renderPlugins();
+  const replyText = document.querySelector('[data-plugin-settings] textarea[name="replyText"]');
+  const autoReply = state.plugins.find((plugin) => plugin.id === 'zenlot.auto-reply');
+  if (replyText && autoReply?.config?.text) replyText.value = autoReply.config.text;
 }
 
 function renderOrders() {
@@ -314,6 +318,40 @@ async function changePluginState(pluginId) {
     await loadPluginCatalog();
   } catch (error) {
     showToast(error.code === 'PLAN_REQUIRED' ? 'Для установки нужен активный тариф' : error.message);
+  }
+}
+
+async function savePluginSettings(form) {
+  const autoReply = state.plugins.find((plugin) => plugin.id === 'zenlot.auto-reply');
+  const text = new FormData(form).get('replyText')?.trim();
+  if (!text) { showToast('Введите текст автоответа'); return; }
+  if (!authState.token) { setAuthModal(true); showToast('Войдите, чтобы сохранить настройки'); return; }
+  if (!autoReply?.installed) { showToast('Сначала установите Автоответчик'); return; }
+  try {
+    await apiRequest('/api/v1/plugins/zenlot.auto-reply/config', { method: 'POST', authenticated: true, body: { config: { text } } });
+    autoReply.config = { text };
+    showToast('Настройки автоответчика сохранены', 'success');
+  } catch (error) {
+    showToast(error.code === 'PLAN_REQUIRED' ? 'Для настройки нужен активный тариф' : error.message);
+  }
+}
+
+async function simulatePluginEvent(form) {
+  const output = document.querySelector('[data-plugin-simulation-output]');
+  if (!authState.token) { setAuthModal(true); showToast('Войдите, чтобы запустить симуляцию'); return; }
+  const input = new FormData(form);
+  const type = input.get('type');
+  const value = input.get('value')?.trim();
+  if (output) output.textContent = 'Симуляция выполняется…';
+  try {
+    const data = type === 'message.received' ? { text: value } : { orderId: value };
+    const result = await apiRequest('/api/v1/plugins/simulate', { method: 'POST', authenticated: true, body: { type, data } });
+    const actions = result.results.flatMap((item) => item.actions || []).map((action) => action.type);
+    if (output) output.textContent = actions.length
+      ? `Готово: ${actions.join(', ')}. Статус — simulated, в FunPay ничего не отправлено.`
+      : 'Сработавших плагинов нет. Установите и включите нужный модуль.';
+  } catch (error) {
+    if (output) output.textContent = error.code === 'PLAN_REQUIRED' ? 'Для симуляции нужен активный тариф.' : error.message;
   }
 }
 
@@ -608,6 +646,14 @@ function init() {
   document.querySelector('[data-auth-form]')?.addEventListener('submit', (event) => {
     event.preventDefault();
     submitAuth(event.currentTarget);
+  });
+  document.querySelector('[data-plugin-settings]')?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    savePluginSettings(event.currentTarget);
+  });
+  document.querySelector('[data-plugin-simulator]')?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    simulatePluginEvent(event.currentTarget);
   });
   restoreSession();
   setView(location.hash.slice(1) || 'dashboard', false);
