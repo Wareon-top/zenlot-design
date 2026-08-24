@@ -585,6 +585,10 @@ body {
 .plugin-card h3 { margin-top:18px; font-size:13px; }
 .plugin-card p { min-height:44px; font-size:9px; line-height:1.55; }
 .plugin-card__bottom span,.plugin-card__bottom button { font-size:8px; }
+.plugin-card.is-planned { opacity:.62; }
+.plugin-card__bottom button:disabled { cursor:not-allowed; filter:saturate(.2); opacity:.6; }
+.plugin-permissions { position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:5px; min-height:25px; margin-top:10px; }
+.plugin-permissions span { padding:4px 6px; border:1px solid var(--line); border-radius:6px; color:var(--muted-2); font-size:7px; }
 
 .telegram-layout { gap:12px; }
 .telegram-connect { padding:28px; }
