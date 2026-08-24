@@ -589,6 +589,18 @@ body {
 .plugin-card__bottom button:disabled { cursor:not-allowed; filter:saturate(.2); opacity:.6; }
 .plugin-permissions { position:relative; z-index:1; display:flex; flex-wrap:wrap; gap:5px; min-height:25px; margin-top:10px; }
 .plugin-permissions span { padding:4px 6px; border:1px solid var(--line); border-radius:6px; color:var(--muted-2); font-size:7px; }
+.plugin-lab { margin-top:14px; padding:20px; border-radius:14px; background:var(--surface); }
+.plugin-lab__heading { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; padding-bottom:18px; border-bottom:1px solid var(--line); }
+.plugin-lab__heading h2 { margin:5px 0 6px; font-size:17px; }
+.plugin-lab__heading p { margin:0; color:var(--muted); font-size:9px; }
+.plugin-lab__grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; padding-top:18px; }
+.plugin-form { display:flex; flex-direction:column; align-items:flex-start; gap:10px; min-width:0; padding:16px; border:1px solid var(--line); border-radius:11px; background:rgba(255,255,255,.015); }
+.plugin-form h3 { margin:4px 0 4px; font-size:12px; }
+.plugin-form p { margin:0; color:var(--muted); font-size:8px; line-height:1.5; }
+.plugin-form label { display:grid; gap:6px; width:100%; color:var(--muted); font-size:8px; }
+.plugin-form textarea,.plugin-form input,.plugin-form select { width:100%; min-height:34px; padding:9px 10px; border:1px solid var(--line); border-radius:8px; outline:0; background:rgba(0,0,0,.16); color:var(--text); font:inherit; font-size:9px; }
+.plugin-form textarea { min-height:72px; resize:vertical; }
+.plugin-simulation-output { display:block; width:100%; min-height:34px; padding:9px 10px; border:1px dashed var(--line); border-radius:8px; color:var(--muted-2); font-size:8px; line-height:1.5; white-space:pre-wrap; }
 
 .telegram-layout { gap:12px; }
 .telegram-connect { padding:28px; }
@@ -691,6 +703,7 @@ body {
   .status-board { grid-template-columns:1fr 1fr; }
   .status-card:last-child { grid-column:1/-1; }
   .plugin-grid { grid-template-columns:repeat(2,1fr); }
+  .plugin-lab__grid { grid-template-columns:1fr; }
   .shop-summary__metrics span { min-width:90px; padding-inline:14px; }
 }
 
@@ -722,6 +735,7 @@ body {
   .setup-list summary { grid-template-columns:30px 1fr 14px; padding-inline:11px; }
   .setup-list details > div { padding-left:53px; }
   .plugin-grid { grid-template-columns:1fr; }
+  .plugin-lab__heading { align-items:flex-start; flex-direction:column; }
   .catalog-count { display:none; }
   .guide-heading { text-align:left; }
   .guide-heading h1 { font-size:34px; }
