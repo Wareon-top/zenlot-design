@@ -593,14 +593,23 @@ body {
 .plugin-lab__heading { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; padding-bottom:18px; border-bottom:1px solid var(--line); }
 .plugin-lab__heading h2 { margin:5px 0 6px; font-size:17px; }
 .plugin-lab__heading p { margin:0; color:var(--muted); font-size:9px; }
-.plugin-lab__grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; padding-top:18px; }
+.plugin-lab__grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; padding-top:18px; }
 .plugin-form { display:flex; flex-direction:column; align-items:flex-start; gap:10px; min-width:0; padding:16px; border:1px solid var(--line); border-radius:11px; background:rgba(255,255,255,.015); }
 .plugin-form h3 { margin:4px 0 4px; font-size:12px; }
 .plugin-form p { margin:0; color:var(--muted); font-size:8px; line-height:1.5; }
 .plugin-form label { display:grid; gap:6px; width:100%; color:var(--muted); font-size:8px; }
 .plugin-form textarea,.plugin-form input,.plugin-form select { width:100%; min-height:34px; padding:9px 10px; border:1px solid var(--line); border-radius:8px; outline:0; background:rgba(0,0,0,.16); color:var(--text); font:inherit; font-size:9px; }
 .plugin-form textarea { min-height:72px; resize:vertical; }
+.plugin-check { display:flex !important; align-items:center; gap:8px; min-height:20px; color:var(--text) !important; }
+.plugin-check input { width:14px; min-height:14px; accent-color:var(--yellow); }
 .plugin-simulation-output { display:block; width:100%; min-height:34px; padding:9px 10px; border:1px dashed var(--line); border-radius:8px; color:var(--muted-2); font-size:8px; line-height:1.5; white-space:pre-wrap; }
+.plugin-audit { margin-top:14px; padding:20px; border-radius:14px; background:var(--surface); }
+.plugin-audit__list { display:grid; gap:0; padding-top:14px; color:var(--muted-2); font-size:8px; }
+.plugin-audit__entry { display:grid; grid-template-columns:100px 1fr auto; align-items:center; gap:12px; min-height:46px; padding:8px 0; border-bottom:1px solid var(--line); }
+.plugin-audit__entry:last-child { border-bottom:0; }
+.plugin-audit__entry time { color:var(--muted-2); font-size:7px; }
+.plugin-audit__entry strong { font-size:9px; }
+.plugin-audit__entry span { color:var(--muted); font-size:8px; }
 
 .telegram-layout { gap:12px; }
 .telegram-connect { padding:28px; }

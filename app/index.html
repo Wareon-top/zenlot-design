@@ -257,7 +257,17 @@
                   <button class="button button--ghost" type="submit">Запустить симуляцию</button>
                   <output class="plugin-simulation-output" data-plugin-simulation-output>Войдите и включите плагин, чтобы выполнить проверку.</output>
                 </form>
+                <form class="plugin-form" data-telegram-settings>
+                  <div><span class="panel-label">Telegram-уведомления</span><h3>Какие события присылать</h3><p>Bot Token остаётся в защищённом backend и никогда не показывается в плагине.</p></div>
+                  <label class="plugin-check"><input type="checkbox" name="messages" checked> Новые сообщения покупателей</label>
+                  <label class="plugin-check"><input type="checkbox" name="paidOrders" checked> Оплаченные заказы</label>
+                  <button class="button button--primary" type="submit">Сохранить уведомления</button>
+                </form>
               </div>
+            </section>
+            <section class="plugin-audit panel" aria-labelledby="plugin-audit-title">
+              <div class="plugin-lab__heading"><div><span class="eyebrow">Контроль</span><h2 id="plugin-audit-title">Журнал плагинов</h2><p>Безопасная история установок, настроек, запусков и предложенных действий.</p></div></div>
+              <div class="plugin-audit__list" id="plugin-audit-list">Войдите, чтобы увидеть журнал текущего магазина.</div>
             </section>
           </section>
 
