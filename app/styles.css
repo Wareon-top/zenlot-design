@@ -602,6 +602,10 @@ body {
 .plugin-form textarea { min-height:72px; resize:vertical; }
 .plugin-check { display:flex !important; align-items:center; gap:8px; min-height:20px; color:var(--text) !important; }
 .plugin-check input { width:14px; min-height:14px; accent-color:var(--yellow); }
+.quiet-hours { display:grid; gap:10px; width:100%; margin:2px 0 0; padding:12px; border:1px solid var(--line); border-radius:9px; }
+.quiet-hours legend { padding:0 6px; color:var(--text); font-size:9px; font-weight:700; }
+.quiet-hours textarea { min-height:58px; }
+.plugin-time-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; width:100%; }
 .plugin-simulation-output { display:block; width:100%; min-height:34px; padding:9px 10px; border:1px dashed var(--line); border-radius:8px; color:var(--muted-2); font-size:8px; line-height:1.5; white-space:pre-wrap; }
 .plugin-audit { margin-top:14px; padding:20px; border-radius:14px; background:var(--surface); }
 .plugin-audit__list { display:grid; gap:0; padding-top:14px; color:var(--muted-2); font-size:8px; }
