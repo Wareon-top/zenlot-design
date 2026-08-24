@@ -29,7 +29,7 @@ const state = {
     { icon: 'alert-triangle', name: 'Эскалация спорного заказа', description: 'Уведомляет владельца и ставит автоматизацию на паузу', runs: '3 запуска', active: false },
   ],
   plugins: [
-    { id: 'zenlot.auto-reply', icon: 'zap', name: 'Автоответчик', vendor: 'ZenLot Core', description: 'Безопасно ставит ответ покупателю в очередь и защищён от циклических сообщений.', permissions: ['Сообщения', 'Очередь ответов'], installed: false, active: false, config: { text: 'Здравствуйте! Сообщение получено — скоро вернёмся с ответом.' } },
+    { id: 'zenlot.auto-reply', icon: 'zap', name: 'Автоответчик', vendor: 'ZenLot Core', description: 'Безопасно ставит ответ покупателю в очередь и защищён от циклических сообщений.', permissions: ['Сообщения', 'Очередь ответов'], installed: false, active: false, config: { text: 'Здравствуйте! Сообщение получено — скоро вернёмся с ответом.', scenario: 'all', keywords: [], excludeKeywords: [], quietHours: { enabled: false, start: '22:00', end: '08:00', timeZone: 'Asia/Almaty', behavior: 'pause', text: 'Сейчас мы офлайн. Ответим утром.' } } },
     { id: 'zenlot.telegram-notifications', icon: 'send', name: 'Telegram-уведомления', vendor: 'ZenLot Core', description: 'Сообщает владельцу о новых сообщениях и оплаченных заказах.', permissions: ['Сообщения', 'Заказы', 'Telegram'], installed: false, active: false, config: { messages: true, paidOrders: true } },
     { id: 'planned.fraud-watch', icon: 'shield', name: 'Fraud Watch', vendor: 'Планируется', description: 'Отмечает подозрительные заказы до автоматической выдачи.', permissions: ['Заказы'], planned: true },
     { id: 'planned.price-pilot', icon: 'trending-up', name: 'Price Pilot', vendor: 'Планируется', description: 'Помогает сравнивать цену и позицию активного лота.', permissions: ['Лоты', 'Аналитика'], planned: true },
@@ -218,9 +218,21 @@ async function loadPluginCatalog() {
     };
   });
   renderPlugins();
-  const replyText = document.querySelector('[data-plugin-settings] textarea[name="replyText"]');
+  const autoReplyForm = document.querySelector('[data-plugin-settings]');
   const autoReply = state.plugins.find((plugin) => plugin.id === 'zenlot.auto-reply');
-  if (replyText && autoReply?.config?.text) replyText.value = autoReply.config.text;
+  if (autoReplyForm && autoReply) {
+    const config = autoReply.config || {};
+    autoReplyForm.elements.replyText.value = config.text || '';
+    autoReplyForm.elements.scenario.value = config.scenario || 'all';
+    autoReplyForm.elements.keywords.value = (config.keywords || []).join(', ');
+    autoReplyForm.elements.excludeKeywords.value = (config.excludeKeywords || []).join(', ');
+    autoReplyForm.elements.quietEnabled.checked = config.quietHours?.enabled === true;
+    autoReplyForm.elements.quietStart.value = config.quietHours?.start || '22:00';
+    autoReplyForm.elements.quietEnd.value = config.quietHours?.end || '08:00';
+    autoReplyForm.elements.timeZone.value = config.quietHours?.timeZone || 'Asia/Almaty';
+    autoReplyForm.elements.quietBehavior.value = config.quietHours?.behavior || 'pause';
+    autoReplyForm.elements.quietText.value = config.quietHours?.text || '';
+  }
   const telegram = state.plugins.find((plugin) => plugin.id === 'zenlot.telegram-notifications');
   const telegramForm = document.querySelector('[data-telegram-settings]');
   if (telegramForm) {
@@ -359,13 +371,31 @@ async function changePluginState(pluginId) {
 
 async function savePluginSettings(form) {
   const autoReply = state.plugins.find((plugin) => plugin.id === 'zenlot.auto-reply');
-  const text = new FormData(form).get('replyText')?.trim();
+  const values = new FormData(form);
+  const text = values.get('replyText')?.trim();
   if (!text) { showToast('Введите текст автоответа'); return; }
   if (!authState.token) { setAuthModal(true); showToast('Войдите, чтобы сохранить настройки'); return; }
   if (!autoReply?.installed) { showToast('Сначала установите Автоответчик'); return; }
+  const terms = (name) => String(values.get(name) || '').split(',').map((term) => term.trim()).filter(Boolean).slice(0, 20);
+  const config = {
+    text,
+    scenario: values.get('scenario') || 'all',
+    keywords: terms('keywords'),
+    excludeKeywords: terms('excludeKeywords'),
+    quietHours: {
+      enabled: form.elements.quietEnabled.checked,
+      start: values.get('quietStart') || '22:00',
+      end: values.get('quietEnd') || '08:00',
+      timeZone: values.get('timeZone') || 'Asia/Almaty',
+      behavior: values.get('quietBehavior') || 'pause',
+      text: values.get('quietText')?.trim() || ''
+    }
+  };
+  if (config.scenario === 'keywords' && !config.keywords.length) { showToast('Добавьте хотя бы одно ключевое слово'); return; }
+  if (config.quietHours.enabled && config.quietHours.behavior === 'alternate' && !config.quietHours.text) { showToast('Введите ответ для тихих часов'); return; }
   try {
-    await apiRequest('/api/v1/plugins/zenlot.auto-reply/config', { method: 'POST', authenticated: true, body: { config: { text } } });
-    autoReply.config = { text };
+    await apiRequest('/api/v1/plugins/zenlot.auto-reply/config', { method: 'POST', authenticated: true, body: { config } });
+    autoReply.config = config;
     await loadPluginAudit().catch(() => {});
     showToast('Настройки автоответчика сохранены', 'success');
   } catch (error) {
@@ -396,12 +426,14 @@ async function simulatePluginEvent(form) {
   const value = input.get('value')?.trim();
   if (output) output.textContent = 'Симуляция выполняется…';
   try {
-    const data = type === 'message.received' ? { text: value } : { orderId: value };
+    const data = type === 'message.received'
+      ? { text: value, isFirstMessage: form.elements.isFirstMessage.checked, occurredAt: form.elements.occurredAt.value || undefined }
+      : { orderId: value };
     const result = await apiRequest('/api/v1/plugins/simulate', { method: 'POST', authenticated: true, body: { type, data } });
     const actions = result.results.flatMap((item) => item.actions || []).map((action) => action.type);
     if (output) output.textContent = actions.length
       ? `Готово: ${actions.join(', ')}. Статус — simulated, в FunPay ничего не отправлено.`
-      : 'Сработавших плагинов нет. Установите и включите нужный модуль.';
+      : 'Действий нет: плагин выключен либо сообщение не прошло выбранные условия или тихие часы.';
     await loadPluginAudit().catch(() => {});
   } catch (error) {
     if (output) output.textContent = error.code === 'PLAN_REQUIRED' ? 'Для симуляции нужен активный тариф.' : error.message;
