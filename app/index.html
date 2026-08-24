@@ -242,6 +242,23 @@
             <div class="view-heading view-heading--compact"><div><span class="eyebrow">Маркетплейс</span><h1 id="plugins-title">Каталог плагинов</h1><p>Расширения с явными разрешениями, безопасным отключением и журналом действий.</p></div><div class="catalog-count"><span id="plugin-total">2 доступно</span><strong id="plugin-installed">0 установлено</strong></div></div>
             <div class="plugin-toolbar"><div class="segmented"><button class="is-active" type="button">Все</button><button type="button">Продажи</button><button type="button">Общение</button><button type="button">Аналитика</button><button type="button">Контроль</button></div><div class="search-field"><svg><use href="#i-search"/></svg><input type="search" placeholder="Найти модуль" aria-label="Поиск модулей"></div></div>
             <div class="plugin-grid" id="plugin-grid"></div>
+            <section class="plugin-lab panel" aria-labelledby="plugin-lab-title">
+              <div class="plugin-lab__heading"><div><span class="eyebrow">Безопасная песочница</span><h2 id="plugin-lab-title">Настрой и проверь плагин</h2><p>Событие обрабатывается в симуляторе: никаких сообщений в FunPay не отправляется.</p></div><span class="health-pill health-pill--waiting"><i></i> Только симуляция</span></div>
+              <div class="plugin-lab__grid">
+                <form class="plugin-form" data-plugin-settings>
+                  <div><span class="panel-label">Автоответчик</span><h3>Текст первого ответа</h3><p>Будет предложен покупателю через безопасную очередь, а не отправлен сразу.</p></div>
+                  <label>Шаблон ответа<textarea name="replyText" maxlength="1000" placeholder="Здравствуйте! Сообщение получено — скоро вернёмся с ответом."></textarea></label>
+                  <button class="button button--primary" type="submit">Сохранить настройки</button>
+                </form>
+                <form class="plugin-form" data-plugin-simulator>
+                  <div><span class="panel-label">Тестовый сигнал</span><h3>Проверка цепочки событий</h3><p>Покажет, какие включённые плагины предложат действие.</p></div>
+                  <label>Тип события<select name="type"><option value="message.received">Новое сообщение покупателя</option><option value="order.paid">Оплаченный заказ</option></select></label>
+                  <label>Текст или номер заказа<input name="value" maxlength="300" value="Здравствуйте, товар в наличии?"></label>
+                  <button class="button button--ghost" type="submit">Запустить симуляцию</button>
+                  <output class="plugin-simulation-output" data-plugin-simulation-output>Войдите и включите плагин, чтобы выполнить проверку.</output>
+                </form>
+              </div>
+            </section>
           </section>
 
           <section class="view" data-view="telegram" aria-labelledby="telegram-title">
