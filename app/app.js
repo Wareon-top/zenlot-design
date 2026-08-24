@@ -30,12 +30,13 @@ const state = {
   ],
   plugins: [
     { id: 'zenlot.auto-reply', icon: 'zap', name: 'Автоответчик', vendor: 'ZenLot Core', description: 'Безопасно ставит ответ покупателю в очередь и защищён от циклических сообщений.', permissions: ['Сообщения', 'Очередь ответов'], installed: false, active: false, config: { text: 'Здравствуйте! Сообщение получено — скоро вернёмся с ответом.' } },
-    { id: 'zenlot.telegram-notifications', icon: 'send', name: 'Telegram-уведомления', vendor: 'ZenLot Core', description: 'Сообщает владельцу о новых сообщениях и оплаченных заказах.', permissions: ['Сообщения', 'Заказы', 'Telegram'], installed: false, active: false },
+    { id: 'zenlot.telegram-notifications', icon: 'send', name: 'Telegram-уведомления', vendor: 'ZenLot Core', description: 'Сообщает владельцу о новых сообщениях и оплаченных заказах.', permissions: ['Сообщения', 'Заказы', 'Telegram'], installed: false, active: false, config: { messages: true, paidOrders: true } },
     { id: 'planned.fraud-watch', icon: 'shield', name: 'Fraud Watch', vendor: 'Планируется', description: 'Отмечает подозрительные заказы до автоматической выдачи.', permissions: ['Заказы'], planned: true },
     { id: 'planned.price-pilot', icon: 'trending-up', name: 'Price Pilot', vendor: 'Планируется', description: 'Помогает сравнивать цену и позицию активного лота.', permissions: ['Лоты', 'Аналитика'], planned: true },
     { id: 'planned.quiet-hours', icon: 'clock', name: 'Quiet Hours', vendor: 'Планируется', description: 'Меняет сценарии ответов в заданное владельцем время.', permissions: ['Расписание'], planned: true },
     { id: 'planned.order-notes', icon: 'file-text', name: 'Order Notes', vendor: 'Планируется', description: 'Добавляет внутренние заметки к покупателям и заказам.', permissions: ['Заказы'], planned: true },
   ],
+  pluginAudit: [],
   analytics: [
     { day: 'Пн', revenue: 42, orders: 26 }, { day: 'Вт', revenue: 58, orders: 36 },
     { day: 'Ср', revenue: 47, orders: 31 }, { day: 'Чт', revenue: 76, orders: 49 },
@@ -188,7 +189,12 @@ async function restoreSession() {
     sessionStorage.removeItem('zenlot_session');
   }
   renderAuthState();
-  if (authState.user) await loadPluginCatalog().catch(() => {});
+  if (authState.user) {
+    await loadPluginCatalog().catch(() => {});
+    await loadPluginAudit().catch(() => {});
+  } else {
+    renderPluginAudit();
+  }
 }
 
 function resetPluginCatalog() {
@@ -215,6 +221,35 @@ async function loadPluginCatalog() {
   const replyText = document.querySelector('[data-plugin-settings] textarea[name="replyText"]');
   const autoReply = state.plugins.find((plugin) => plugin.id === 'zenlot.auto-reply');
   if (replyText && autoReply?.config?.text) replyText.value = autoReply.config.text;
+  const telegram = state.plugins.find((plugin) => plugin.id === 'zenlot.telegram-notifications');
+  const telegramForm = document.querySelector('[data-telegram-settings]');
+  if (telegramForm) {
+    telegramForm.elements.messages.checked = telegram?.config?.messages !== false;
+    telegramForm.elements.paidOrders.checked = telegram?.config?.paidOrders !== false;
+  }
+}
+
+function renderPluginAudit() {
+  const target = byId('plugin-audit-list');
+  if (!target) return;
+  if (!authState.user) { target.textContent = 'Войдите, чтобы увидеть журнал текущего магазина.'; return; }
+  if (!state.pluginAudit.length) { target.textContent = 'Пока нет действий плагинов. Установите модуль или запустите симуляцию.'; return; }
+  const labels = {
+    'plugin.installed': 'Плагин установлен', 'plugin.enabled': 'Плагин включён', 'plugin.disabled': 'Плагин остановлен',
+    'plugin.configured': 'Настройки сохранены', 'plugin.dispatch.completed': 'Событие обработано', 'plugin.dispatch.failed': 'Обработка остановлена'
+  };
+  target.innerHTML = state.pluginAudit.map((entry) => {
+    const time = new Intl.DateTimeFormat('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date(entry.at || entry.createdAt));
+    const plugin = state.plugins.find((item) => item.id === entry.pluginId)?.name || entry.pluginId || 'ZenLot';
+    const detail = entry.actionCount != null ? `${entry.actionCount} предлож. действий · simulated` : plugin;
+    return `<article class="plugin-audit__entry"><time>${time}</time><strong>${labels[entry.event] || 'Событие плагина'}</strong><span>${detail}</span></article>`;
+  }).join('');
+}
+
+async function loadPluginAudit() {
+  if (!authState.token || !API_BASE_URL) { renderPluginAudit(); return; }
+  state.pluginAudit = await apiRequest('/api/v1/plugins/audit?limit=30', { authenticated: true });
+  renderPluginAudit();
 }
 
 function renderOrders() {
@@ -316,6 +351,7 @@ async function changePluginState(pluginId) {
       showToast(`${plugin.name} включён`, 'success');
     }
     await loadPluginCatalog();
+    await loadPluginAudit().catch(() => {});
   } catch (error) {
     showToast(error.code === 'PLAN_REQUIRED' ? 'Для установки нужен активный тариф' : error.message);
   }
@@ -330,7 +366,23 @@ async function savePluginSettings(form) {
   try {
     await apiRequest('/api/v1/plugins/zenlot.auto-reply/config', { method: 'POST', authenticated: true, body: { config: { text } } });
     autoReply.config = { text };
+    await loadPluginAudit().catch(() => {});
     showToast('Настройки автоответчика сохранены', 'success');
+  } catch (error) {
+    showToast(error.code === 'PLAN_REQUIRED' ? 'Для настройки нужен активный тариф' : error.message);
+  }
+}
+
+async function saveTelegramSettings(form) {
+  const telegram = state.plugins.find((plugin) => plugin.id === 'zenlot.telegram-notifications');
+  if (!authState.token) { setAuthModal(true); showToast('Войдите, чтобы сохранить уведомления'); return; }
+  if (!telegram?.installed) { showToast('Сначала установите Telegram-уведомления'); return; }
+  const config = { messages: form.elements.messages.checked, paidOrders: form.elements.paidOrders.checked };
+  try {
+    await apiRequest('/api/v1/plugins/zenlot.telegram-notifications/config', { method: 'POST', authenticated: true, body: { config } });
+    telegram.config = config;
+    await loadPluginAudit().catch(() => {});
+    showToast('Настройки Telegram сохранены', 'success');
   } catch (error) {
     showToast(error.code === 'PLAN_REQUIRED' ? 'Для настройки нужен активный тариф' : error.message);
   }
@@ -350,6 +402,7 @@ async function simulatePluginEvent(form) {
     if (output) output.textContent = actions.length
       ? `Готово: ${actions.join(', ')}. Статус — simulated, в FunPay ничего не отправлено.`
       : 'Сработавших плагинов нет. Установите и включите нужный модуль.';
+    await loadPluginAudit().catch(() => {});
   } catch (error) {
     if (output) output.textContent = error.code === 'PLAN_REQUIRED' ? 'Для симуляции нужен активный тариф.' : error.message;
   }
@@ -628,6 +681,7 @@ function init() {
   renderLots();
   renderAutomations();
   renderPlugins();
+  renderPluginAudit();
   renderAnalytics();
   renderEvents();
   const composer = document.querySelector('.composer textarea');
@@ -654,6 +708,10 @@ function init() {
   document.querySelector('[data-plugin-simulator]')?.addEventListener('submit', (event) => {
     event.preventDefault();
     simulatePluginEvent(event.currentTarget);
+  });
+  document.querySelector('[data-telegram-settings]')?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    saveTelegramSettings(event.currentTarget);
   });
   restoreSession();
   setView(location.hash.slice(1) || 'dashboard', false);
