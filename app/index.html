@@ -53,11 +53,16 @@
           <button class="icon-button sidebar__close" type="button" aria-label="Закрыть меню" data-sidebar-close><svg><use href="#i-close"/></svg></button>
         </div>
 
-        <button class="workspace-switcher" type="button" data-toast="Переключение магазинов появится после подключения второго магазина">
+        <button class="workspace-switcher" type="button" data-store-switcher aria-expanded="false">
           <span class="workspace-switcher__avatar">ZL</span>
-          <span><small>Рабочее пространство</small><strong>Мой магазин</strong></span>
+          <span><small>Активный магазин</small><strong data-selected-store-name>Мой магазин</strong></span>
           <svg><use href="#i-chevron"/></svg>
         </button>
+        <div class="store-switcher-panel" data-store-switcher-panel hidden>
+          <header><span>Магазины</span><b data-store-capacity>3 / 10</b></header>
+          <div data-store-switcher-list></div>
+          <button type="button" data-open-connect><svg><use href="#i-plus"/></svg> Подключить магазин</button>
+        </div>
 
         <nav class="sidebar-nav">
           <span class="sidebar-nav__label">Рабочее пространство</span>
@@ -125,13 +130,19 @@
             </section>
 
             <section class="shop-summary panel" aria-label="Магазин FunPay">
-              <div class="shop-summary__identity"><span class="store-logo">FP</span><div><strong>Мой цифровой магазин</strong><small>FunPay · ожидает подключения</small></div></div>
+              <div class="shop-summary__identity"><span class="store-logo">FP</span><div><strong data-active-store-name>Мой цифровой магазин</strong><small data-active-store-status>FunPay · ожидает подключения</small></div></div>
               <div class="shop-summary__metrics">
-                <span><small>Баланс</small><strong>— ₽</strong></span>
-                <span><small>Активные лоты</small><strong>—</strong></span>
-                <span><small>Сообщения</small><strong>—</strong></span>
+                <span><small>Баланс</small><strong data-active-store-balance>— ₽</strong></span>
+                <span><small>Активные лоты</small><strong data-active-store-lots>—</strong></span>
+                <span><small>Сообщения</small><strong data-active-store-unread>—</strong></span>
               </div>
               <button class="icon-button" type="button" aria-label="Обновить магазин" data-toast="Синхронизация станет доступна после подключения"><svg><use href="#i-bolt"/></svg></button>
+            </section>
+
+            <section class="fleet-overview panel" aria-label="Все магазины">
+              <div class="panel-head"><div><span class="panel-label">Multi-account / isolated workers</span><h2>Все магазины в одном окне</h2></div><span class="fleet-capacity" data-fleet-capacity>3 из 10</span></div>
+              <div class="fleet-grid" data-fleet-grid></div>
+              <p class="fleet-note"><svg><use href="#i-shield"/></svg> У каждого магазина собственный worker и закреплённый прокси. Переключение меняет контекст интерфейса, но не сетевой маршрут аккаунта.</p>
             </section>
 
             <div class="status-board">
