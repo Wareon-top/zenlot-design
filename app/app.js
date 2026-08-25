@@ -37,6 +37,7 @@ const state = {
     { id: 'planned.order-notes', icon: 'file-text', name: 'Order Notes', vendor: 'Планируется', description: 'Добавляет внутренние заметки к покупателям и заказам.', permissions: ['Заказы'], planned: true },
   ],
   pluginAudit: [],
+  finance: { stores: [], withdrawalIntents: [], liveWithdrawalEnabled: false },
   analytics: [
     { day: 'Пн', revenue: 42, orders: 26 }, { day: 'Вт', revenue: 58, orders: 36 },
     { day: 'Ср', revenue: 47, orders: 31 }, { day: 'Чт', revenue: 76, orders: 49 },
@@ -75,6 +76,7 @@ const iconNames = {
 };
 const icon = (name) => `<svg aria-hidden="true"><use href="#i-${iconNames[name] || name}"></use></svg>`;
 const byId = (id) => document.getElementById(id);
+const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 const API_BASE_URL = (window.ZENLOT_API_BASE_URL || document.querySelector('meta[name="zenlot-api-base-url"]')?.content || '').replace(/\/$/, '');
 const authState = { mode: 'login', token: sessionStorage.getItem('zenlot_session') || '', user: null };
 
@@ -167,6 +169,7 @@ async function submitAuth(form) {
     sessionStorage.setItem('zenlot_session', session.token);
     renderAuthState();
     await loadPluginCatalog().catch(() => {});
+    await loadFinance().catch(() => {});
     showToast('Вход выполнен через защищённый API', 'success');
   } catch (error) {
     message.classList.add('is-error');
@@ -192,8 +195,79 @@ async function restoreSession() {
   if (authState.user) {
     await loadPluginCatalog().catch(() => {});
     await loadPluginAudit().catch(() => {});
+    await loadFinance().catch(() => {});
   } else {
     renderPluginAudit();
+  }
+}
+
+function formatMinor(amountMinor, currency = 'RUB') {
+  return new Intl.NumberFormat('ru-RU', { style: 'currency', currency, maximumFractionDigits: 2 }).format(Number(amountMinor || 0) / 100);
+}
+
+function renderFinance() {
+  const storesTarget = byId('finance-store-list');
+  const intentsTarget = byId('withdrawal-intent-list');
+  const form = document.querySelector('[data-withdrawal-intent-form]');
+  if (!storesTarget || !intentsTarget) return;
+  if (!authState.user) {
+    storesTarget.innerHTML = '<div class="finance-empty">Войдите, чтобы увидеть балансы подключённых магазинов.</div>';
+    intentsTarget.textContent = 'Журнал намерений появится после входа.';
+    if (form) form.hidden = true;
+    return;
+  }
+  if (!state.finance.stores.length) {
+    storesTarget.innerHTML = '<div class="finance-empty">Нет финансового снимка. Подключите магазин в read-only режиме и обновите данные.</div>';
+    intentsTarget.textContent = 'Симулированных намерений пока нет.';
+    if (form) form.hidden = true;
+    return;
+  }
+  storesTarget.innerHTML = state.finance.stores.map((store) => `
+    <article class="finance-store-card">
+      <div><span class="store-logo">FP</span><span><strong>${escapeHtml(store.displayName)}</strong><small>${escapeHtml(store.storeId)} · закреплённый proxy worker</small></span></div>
+      <span><small>Доступно</small><strong>${formatMinor(store.availableMinor, store.currency)}</strong></span>
+      <span><small>Ожидает</small><strong>${formatMinor(store.pendingMinor, store.currency)}</strong></span>
+      <span class="health-pill health-pill--waiting"><i></i> Только подтверждение</span>
+    </article>`).join('');
+  if (form) {
+    form.hidden = false;
+    form.elements.storeId.innerHTML = state.finance.stores.map((store) => `<option value="${escapeHtml(store.storeId)}">${escapeHtml(store.displayName)}</option>`).join('');
+  }
+  intentsTarget.innerHTML = state.finance.withdrawalIntents.length
+    ? state.finance.withdrawalIntents.map((intent) => `<article><time>${new Intl.DateTimeFormat('ru-RU', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(intent.createdAt))}</time><strong>${formatMinor(intent.amountMinor, intent.currency)}</strong><span>simulated · деньги не отправлены</span></article>`).join('')
+    : 'Симулированных намерений пока нет.';
+}
+
+async function loadFinance() {
+  if (!authState.token || !API_BASE_URL) { renderFinance(); return; }
+  state.finance = await apiRequest('/api/v1/finance', { authenticated: true });
+  renderFinance();
+}
+
+async function refreshFinance() {
+  if (!authState.token) { setAuthModal(true); showToast('Войдите, чтобы обновить финансовый снимок'); return; }
+  try {
+    await apiRequest('/api/v1/finance/refresh', { method: 'POST', authenticated: true, body: {} });
+    await loadFinance();
+    showToast('Read-only баланс обновлён через закреплённый proxy worker', 'success');
+  } catch (error) {
+    showToast(error.code === 'INVALID_STATE' ? 'Сначала завершите read-only подключение магазина' : error.message);
+  }
+}
+
+async function createWithdrawalIntent(form) {
+  const values = new FormData(form);
+  const amountMinor = Math.round(Number(values.get('amount')) * 100);
+  if (!Number.isSafeInteger(amountMinor) || amountMinor <= 0) { showToast('Введите корректную сумму'); return; }
+  try {
+    const intent = await apiRequest('/api/v1/finance/withdrawal-intents', {
+      method: 'POST', authenticated: true, body: { storeId: values.get('storeId'), amountMinor }
+    });
+    await loadFinance();
+    showToast(`Создано намерение ${formatMinor(intent.amountMinor, intent.currency)}. Деньги не отправлены.`, 'success');
+    form.elements.amount.value = '';
+  } catch (error) {
+    showToast(error.message);
   }
 }
 
@@ -581,7 +655,7 @@ function bindInteractions() {
     if (event.target.closest('[data-auth-close]')) { setAuthModal(false); return; }
     if (event.target.closest('[data-auth-logout]')) {
       apiRequest('/api/v1/auth/logout', { method: 'POST', authenticated: true }).catch(() => {}).finally(() => {
-        authState.token = ''; authState.user = null; sessionStorage.removeItem('zenlot_session'); resetPluginCatalog(); renderAuthState(); setAuthMode('login');
+        authState.token = ''; authState.user = null; state.finance = { stores: [], withdrawalIntents: [], liveWithdrawalEnabled: false }; sessionStorage.removeItem('zenlot_session'); resetPluginCatalog(); renderFinance(); renderAuthState(); setAuthMode('login');
       });
       return;
     }
@@ -635,6 +709,11 @@ function bindInteractions() {
       period.parentElement.querySelectorAll('[data-period]').forEach((button) => button.classList.remove('is-active'));
       period.classList.add('is-active');
       showToast(`Период аналитики: ${period.textContent.trim()}`);
+      return;
+    }
+
+    if (event.target.closest('[data-finance-refresh]')) {
+      refreshFinance();
       return;
     }
 
@@ -745,6 +824,11 @@ function init() {
     event.preventDefault();
     saveTelegramSettings(event.currentTarget);
   });
+  document.querySelector('[data-withdrawal-intent-form]')?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    createWithdrawalIntent(event.currentTarget);
+  });
+  renderFinance();
   restoreSession();
   setView(location.hash.slice(1) || 'dashboard', false);
   updateClock();
