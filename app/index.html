@@ -326,7 +326,21 @@
           </section>
 
           <section class="view" data-view="billing" aria-labelledby="billing-title">
-            <div class="view-heading view-heading--compact"><div><span class="eyebrow">Баланс и подписка</span><h1 id="billing-title">Финансы</h1><p>Тариф, лимиты и история операций ZenLot в одном месте.</p></div><button class="button button--ghost" type="button" data-toast="История платежей пока содержит демонстрационные данные">История операций <svg><use href="#i-external"/></svg></button></div>
+            <div class="view-heading view-heading--compact"><div><span class="eyebrow">Балансы магазинов и подписка</span><h1 id="billing-title">Финансы</h1><p>Каждый баланс читается worker’ом магазина через его закреплённый прокси.</p></div><button class="button button--ghost" type="button" data-finance-refresh>Обновить балансы <svg><use href="#i-bolt"/></svg></button></div>
+            <section class="finance-overview panel">
+              <div class="panel-head"><div><span class="panel-label">FunPay / Read only</span><h2>Балансы магазинов</h2></div><span class="health-pill health-pill--waiting"><i></i> Вывод отключён</span></div>
+              <div class="finance-store-list" id="finance-store-list"></div>
+              <div class="finance-action-grid">
+                <form class="withdrawal-intent-form" data-withdrawal-intent-form hidden>
+                  <div><span class="panel-label">Безопасная симуляция</span><h3>Намерение на вывод</h3><p>Запись помогает проверить интерфейс и лимиты. Запрос в FunPay не отправляется.</p></div>
+                  <label>Магазин<select name="storeId"></select></label>
+                  <label>Сумма<input name="amount" inputmode="decimal" placeholder="500.00" autocomplete="off"></label>
+                  <button class="button button--primary" type="submit">Создать симуляцию</button>
+                </form>
+                <div class="withdrawal-intent-log"><span class="panel-label">Audit / Simulated only</span><h3>Журнал намерений</h3><div id="withdrawal-intent-list"></div></div>
+              </div>
+              <p class="finance-guardrail"><strong>Важно:</strong> массового вывода и доступа плагинов к деньгам нет. Реальная операция появится только после официального разрешения и отдельного подтверждения владельца.</p>
+            </section>
             <section class="current-plan panel"><div><span class="plan-orb">PRO</span><span><span class="panel-label">Current plan</span><h2>Тариф «Про»</h2><p>Один магазин и до 10 активных модулей.</p></span></div><div class="current-plan__price"><strong>349 ₽</strong><span>следующее списание<br><b>14 сентября 2026</b></span></div><button class="button button--primary" type="button" data-toast="Смена тарифа будет подключена вместе с оплатой">Изменить тариф</button></section>
             <div class="billing-grid"><section class="panel usage-panel"><div class="panel-head"><div><span class="panel-label">Plan usage</span><h2>Использование</h2></div><span>Обновится через 30 дней</span></div><div class="usage-list"><article><div><span>Активные магазины</span><b>1 из 1</b></div><i><b style="width:100%"></b></i></article><article><div><span>Подключённые модули</span><b>4 из 10</b></div><i><b style="width:40%"></b></i></article><article><div><span>AI-ответы</span><b>238 из 1 000</b></div><i><b style="width:23.8%"></b></i></article><article><div><span>История событий</span><b>30 дней</b></div><i><b style="width:60%"></b></i></article></div></section><section class="panel payment-method"><div class="panel-head"><div><span class="panel-label">Payment method</span><h2>Способ оплаты</h2></div></div><div class="bank-card"><span>VISA</span><strong>•••• 4821</strong><small>09 / 29</small></div><button class="full-width-link" type="button">Изменить способ оплаты <svg><use href="#i-chevron"/></svg></button></section></div>
           </section>
