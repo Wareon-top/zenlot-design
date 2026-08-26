@@ -37,6 +37,16 @@ const state = {
     { id: 'planned.order-notes', icon: 'file-text', name: 'Order Notes', vendor: 'Планируется', description: 'Добавляет внутренние заметки к покупателям и заказам.', permissions: ['Заказы'], planned: true },
   ],
   pluginAudit: [],
+  storeFleet: {
+    selectedStoreId: 'demo-store-main',
+    capacity: { used: 3, limit: 10 },
+    liveActionsEnabled: false,
+    stores: [
+      { id: 'demo-store-main', displayName: 'Digital Hub', status: 'connected_read_only', proxyConfigured: true, workerId: 'worker-fi-01', lastSeenAt: new Date().toISOString(), demo: true, metrics: { balance: '1 842 ₽', lots: 84, unread: 2 } },
+      { id: 'demo-store-games', displayName: 'Game Market', status: 'connected_read_only', proxyConfigured: true, workerId: 'worker-de-02', lastSeenAt: new Date().toISOString(), demo: true, metrics: { balance: '3 116 ₽', lots: 126, unread: 1 } },
+      { id: 'demo-store-new', displayName: 'Новый магазин', status: 'awaiting_credentials', proxyConfigured: false, workerId: 'worker-pending-03', lastSeenAt: null, demo: true, metrics: { balance: '—', lots: '—', unread: '—' } },
+    ]
+  },
   finance: { stores: [], withdrawalIntents: [], liveWithdrawalEnabled: false },
   analytics: [
     { day: 'Пн', revenue: 42, orders: 26 }, { day: 'Вт', revenue: 58, orders: 36 },
@@ -169,6 +179,7 @@ async function submitAuth(form) {
     sessionStorage.setItem('zenlot_session', session.token);
     renderAuthState();
     await loadPluginCatalog().catch(() => {});
+    await loadStoreFleet().catch(() => {});
     await loadFinance().catch(() => {});
     showToast('Вход выполнен через защищённый API', 'success');
   } catch (error) {
@@ -195,6 +206,7 @@ async function restoreSession() {
   if (authState.user) {
     await loadPluginCatalog().catch(() => {});
     await loadPluginAudit().catch(() => {});
+    await loadStoreFleet().catch(() => {});
     await loadFinance().catch(() => {});
   } else {
     renderPluginAudit();
@@ -203,6 +215,74 @@ async function restoreSession() {
 
 function formatMinor(amountMinor, currency = 'RUB') {
   return new Intl.NumberFormat('ru-RU', { style: 'currency', currency, maximumFractionDigits: 2 }).format(Number(amountMinor || 0) / 100);
+}
+
+const storeStatus = (store) => store.status === 'connected_read_only'
+  ? { label: 'Read-only активен', tone: 'online' }
+  : store.status === 'attention'
+    ? { label: 'Требует внимания', tone: 'attention' }
+    : store.status === 'paused'
+      ? { label: 'На паузе', tone: 'paused' }
+      : { label: 'Ожидает подключения', tone: 'waiting' };
+
+function renderStoreFleet() {
+  const fleet = state.storeFleet;
+  const selected = fleet.stores.find((store) => store.id === fleet.selectedStoreId) || fleet.stores[0];
+  if (selected && !fleet.selectedStoreId) fleet.selectedStoreId = selected.id;
+  document.querySelectorAll('[data-selected-store-name]').forEach((node) => { node.textContent = selected?.displayName || 'Нет магазинов'; });
+  const activeName = document.querySelector('[data-active-store-name]');
+  const activeStatus = document.querySelector('[data-active-store-status]');
+  if (activeName) activeName.textContent = selected?.displayName || 'Подключите магазин';
+  if (activeStatus) activeStatus.textContent = selected ? `FunPay · ${storeStatus(selected).label.toLowerCase()}` : 'FunPay · нет подключения';
+  const activeMetrics = selected?.metrics || {};
+  const balance = document.querySelector('[data-active-store-balance]');
+  const lots = document.querySelector('[data-active-store-lots]');
+  const unread = document.querySelector('[data-active-store-unread]');
+  if (balance) balance.textContent = activeMetrics.balance ?? '—';
+  if (lots) lots.textContent = activeMetrics.lots ?? '—';
+  if (unread) unread.textContent = activeMetrics.unread ?? '—';
+  const capacityText = `${fleet.capacity?.used ?? fleet.stores.length} из ${fleet.capacity?.limit ?? 10}`;
+  document.querySelectorAll('[data-fleet-capacity]').forEach((node) => { node.textContent = capacityText; });
+  document.querySelectorAll('[data-store-capacity]').forEach((node) => { node.textContent = capacityText.replace('из', '/'); });
+
+  const switcherList = document.querySelector('[data-store-switcher-list]');
+  if (switcherList) switcherList.innerHTML = fleet.stores.map((store) => {
+    const status = storeStatus(store);
+    return `<button type="button" data-select-store="${escapeHtml(store.id)}" class="${store.id === selected?.id ? 'is-active' : ''}"><span class="store-mini-logo">FP</span><span><strong>${escapeHtml(store.displayName)}</strong><small>${escapeHtml(status.label)}</small></span><i class="store-health store-health--${status.tone}"></i></button>`;
+  }).join('') || '<p>Подключённых магазинов пока нет.</p>';
+
+  const grid = document.querySelector('[data-fleet-grid]');
+  if (grid) grid.innerHTML = fleet.stores.map((store) => {
+    const status = storeStatus(store);
+    const metrics = store.metrics || {};
+    return `<button type="button" class="fleet-card ${store.id === selected?.id ? 'is-active' : ''}" data-select-store="${escapeHtml(store.id)}">
+      <span class="fleet-card__top"><span class="store-logo">FP</span><span><strong>${escapeHtml(store.displayName)}</strong><small>${store.demo ? 'Демонстрация · ' : ''}${escapeHtml(store.workerId)}</small></span><i class="store-health store-health--${status.tone}"></i></span>
+      <span class="fleet-card__metrics"><span><small>Баланс</small><strong>${escapeHtml(metrics.balance ?? '—')}</strong></span><span><small>Лоты</small><strong>${escapeHtml(metrics.lots ?? '—')}</strong></span><span><small>Новые</small><strong>${escapeHtml(metrics.unread ?? '—')}</strong></span></span>
+      <span class="fleet-card__footer"><span>${escapeHtml(status.label)}</span><b>${store.proxyConfigured ? 'Proxy закреплён' : 'Proxy не настроен'}</b></span>
+    </button>`;
+  }).join('') || '<div class="finance-empty">Подключите первый магазин, чтобы создать отдельный proxy worker.</div>';
+}
+
+async function loadStoreFleet() {
+  if (!authState.token || !API_BASE_URL) { renderStoreFleet(); return; }
+  state.storeFleet = await apiRequest('/api/v1/stores', { authenticated: true });
+  renderStoreFleet();
+}
+
+async function selectStore(storeId) {
+  const exists = state.storeFleet.stores.some((store) => store.id === storeId);
+  if (!exists) return;
+  if (authState.token && API_BASE_URL) {
+    state.storeFleet = await apiRequest(`/api/v1/stores/${encodeURIComponent(storeId)}/select`, { method: 'POST', authenticated: true, body: {} });
+  } else {
+    state.storeFleet.selectedStoreId = storeId;
+  }
+  renderStoreFleet();
+  const panel = document.querySelector('[data-store-switcher-panel]');
+  const trigger = document.querySelector('[data-store-switcher]');
+  if (panel) panel.hidden = true;
+  trigger?.setAttribute('aria-expanded', 'false');
+  showToast(`Активный контекст: ${state.storeFleet.stores.find((store) => store.id === storeId)?.displayName}`, 'success');
 }
 
 function renderFinance() {
@@ -655,7 +735,7 @@ function bindInteractions() {
     if (event.target.closest('[data-auth-close]')) { setAuthModal(false); return; }
     if (event.target.closest('[data-auth-logout]')) {
       apiRequest('/api/v1/auth/logout', { method: 'POST', authenticated: true }).catch(() => {}).finally(() => {
-        authState.token = ''; authState.user = null; state.finance = { stores: [], withdrawalIntents: [], liveWithdrawalEnabled: false }; sessionStorage.removeItem('zenlot_session'); resetPluginCatalog(); renderFinance(); renderAuthState(); setAuthMode('login');
+        authState.token = ''; authState.user = null; state.finance = { stores: [], withdrawalIntents: [], liveWithdrawalEnabled: false }; sessionStorage.removeItem('zenlot_session'); resetPluginCatalog(); renderFinance(); renderStoreFleet(); renderAuthState(); setAuthMode('login');
       });
       return;
     }
@@ -675,7 +755,21 @@ function bindInteractions() {
       return;
     }
     if (event.target.closest('[data-open-connect]')) {
+      const switcherPanel = document.querySelector('[data-store-switcher-panel]');
+      if (switcherPanel) switcherPanel.hidden = true;
       setModal(true);
+      return;
+    }
+    const storeSwitcher = event.target.closest('[data-store-switcher]');
+    if (storeSwitcher) {
+      const panel = document.querySelector('[data-store-switcher-panel]');
+      if (panel) panel.hidden = !panel.hidden;
+      storeSwitcher.setAttribute('aria-expanded', String(panel ? !panel.hidden : false));
+      return;
+    }
+    const selectedStore = event.target.closest('[data-select-store]');
+    if (selectedStore) {
+      selectStore(selectedStore.dataset.selectStore).catch((error) => showToast(error.message));
       return;
     }
     if (event.target.closest('[data-close-connect]') || event.target.matches('.modal-backdrop')) {
@@ -829,6 +923,7 @@ function init() {
     createWithdrawalIntent(event.currentTarget);
   });
   renderFinance();
+  renderStoreFleet();
   restoreSession();
   setView(location.hash.slice(1) || 'dashboard', false);
   updateClock();
