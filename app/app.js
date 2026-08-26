@@ -657,51 +657,52 @@ function showToast(message, tone = 'default') {
 }
 
 let connectionStep = 0;
+let connectionDraftId = null;
+let connectionStatus = null;
+let connectionBusy = false;
 const connectionDemoSteps = [
-  {
-    icon: 'card',
-    title: 'Тариф активен',
-    text: 'Подключение магазина доступно после покупки любого тарифа. В демонстрации активирован тариф «Про».',
-    points: ['Проверка подписки на backend', 'Лимиты модулей из тарифа', 'Один магазин в первом MVP'],
-    action: 'Перейти к Telegram',
-  },
-  {
-    icon: 'send',
-    title: 'Привязка Telegram-бота',
-    text: 'Bot Token добавляется на защищённом сайте. После /start бот принимает одноразовый код из кабинета и привязывается к workspace.',
-    points: ['Создание бота через BotFather', 'Одноразовый код с коротким сроком', 'Никаких FunPay-секретов в сообщениях'],
-    action: 'Смоделировать привязку',
-  },
-  {
-    icon: 'lock',
-    title: 'FunPay и закреплённый прокси',
-    text: 'Golden Key и прокси вводятся по очереди только в защищённом кабинете. В публичном прототипе реальные поля намеренно отключены.',
-    points: ['Шифрование до сохранения', 'Read-only проверка через прокси', 'Остановка при CAPTCHA или потере авторизации'],
-    action: 'Запустить демо-проверку',
-  },
-  {
-    icon: 'check',
-    title: 'Магазин подключён',
-    text: 'Магазин FunPay успешно подключён к сервису и боту. Приятного пользования.',
-    points: ['Доступен безопасный режим чтения', 'Управление на сайте и в Telegram', 'Автоматические действия пока заблокированы'],
-    action: 'Открыть управление',
-  },
+  { icon: 'card', title: 'Отдельный контекст магазина', text: 'Каждый магазин получает собственный worker и закреплённое соединение. В демонстрации реальные секретные поля отключены.', points: ['До 10 магазинов в workspace', 'Отдельный workerId', 'Изоляция данных магазина'], action: 'Посмотреть Golden Key' },
+  { icon: 'lock', title: 'Golden Key выбранного магазина', text: 'Ключ передаётся только защищённому API, шифруется в vault и никогда не возвращается в интерфейс.', points: ['Отдельная vault-ссылка', 'Нет ключа в PostgreSQL', 'Поле очищается после отправки'], action: 'Посмотреть прокси' },
+  { icon: 'shield', title: 'Закреплённый прокси', text: 'Прокси хранится отдельно от Golden Key и используется только worker этого магазина.', points: ['Один магазин — один прокси', 'Пароль не отображается повторно', 'Нет общего IP между магазинами'], action: 'Посмотреть проверку' },
+  { icon: 'check', title: 'Read-only проверка', text: 'Preflight проверяет пару Golden Key + прокси, не выполняя действий в FunPay.', points: ['Доступен безопасный режим чтения', 'Worker закреплён за магазином', 'Автоматические действия заблокированы'], action: 'Закрыть демонстрацию' },
 ];
 
-function renderConnectionDemo() {
+const liveConnectionMode = () => Boolean(authState.user && API_BASE_URL);
+const selectedConnectionStore = () => state.storeFleet.stores.find((store) => store.id === connectionDraftId)
+  || state.storeFleet.stores.find((store) => store.id === state.storeFleet.selectedStoreId);
+
+function renderConnectionWizard() {
   const modal = document.querySelector('.connect-modal');
   if (!modal) return;
-  const step = connectionDemoSteps[connectionStep];
   const body = modal.querySelector('.connect-modal__body');
   const action = modal.querySelector('[data-connect-next]');
+  const mode = modal.querySelector('[data-connection-mode]');
   modal.querySelectorAll('.connect-progress > span').forEach((item, index) => {
     item.classList.toggle('is-active', index === connectionStep);
     item.classList.toggle('is-complete', index < connectionStep);
   });
-  if (body) {
-    body.innerHTML = `<span class="connect-illustration${connectionStep === 3 ? ' connect-illustration--success' : ''}">${icon(step.icon)}<i></i></span><h3>${step.title}</h3><p>${step.text}</p><ul>${step.points.map((point) => `<li>${icon('check')} ${point}</li>`).join('')}</ul>`;
+  if (!liveConnectionMode()) {
+    const step = connectionDemoSteps[connectionStep];
+    if (mode) mode.textContent = 'Connection wizard / Demo';
+    if (body) body.innerHTML = `<span class="connect-illustration${connectionStep === 3 ? ' connect-illustration--success' : ''}">${icon(step.icon)}<i></i></span><h3>${step.title}</h3><p>${step.text}</p><ul>${step.points.map((point) => `<li>${icon('check')} ${point}</li>`).join('')}</ul>`;
+    if (action) action.innerHTML = `${step.action} ${icon('chevron-right')}`;
+    return;
   }
-  if (action) action.innerHTML = `${step.action} ${icon('chevron-right')}`;
+  if (mode) mode.textContent = 'Protected per-store connection';
+  const store = selectedConnectionStore();
+  const worker = store?.workerId ? escapeHtml(store.workerId) : 'будет создан автоматически';
+  const pages = [
+    `<span class="connect-illustration">${icon('plus')}<i></i></span><h3>${store?.status === 'awaiting_credentials' ? 'Продолжить подключение' : 'Новый магазин'}</h3><p>Подключение создаётся внутри текущего workspace и получает отдельный worker.</p>${store?.status === 'awaiting_credentials' ? `<div class="connection-store-badge"><span class="store-logo">FP</span><span><strong>${escapeHtml(store.displayName)}</strong><small>${worker}</small></span></div>` : '<div class="connection-form"><label>Название магазина<input name="storeName" maxlength="80" placeholder="Например, Магазин Финляндия" autocomplete="off"></label><small>Название обновится после read-only проверки профиля.</small></div>'}`,
+    `<span class="connect-illustration">${icon('lock')}<i></i></span><h3>Golden Key</h3><p>Ключ отправляется напрямую в vault для магазина «${escapeHtml(store?.displayName || 'Новый магазин')}» и не возвращается обратно.</p><div class="connection-form"><label>Golden Key<input type="password" name="goldenKey" minlength="12" maxlength="4096" autocomplete="off" spellcheck="false" placeholder="Вставьте ключ один раз"></label><small>Не отправляйте Golden Key в Telegram или поддержку.</small></div>`,
+    `<span class="connect-illustration">${icon('shield')}<i></i></span><h3>Закреплённый прокси</h3><p>Этот прокси будет использовать только worker <strong>${worker}</strong>.</p><div class="connection-form"><label>Proxy URL<input type="password" name="proxyUrl" maxlength="2048" autocomplete="off" spellcheck="false" placeholder="socks5://user:password@host:port"></label><small>Поддерживаются http, https и socks5. Адрес и пароль не появятся в ответе API.</small></div>`,
+    `<span class="connect-illustration connect-illustration--success">${icon('check')}<i></i></span><h3>Read-only проверка</h3><p>ZenLot проверит авторизацию через закреплённый прокси. Сообщения, лоты, заказы и деньги не изменяются.</p><div class="connection-checks"><span>Golden Key <b>${connectionStatus?.credential?.configured ? 'Добавлен' : 'Ожидается'}</b></span><span>Прокси <b>${connectionStatus?.proxy?.configured ? 'Добавлен' : 'Ожидается'}</b></span><span>Live-действия <b>Отключены</b></span></div>`,
+  ];
+  if (body) body.innerHTML = pages[connectionStep];
+  if (action) {
+    const labels = [store?.status === 'awaiting_credentials' ? 'Продолжить' : 'Создать магазин', 'Сохранить Golden Key', 'Закрепить прокси', 'Запустить read-only проверку'];
+    action.disabled = connectionBusy;
+    action.innerHTML = `${connectionBusy ? 'Проверяем…' : labels[connectionStep]} ${icon('chevron-right')}`;
+  }
 }
 
 function setModal(open) {
@@ -711,7 +712,10 @@ function setModal(open) {
   if (open) {
     modal.hidden = false;
     connectionStep = 0;
-    renderConnectionDemo();
+    connectionStatus = null;
+    const selected = state.storeFleet.stores.find((store) => store.id === state.storeFleet.selectedStoreId);
+    connectionDraftId = selected?.status === 'awaiting_credentials' ? selected.id : null;
+    renderConnectionWizard();
   }
   requestAnimationFrame(() => {
     modal.classList.toggle('is-open', open);
@@ -724,6 +728,62 @@ function setModal(open) {
     window.setTimeout(() => {
       if (!modal.classList.contains('is-open')) modal.hidden = true;
     }, 220);
+  }
+}
+
+async function advanceConnectionWizard() {
+  if (!liveConnectionMode()) {
+    if (connectionStep < connectionDemoSteps.length - 1) {
+      connectionStep += 1;
+      renderConnectionWizard();
+      return;
+    }
+    setModal(false);
+    showToast('Демонстрация завершена. Реальные секреты не вводились.', 'success');
+    return;
+  }
+  if (connectionBusy) return;
+  const modal = document.querySelector('.connect-modal');
+  let submittedValue = null;
+  if (connectionStep === 0 && !connectionDraftId) {
+    submittedValue = modal.querySelector('input[name="storeName"]')?.value.trim();
+    if (!submittedValue) { showToast('Введите название магазина'); return; }
+  }
+  if (connectionStep === 1) {
+    submittedValue = modal.querySelector('input[name="goldenKey"]')?.value;
+    if (!submittedValue) { showToast('Введите Golden Key'); return; }
+  }
+  if (connectionStep === 2) {
+    submittedValue = modal.querySelector('input[name="proxyUrl"]')?.value;
+    if (!submittedValue) { showToast('Введите Proxy URL'); return; }
+  }
+  connectionBusy = true;
+  renderConnectionWizard();
+  try {
+    if (connectionStep === 0 && !connectionDraftId) {
+      const draft = await apiRequest('/api/v1/stores', { method: 'POST', authenticated: true, body: { displayName: submittedValue } });
+      connectionDraftId = draft.id;
+      await loadStoreFleet();
+    } else if (connectionStep === 1) {
+      connectionStatus = await apiRequest(`/api/v1/stores/${encodeURIComponent(connectionDraftId)}/connection/golden-key`, { method: 'POST', authenticated: true, body: { goldenKey: submittedValue } });
+      submittedValue = null;
+    } else if (connectionStep === 2) {
+      connectionStatus = await apiRequest(`/api/v1/stores/${encodeURIComponent(connectionDraftId)}/connection/proxy`, { method: 'POST', authenticated: true, body: { proxyUrl: submittedValue } });
+      submittedValue = null;
+    } else if (connectionStep === 3) {
+      connectionStatus = await apiRequest(`/api/v1/stores/${encodeURIComponent(connectionDraftId)}/connection/preflight`, { method: 'POST', authenticated: true, body: {} });
+      await loadStoreFleet();
+      setModal(false);
+      showToast('Магазин подключён в read-only режиме через отдельный worker', 'success');
+      return;
+    }
+    connectionStep += 1;
+    showToast(`Шаг ${connectionStep + 1} из 4`, 'success');
+  } catch (error) {
+    showToast(error.message);
+  } finally {
+    connectionBusy = false;
+    renderConnectionWizard();
   }
 }
 
@@ -850,16 +910,7 @@ function bindInteractions() {
     }
   });
 
-  document.querySelector('[data-connect-next]')?.addEventListener('click', () => {
-    if (connectionStep < connectionDemoSteps.length - 1) {
-      connectionStep += 1;
-      renderConnectionDemo();
-      showToast(`Шаг ${connectionStep + 1} из ${connectionDemoSteps.length}`);
-      return;
-    }
-    setModal(false);
-    showToast('Демо-магазин подключён в безопасном read-only режиме.', 'success');
-  });
+  document.querySelector('[data-connect-next]')?.addEventListener('click', () => advanceConnectionWizard());
 
   byId('send-message')?.addEventListener('click', () => {
     const composer = byId('message-composer');
