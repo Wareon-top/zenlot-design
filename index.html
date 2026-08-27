@@ -51,6 +51,35 @@
     .faq-list,details{border-color:#292a24}summary:after{border-color:#35362f;color:#ffc526}details p{color:#99978d}
     .cta-box{background:radial-gradient(circle at 90% 120%,rgba(255,222,96,.25),transparent 34%),linear-gradient(135deg,#f2a913,#ffcc28);color:#17140a;box-shadow:0 34px 90px rgba(0,0,0,.35)}.cta-copy span,.cta p{color:#4d3c12}.cta .button{border-color:#17140a;background:#17140a;color:#fff}
     footer{border-color:#292a24;background:#0b0c09}.footer-about p,.footer-col a{color:#929087}.footer-bottom{border-color:#292a24;color:#6f6e67}
+
+    /* Visual hierarchy refinement */
+    .header-inner{height:88px}
+    .nav{gap:5px;padding:6px;border:1px solid rgba(255,255,255,.07);border-radius:999px;background:rgba(255,255,255,.035);box-shadow:0 12px 34px rgba(0,0,0,.18)}
+    .nav a{padding:11px 18px;border-radius:999px;transition:background .2s,color .2s}
+    .nav a:hover{background:rgba(255,255,255,.06)}
+    .header-actions{gap:16px}.header-start{min-height:48px;padding-inline:21px}
+    .hero{min-height:850px;padding:104px 0 76px}
+    .hero:after{position:absolute;z-index:-1;top:80px;left:50%;width:580px;height:220px;border-radius:50%;background:rgba(255,180,20,.07);filter:blur(70px);transform:translateX(-50%);content:""}
+    .badge{margin-bottom:31px;padding:10px 15px;box-shadow:0 0 34px rgba(255,187,25,.12)}
+    .hero h1{font-size:clamp(66px,7.8vw,104px);line-height:.91;letter-spacing:-.075em}
+    .hero h1 span{display:inline-block;padding-bottom:.08em;background:linear-gradient(100deg,#ffd83f 4%,#ffb21a 56%,#ff8b18);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero p{max-width:760px;margin-top:32px;font-size:19px;line-height:1.6}
+    .hero-actions{gap:13px;margin-top:38px}.hero-actions .button{min-width:215px;min-height:60px;border-radius:17px;font-size:14px}
+    .hero .note{margin-top:19px}
+    .window{margin-top:82px;padding:12px;border-radius:34px}.app{border-radius:24px}
+    .trust{margin-top:30px}
+    .features{padding-top:155px}
+    .features .section-head{margin-bottom:58px}
+    .features .grid{grid-template-columns:repeat(12,1fr)}
+    .feature{position:relative;grid-column:span 3;min-height:245px;overflow:hidden}
+    .feature:nth-child(-n+2){grid-column:span 6;min-height:315px;padding:36px;background:radial-gradient(circle at 100% 0,rgba(255,190,28,.08),transparent 38%),#11120f}
+    .feature:nth-child(-n+2) h3{font-size:27px}.feature:nth-child(-n+2) p{max-width:470px;font-size:14px}
+    .feature:after{position:absolute;right:-16px;bottom:-45px;color:rgba(255,202,34,.035);font-size:130px;font-weight:800;line-height:1;content:attr(data-index)}
+    .feature-icon{margin-bottom:35px;border:1px solid #443b21}
+    .plugin{transition:transform .25s,border-color .25s,background .25s}.plugin:hover{transform:translateY(-5px);border-color:#5b512e;background:#151610}
+    .plugin-logo{border:1px solid #443b21}
+    @media(max-width:920px){.header-inner{height:76px}.hero{min-height:auto;padding-top:78px}.features .grid{grid-template-columns:repeat(2,1fr)}.feature,.feature:nth-child(-n+2){grid-column:auto;min-height:260px;padding:28px}.feature:nth-child(-n+2) h3{font-size:23px}}
+    @media(max-width:650px){.header-inner{height:68px}.hero{padding-top:58px}.hero h1{font-size:54px}.hero p{font-size:16px}.hero-actions .button{min-height:54px}.window{margin-top:55px}.features .grid{grid-template-columns:1fr}.feature,.feature:nth-child(-n+2){min-height:230px}.feature:after{font-size:100px}}
   </style>
 </head>
 <body>
@@ -69,7 +98,7 @@
       <div class="trust"><article><span class="trust-icon">24</span><div><strong>Работа в облаке</strong><small>Компьютер можно выключить</small></div></article><article><span class="trust-icon">∞</span><div><strong>Несколько магазинов</strong><small>Переключение в один клик</small></div></article><article><span class="trust-icon">✓</span><div><strong>Прозрачные действия</strong><small>Статусы и журнал событий</small></div></article></div>
     </div></section>
     <section class="features" id="features"><div class="container"><div class="section-head"><div><p class="eyebrow">Возможности</p><h2 class="title">Рутина уходит.<br>Контроль остаётся.</h2></div><p class="lead">ZenLot собирает главное в одной системе: от новых сообщений до состояния каждого подключённого магазина.</p></div><div class="grid">
-      <article class="feature"><span class="feature-icon">01</span><h3>Единый обзор</h3><p>Заказы, выручка, сообщения и важные события видны сразу после входа.</p></article><article class="feature"><span class="feature-icon">02</span><h3>Несколько магазинов</h3><p>Подключайте аккаунты отдельно и быстро переключайтесь между ними без путаницы.</p></article><article class="feature"><span class="feature-icon">03</span><h3>Автовыдача</h3><p>Настраивайте выдачу цифровых товаров и следите за результатом каждой операции.</p></article><article class="feature"><span class="feature-icon">04</span><h3>Сообщения</h3><p>Не пропускайте вопросы покупателей и управляйте шаблонами ответов из одного окна.</p></article><article class="feature"><span class="feature-icon">05</span><h3>Контроль лотов</h3><p>Следите за остатками и статусами предложений без бесконечных вкладок.</p></article><article class="feature"><span class="feature-icon">06</span><h3>История действий</h3><p>Видно, что сработало, что ожидает выполнения и где нужно ваше внимание.</p></article>
+      <article class="feature" data-index="01"><span class="feature-icon">01</span><h3>Единый обзор</h3><p>Заказы, выручка, сообщения и важные события видны сразу после входа.</p></article><article class="feature" data-index="02"><span class="feature-icon">02</span><h3>Несколько магазинов</h3><p>Подключайте аккаунты отдельно и быстро переключайтесь между ними без путаницы.</p></article><article class="feature" data-index="03"><span class="feature-icon">03</span><h3>Автовыдача</h3><p>Настраивайте выдачу цифровых товаров и следите за результатом каждой операции.</p></article><article class="feature" data-index="04"><span class="feature-icon">04</span><h3>Сообщения</h3><p>Не пропускайте вопросы покупателей и управляйте шаблонами ответов из одного окна.</p></article><article class="feature" data-index="05"><span class="feature-icon">05</span><h3>Контроль лотов</h3><p>Следите за остатками и статусами предложений без бесконечных вкладок.</p></article><article class="feature" data-index="06"><span class="feature-icon">06</span><h3>История действий</h3><p>Видно, что сработало, что ожидает выполнения и где нужно ваше внимание.</p></article>
     </div></div></section>
     <section class="workflow" id="comparison"><div class="container workflow-box"><div><p class="eyebrow">Простой старт</p><h2 class="title">Первый магазин — без сложной установки.</h2><p class="lead">Каждый шаг объясняется в интерфейсе, а подключения настраиваются отдельно.</p></div><div class="steps"><article class="step"><span class="number">01</span><div><h3>Создайте аккаунт</h3><p>Один профиль станет общей точкой управления.</p></div></article><article class="step"><span class="number">02</span><div><h3>Подключите магазин</h3><p>Добавьте необходимые данные в пошаговом мастере.</p></div></article><article class="step"><span class="number">03</span><div><h3>Выберите автоматизацию</h3><p>Включайте только нужные функции и контролируйте их статус.</p></div></article></div></div></section>
     <section class="plugins" id="plugins"><div class="container"><div class="section-head"><div><p class="eyebrow">Каталог плагинов</p><h2 class="title">Расширяйте ZenLot<br>под свой магазин.</h2></div><a class="button" href="app/#plugins">Смотреть все плагины</a></div><div class="grid">
