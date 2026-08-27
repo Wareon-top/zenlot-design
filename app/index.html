@@ -65,34 +65,28 @@
         </div>
 
         <nav class="sidebar-nav">
-          <span class="sidebar-nav__label">Работа</span>
-          <button class="nav-item is-active" type="button" data-view-target="dashboard"><svg><use href="#i-grid"/></svg><span>Обзор</span></button>
-
+          <button class="nav-item is-active" type="button" data-view-target="dashboard"><svg><use href="#i-grid"/></svg><span>Панель</span></button>
           <details class="nav-group" open>
             <summary><svg><use href="#i-bag"/></svg><span>Магазин</span><svg><use href="#i-chevron"/></svg></summary>
             <div>
               <button class="nav-item nav-item--nested" type="button" data-view-target="orders"><span>Заказы</span><b>12</b></button>
               <button class="nav-item nav-item--nested" type="button" data-view-target="messages"><span>Сообщения</span><b class="nav-item__alert">3</b></button>
               <button class="nav-item nav-item--nested" type="button" data-view-target="lots"><span>Лоты и товары</span></button>
+              <button class="nav-item nav-item--nested" type="button" data-view-target="analytics"><span>Аналитика</span></button>
             </div>
           </details>
-
           <button class="nav-item" type="button" data-view-target="automations"><svg><use href="#i-bolt"/></svg><span>Автоматизация</span><i></i></button>
           <button class="nav-item" type="button" data-view-target="plugins"><svg><use href="#i-puzzle"/></svg><span>Плагины</span></button>
-          <button class="nav-item" type="button" data-view-target="analytics"><svg><use href="#i-chart"/></svg><span>Аналитика</span></button>
-
+          <button class="nav-item" type="button" data-view-target="billing"><svg><use href="#i-card"/></svg><span>Финансы</span></button>
+          <button class="nav-item" type="button" data-view-target="guide"><svg><use href="#i-help"/></svg><span>База знаний</span></button>
           <details class="nav-group">
-            <summary><svg><use href="#i-send"/></svg><span>Подключения</span><svg><use href="#i-chevron"/></svg></summary>
+            <summary><svg><use href="#i-more"/></svg><span>Настройки</span><svg><use href="#i-chevron"/></svg></summary>
             <div>
               <button class="nav-item nav-item--nested" type="button" data-view-target="telegram"><span>Telegram</span></button>
-              <button class="nav-item nav-item--nested" type="button" data-view-target="security"><span>Доступ и секреты</span></button>
+              <button class="nav-item nav-item--nested" type="button" data-view-target="security"><span>Безопасность</span></button>
+              <button class="nav-item nav-item--nested" type="button" data-view-target="events"><span>Журнал событий</span></button>
             </div>
           </details>
-
-          <span class="sidebar-nav__label">Настройки</span>
-          <button class="nav-item" type="button" data-view-target="billing"><svg><use href="#i-card"/></svg><span>Финансы</span></button>
-          <button class="nav-item" type="button" data-view-target="events"><svg><use href="#i-list"/></svg><span>Журнал</span></button>
-          <button class="nav-item" type="button" data-view-target="guide"><svg><use href="#i-help"/></svg><span>База знаний</span></button>
         </nav>
 
         <div class="sidebar__bottom">
@@ -137,8 +131,8 @@
 
             <section class="start-grid">
               <article class="start-card start-card--accent"><span class="start-card__icon"><svg><use href="#i-shield"/></svg></span><div><span class="panel-label">Следующий шаг</span><h2>Завершите подключение</h2><p>Добавьте Golden Key и закреплённый прокси. ZenLot выполнит только read-only проверку.</p></div><button class="button button--primary" type="button" data-open-connect>Открыть мастер <svg><use href="#i-chevron"/></svg></button></article>
-              <article class="start-card"><span class="start-card__icon"><svg><use href="#i-chat"/></svg></span><div><span class="panel-label">Входящие</span><h2>Сообщения покупателей</h2><p>Диалоги, быстрые ответы и проверка предложенных автоматизаций.</p></div><button class="text-action" type="button" data-view-link="messages">Открыть сообщения <svg><use href="#i-chevron"/></svg></button></article>
-              <article class="start-card"><span class="start-card__icon"><svg><use href="#i-puzzle"/></svg></span><div><span class="panel-label">Расширения</span><h2>Автоматизация под задачу</h2><p>Подключайте модули с прозрачными разрешениями и журналом действий.</p></div><button class="text-action" type="button" data-view-link="plugins">Открыть каталог <svg><use href="#i-chevron"/></svg></button></article>
+              <article class="start-card start-card--messages"><span class="start-card__icon"><svg><use href="#i-chat"/></svg></span><div><span class="panel-label">Входящие</span><h2>Сообщения покупателей</h2><p>Диалоги, быстрые ответы и проверка предложенных автоматизаций.</p></div><button class="text-action" type="button" data-view-link="messages">Открыть сообщения <svg><use href="#i-chevron"/></svg></button></article>
+              <article class="start-card start-card--plugins"><span class="start-card__icon"><svg><use href="#i-puzzle"/></svg></span><div><span class="panel-label">Расширения</span><h2>Автоматизация под задачу</h2><p>Подключайте модули с прозрачными разрешениями и журналом действий.</p></div><button class="text-action" type="button" data-view-link="plugins">Открыть каталог <svg><use href="#i-chevron"/></svg></button></article>
             </section>
           </section>
 
