@@ -66,7 +66,8 @@
     .hero p{max-width:760px;margin-top:32px;font-size:19px;line-height:1.6}
     .hero-actions{gap:13px;margin-top:38px}.hero-actions .button{min-width:215px;min-height:60px;border-radius:17px;font-size:14px}
     .hero .note{margin-top:19px}
-    .window{margin-top:82px;padding:12px;border-radius:34px}.app{border-radius:24px}
+    .hero-banner{display:block;margin-top:72px;overflow:hidden;border:1px solid rgba(255,202,34,.22);border-radius:32px;background:#160a03;box-shadow:0 30px 90px rgba(0,0,0,.42)}
+    .hero-banner img{display:block;width:100%;height:auto}
     .trust{margin-top:30px}
     .features{padding-top:155px}
     .features .section-head{margin-bottom:58px}
@@ -93,7 +94,7 @@
     .plan--basic .plan-visual svg{width:62px}.plan--business .plan-visual svg{width:78px}
     .plan-name-row{display:flex;align-items:center;justify-content:space-between;gap:12px}.plan-name-row small{color:var(--plan-color);font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
     @media(max-width:920px){.header-inner{height:76px}.hero{min-height:auto;padding-top:78px}.features .grid{grid-template-columns:repeat(2,1fr)}.feature,.feature:nth-child(-n+2){grid-column:auto;min-height:260px;padding:28px}.feature:nth-child(-n+2) h3{font-size:23px}}
-    @media(max-width:650px){.header-inner{height:68px}.hero{padding-top:58px}.hero h1{font-size:54px}.hero p{font-size:16px}.hero-actions .button{min-height:54px}.window{margin-top:55px}.features .grid{grid-template-columns:1fr}.feature,.feature:nth-child(-n+2){min-height:230px}.feature:after{font-size:100px}}
+    @media(max-width:650px){.header-inner{height:68px}.hero{padding-top:58px}.hero h1{font-size:54px}.hero p{font-size:16px}.hero-actions .button{min-height:54px}.hero-banner{margin-top:44px;border-radius:20px}.features .grid{grid-template-columns:1fr}.feature,.feature:nth-child(-n+2){min-height:230px}.feature:after{font-size:100px}}
   </style>
 </head>
 <body>
@@ -105,10 +106,7 @@
   <main id="top">
     <section class="hero"><div class="container">
       <div class="hero-copy"><div class="badge"><i></i>Облачная платформа для продавцов FunPay</div><h1>Все магазины.<br><span>Один ZenLot.</span></h1><p>Следите за заказами, сообщениями, лотами и автоматизацией из одной понятной панели — даже если у вас несколько аккаунтов.</p><div class="hero-actions"><a class="button primary" href="#tariffs">Попробовать ZenLot →</a><a class="button" href="app/">Открыть демо кабинета</a></div><div class="note">Без установки на компьютер · Каждый магазин настраивается отдельно</div></div>
-      <div class="window" aria-label="Предпросмотр кабинета ZenLot"><div class="app">
-        <aside class="side"><div class="mini-brand"><span class="brand-mark"></span>ZenLot</div><div class="picker"><span class="avatar">GM</span><div><small>Выбран магазин</small><strong>Game Market</strong></div></div><div class="mini-nav"><span class="active">Обзор</span><span>Заказы</span><span>Сообщения</span><span>Лоты</span><span>Автоматизация</span><span>Аналитика</span></div></aside>
-        <div class="demo"><div class="demo-top"><div><small>Четверг, 27 августа</small><h2>Добрый день, Алексей</h2></div><span class="status">Магазин онлайн</span></div><div class="metrics"><article class="metric"><span>Заказы сегодня</span><strong>28</strong><small>+12%</small></article><article class="metric"><span>Выручка</span><strong>34 820 ₽</strong></article><article class="metric"><span>Сообщения</span><strong>7</strong><small>3 важных</small></article></div><div class="demo-grid"><article class="demo-card"><div class="card-head"><strong>Продажи за неделю</strong><span>24–30 августа</span></div><div class="chart"><i style="height:32%"></i><i style="height:47%"></i><i style="height:39%"></i><i style="height:70%"></i><i style="height:58%"></i><i style="height:83%"></i><i style="height:76%"></i><i style="height:94%"></i></div></article><article class="demo-card"><div class="card-head"><strong>Последние события</strong><span>Все</span></div><div class="event"><span class="event-icon">₽</span><div><strong>Новый заказ #1842</strong><small>2 минуты назад</small></div><b>+1 490 ₽</b></div><div class="event"><span class="event-icon">M</span><div><strong>Новое сообщение</strong><small>5 минут назад</small></div><b>Открыть</b></div><div class="event"><span class="event-icon">✓</span><div><strong>Товар выдан</strong><small>12 минут назад</small></div><b>Готово</b></div></article></div></div>
-      </div></div>
+      <div class="hero-banner"><img src="assets/zenlot-main-banner.jpg" alt="Автоматизация продаж на FunPay с ZenLot" width="1710" height="919"></div>
       <div class="trust"><article><span class="trust-icon">24</span><div><strong>Работа в облаке</strong><small>Компьютер можно выключить</small></div></article><article><span class="trust-icon">∞</span><div><strong>Несколько магазинов</strong><small>Переключение в один клик</small></div></article><article><span class="trust-icon">✓</span><div><strong>Прозрачные действия</strong><small>Статусы и журнал событий</small></div></article></div>
     </div></section>
     <section class="features" id="features"><div class="container"><div class="section-head"><div><p class="eyebrow">Возможности</p><h2 class="title">Рутина уходит.<br>Контроль остаётся.</h2></div><p class="lead">ZenLot собирает главное в одной системе: от новых сообщений до состояния каждого подключённого магазина.</p></div><div class="grid">
