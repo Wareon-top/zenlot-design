@@ -314,29 +314,44 @@
       <footer><span class="connect-safe-note">Секреты не отображаются повторно</span><button class="button button--ghost" type="button" data-close-connect>Отмена</button><button class="button button--primary" type="button" data-connect-next>Начать подключение <svg><use href="#i-chevron"/></svg></button></footer>
     </section>
 
-    <div class="auth-backdrop" data-auth-close></div>
+    <div class="auth-backdrop"></div>
     <section class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" hidden>
-      <button class="icon-button auth-modal__close" type="button" aria-label="Закрыть" data-auth-close><svg><use href="#i-close"/></svg></button>
-      <div class="auth-modal__brand"><span class="brand__mark"></span><strong>ZenLot</strong></div>
-      <span class="panel-label">Protected account access</span>
-      <h2 id="auth-modal-title">Вход в кабинет</h2>
-      <p>Сессия создаётся через ZenLot API и хранится только до закрытия вкладки.</p>
-      <div class="auth-tabs" role="tablist">
-        <button class="is-active" type="button" role="tab" data-auth-mode="login">Вход</button>
-        <button type="button" role="tab" data-auth-mode="register">Регистрация</button>
+      <aside class="auth-promo">
+        <a class="auth-modal__brand" href="../"><span class="brand__mark"></span><strong>ZenLot</strong></a>
+        <div class="auth-promo__copy">
+          <span>Единое рабочее пространство</span>
+          <h2>Все магазины остаются под контролем.</h2>
+          <p>Заказы, сообщения, лоты и автоматизация в одной спокойной панели.</p>
+        </div>
+        <div class="auth-promo__points">
+          <span><i>✓</i> Отдельное подключение каждого магазина</span>
+          <span><i>✓</i> Секреты не отображаются повторно</span>
+          <span><i>✓</i> Прозрачный журнал действий</span>
+        </div>
+      </aside>
+      <div class="auth-content">
+        <a class="auth-modal__close" href="../" aria-label="Вернуться на главную"><svg><use href="#i-close"/></svg></a>
+        <span class="panel-label">Защищённый доступ</span>
+        <h2 id="auth-modal-title">Вход в кабинет</h2>
+        <p class="auth-intro">Войдите, чтобы продолжить работу с магазинами ZenLot.</p>
+        <div class="auth-tabs" role="tablist">
+          <button class="is-active" type="button" role="tab" data-auth-mode="login">Вход</button>
+          <button type="button" role="tab" data-auth-mode="register">Регистрация</button>
+        </div>
+        <form class="auth-form" data-auth-form novalidate>
+          <label>Email<input name="email" type="email" autocomplete="email" required placeholder="you@example.com"></label>
+          <label>Пароль<input name="password" type="password" autocomplete="current-password" minlength="12" maxlength="256" required placeholder="Не менее 12 символов"></label>
+          <div class="auth-message" data-auth-message aria-live="polite"></div>
+          <button class="button button--primary button--wide" type="submit" data-auth-submit>Войти</button>
+        </form>
+        <div class="auth-session" data-auth-session hidden>
+          <span class="auth-session__avatar" data-auth-session-avatar>ZL</span>
+          <div><strong data-auth-session-email></strong><small>Защищённая сессия активна</small></div>
+          <button class="button button--ghost" type="button" data-auth-logout>Выйти</button>
+        </div>
+        <p class="auth-legal">Продолжая, вы принимаете условия использования и политику конфиденциальности.</p>
+        <small class="auth-api-state">API: <b data-api-state>локальный контур</b></small>
       </div>
-      <form class="auth-form" data-auth-form novalidate>
-        <label>Email<input name="email" type="email" autocomplete="email" required placeholder="you@example.com"></label>
-        <label>Пароль<input name="password" type="password" autocomplete="current-password" minlength="12" maxlength="256" required placeholder="Не менее 12 символов"></label>
-        <div class="auth-message" data-auth-message aria-live="polite"></div>
-        <button class="button button--primary button--wide" type="submit" data-auth-submit>Войти</button>
-      </form>
-      <div class="auth-session" data-auth-session hidden>
-        <span class="auth-session__avatar" data-auth-session-avatar>ZL</span>
-        <div><strong data-auth-session-email></strong><small>Защищённая сессия активна</small></div>
-        <button class="button button--ghost" type="button" data-auth-logout>Выйти</button>
-      </div>
-      <small class="auth-api-state">API: <b data-api-state>локальный контур</b></small>
     </section>
 
     <div class="toast-region" aria-live="polite" aria-atomic="true"></div>
