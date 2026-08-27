@@ -135,8 +135,12 @@ function setAuthMode(mode) {
   const title = byId('auth-modal-title');
   const submit = document.querySelector('[data-auth-submit]');
   const password = document.querySelector('[data-auth-form] input[name="password"]');
+  const intro = document.querySelector('.auth-intro');
   if (title) title.textContent = authState.mode === 'register' ? 'Создать аккаунт' : 'Вход в кабинет';
   if (submit) submit.textContent = authState.mode === 'register' ? 'Зарегистрироваться' : 'Войти';
+  if (intro) intro.textContent = authState.mode === 'register'
+    ? 'Создайте единый аккаунт для управления магазинами ZenLot.'
+    : 'Войдите, чтобы продолжить работу с магазинами ZenLot.';
   if (password) password.autocomplete = authState.mode === 'register' ? 'new-password' : 'current-password';
   const message = document.querySelector('[data-auth-message]');
   if (message) { message.textContent = ''; message.className = 'auth-message'; }
@@ -977,6 +981,11 @@ function init() {
   renderStoreFleet();
   restoreSession();
   setView(location.hash.slice(1) || 'dashboard', false);
+  const requestedAuthMode = new URLSearchParams(location.search).get('auth');
+  if (requestedAuthMode === 'login' || requestedAuthMode === 'register') {
+    setAuthMode(requestedAuthMode);
+    setAuthModal(true);
+  }
   updateClock();
   window.setInterval(updateClock, 1000);
   window.addEventListener('hashchange', () => setView(location.hash.slice(1), false));
