@@ -65,8 +65,8 @@
         </div>
 
         <nav class="sidebar-nav">
-          <span class="sidebar-nav__label">Рабочее пространство</span>
-          <button class="nav-item is-active" type="button" data-view-target="dashboard"><svg><use href="#i-grid"/></svg><span>Главная</span></button>
+          <span class="sidebar-nav__label">Работа</span>
+          <button class="nav-item is-active" type="button" data-view-target="dashboard"><svg><use href="#i-grid"/></svg><span>Обзор</span></button>
 
           <details class="nav-group" open>
             <summary><svg><use href="#i-bag"/></svg><span>Магазин</span><svg><use href="#i-chevron"/></svg></summary>
@@ -77,7 +77,7 @@
             </div>
           </details>
 
-          <button class="nav-item" type="button" data-view-target="automations"><svg><use href="#i-bolt"/></svg><span>Автопилот</span><i></i></button>
+          <button class="nav-item" type="button" data-view-target="automations"><svg><use href="#i-bolt"/></svg><span>Автоматизация</span><i></i></button>
           <button class="nav-item" type="button" data-view-target="plugins"><svg><use href="#i-puzzle"/></svg><span>Плагины</span></button>
           <button class="nav-item" type="button" data-view-target="analytics"><svg><use href="#i-chart"/></svg><span>Аналитика</span></button>
 
@@ -89,7 +89,7 @@
             </div>
           </details>
 
-          <span class="sidebar-nav__label">Сервис</span>
+          <span class="sidebar-nav__label">Настройки</span>
           <button class="nav-item" type="button" data-view-target="billing"><svg><use href="#i-card"/></svg><span>Финансы</span></button>
           <button class="nav-item" type="button" data-view-target="events"><svg><use href="#i-list"/></svg><span>Журнал</span></button>
           <button class="nav-item" type="button" data-view-target="guide"><svg><use href="#i-help"/></svg><span>База знаний</span></button>
@@ -118,86 +118,27 @@
 
         <div class="view-stack">
           <section class="view is-active" data-view="dashboard" aria-labelledby="dashboard-title">
-            <div class="view-heading clean-heading">
-              <div><span class="eyebrow">Обзор</span><h1 id="dashboard-title">Панель управления</h1><p>Подключение магазина, состояние сервиса и главные действия без лишнего шума.</p></div>
-              <button class="button button--primary" type="button" data-open-connect><svg><use href="#i-plus"/></svg> Подключить магазин</button>
+            <div class="view-heading zen-heading">
+              <div><span class="eyebrow">ZenLot · рабочее пространство</span><h1 id="dashboard-title">Управляйте магазинами<br>в одном месте</h1><p>Выберите магазин и переходите к заказам, сообщениям или настройке автоматизации.</p></div>
+              <button class="button button--primary" type="button" data-open-connect><svg><use href="#i-plus"/></svg> Добавить магазин</button>
             </div>
 
-            <section class="activation-banner panel" aria-label="Статус активации">
-              <span class="activation-banner__icon"><svg><use href="#i-bolt"/></svg></span>
-              <div><strong>Магазин ещё не подключён</strong><p>Тариф активен. Завершите Telegram и FunPay-подключение, чтобы запустить управление.</p></div>
-              <button class="button button--light" type="button" data-open-connect>Продолжить настройку</button>
+            <section class="focus-store panel" aria-label="Выбранный магазин">
+              <div class="focus-store__identity"><span class="store-logo">FP</span><div><span class="panel-label">Выбранный магазин</span><strong data-active-store-name>Мой цифровой магазин</strong><small data-active-store-status>FunPay · ожидает подключения</small></div></div>
+              <div class="focus-store__metrics"><span><small>Баланс</small><strong data-active-store-balance>— ₽</strong></span><span><small>Лоты</small><strong data-active-store-lots>—</strong></span><span><small>Новые сообщения</small><strong data-active-store-unread>—</strong></span></div>
+              <button class="button button--ghost" type="button" data-view-link="orders">Открыть заказы <svg><use href="#i-chevron"/></svg></button>
             </section>
 
-            <section class="shop-summary panel" aria-label="Магазин FunPay">
-              <div class="shop-summary__identity"><span class="store-logo">FP</span><div><strong data-active-store-name>Мой цифровой магазин</strong><small data-active-store-status>FunPay · ожидает подключения</small></div></div>
-              <div class="shop-summary__metrics">
-                <span><small>Баланс</small><strong data-active-store-balance>— ₽</strong></span>
-                <span><small>Активные лоты</small><strong data-active-store-lots>—</strong></span>
-                <span><small>Сообщения</small><strong data-active-store-unread>—</strong></span>
-              </div>
-              <button class="icon-button" type="button" aria-label="Обновить магазин" data-toast="Синхронизация станет доступна после подключения"><svg><use href="#i-bolt"/></svg></button>
-            </section>
-
-            <section class="fleet-overview panel" aria-label="Все магазины">
-              <div class="panel-head"><div><span class="panel-label">Multi-account / isolated workers</span><h2>Все магазины в одном окне</h2></div><span class="fleet-capacity" data-fleet-capacity>3 из 10</span></div>
+            <section class="simple-section">
+              <div class="section-intro"><div><span class="eyebrow">Мои магазины</span><h2>Все аккаунты на виду</h2></div><span class="fleet-capacity" data-fleet-capacity>3 из 10</span></div>
               <div class="fleet-grid" data-fleet-grid></div>
-              <p class="fleet-note"><svg><use href="#i-shield"/></svg> У каждого магазина собственный worker и закреплённый прокси. Переключение меняет контекст интерфейса, но не сетевой маршрут аккаунта.</p>
+              <button class="inline-action" type="button" data-open-connect><svg><use href="#i-plus"/></svg> Подключить ещё один магазин</button>
             </section>
 
-            <div class="status-board">
-              <section class="status-card panel">
-                <header><span><svg><use href="#i-card"/></svg></span><h2>Статус</h2></header>
-                <div class="status-card__state status-card__state--warning"><i></i><span><strong>Ожидает настройки</strong><small>Golden Key и прокси не добавлены</small></span></div>
-                <button class="text-action" type="button" data-open-connect>Проверить подключение <svg><use href="#i-chevron"/></svg></button>
-              </section>
-              <section class="status-card panel">
-                <header><span><svg><use href="#i-bolt"/></svg></span><h2>Управление</h2></header>
-                <div class="control-actions">
-                  <button type="button" data-toast="Сначала подключите магазин">Запустить</button>
-                  <button type="button" data-toast="Магазин ещё не запущен">Остановить</button>
-                  <button type="button" data-toast="Сначала подключите магазин">Перезапустить</button>
-                </div>
-              </section>
-              <section class="status-card panel">
-                <header><span><svg><use href="#i-list"/></svg></span><h2>Журнал</h2></header>
-                <p>События сайта, Telegram и автоматизаций будут собраны в одном потоке.</p>
-                <button class="button button--secondary button--wide" type="button" data-view-link="events">Открыть журнал</button>
-              </section>
-            </div>
-
-            <section class="setup-panel panel">
-              <div class="setup-panel__head">
-                <div><span class="panel-label">Быстрый старт</span><h2>Подключите магазин за четыре шага</h2><p>Секретные данные вводятся только в защищённых полях сайта.</p></div>
-                <span class="setup-progress"><strong>1</strong> из 4</span>
-              </div>
-              <div class="setup-progressbar"><i></i></div>
-              <div class="setup-layout">
-                <div class="setup-list">
-                  <details open>
-                    <summary><b>01</b><span><strong>Активировать тариф</strong><small>Любой оплаченный тариф открывает подключение</small></span><svg><use href="#i-chevron"/></svg></summary>
-                    <div><span class="table-status table-status--success">Выполнено</span><p>Для демонстрации уже активирован тариф «Про».</p></div>
-                  </details>
-                  <details>
-                    <summary><b>02</b><span><strong>Подключить Telegram-бота</strong><small>Bot Token на сайте и одноразовый код после /start</small></span><svg><use href="#i-chevron"/></svg></summary>
-                    <div><p>Создайте бота через BotFather, добавьте токен в кабинете и подтвердите связь одноразовым кодом.</p><button type="button" data-view-link="telegram">Открыть Telegram</button></div>
-                  </details>
-                  <details>
-                    <summary><b>03</b><span><strong>Добавить FunPay и прокси</strong><small>Golden Key и закреплённый прокси вводятся только на сайте</small></span><svg><use href="#i-chevron"/></svg></summary>
-                    <div><p>ZenLot выполнит безопасную read-only проверку соединения перед запуском автоматизаций.</p><button type="button" data-open-connect>Открыть мастер</button></div>
-                  </details>
-                  <details>
-                    <summary><b>04</b><span><strong>Проверить и запустить</strong><small>Диагностика соединения и доступ к управлению</small></span><svg><use href="#i-chevron"/></svg></summary>
-                    <div><p>После успешной проверки управление станет доступно одновременно на сайте и в Telegram.</p></div>
-                  </details>
-                </div>
-                <aside class="setup-note">
-                  <span><svg><use href="#i-shield"/></svg></span>
-                  <h3>Секреты остаются секретами</h3>
-                  <p>Golden Key, Bot Token и данные прокси нельзя отправлять в Telegram, поддержку или публичный репозиторий.</p>
-                  <button type="button" data-view-link="guide">Открыть базу знаний <svg><use href="#i-chevron"/></svg></button>
-                </aside>
-              </div>
+            <section class="start-grid">
+              <article class="start-card start-card--accent"><span class="start-card__icon"><svg><use href="#i-shield"/></svg></span><div><span class="panel-label">Следующий шаг</span><h2>Завершите подключение</h2><p>Добавьте Golden Key и закреплённый прокси. ZenLot выполнит только read-only проверку.</p></div><button class="button button--primary" type="button" data-open-connect>Открыть мастер <svg><use href="#i-chevron"/></svg></button></article>
+              <article class="start-card"><span class="start-card__icon"><svg><use href="#i-chat"/></svg></span><div><span class="panel-label">Входящие</span><h2>Сообщения покупателей</h2><p>Диалоги, быстрые ответы и проверка предложенных автоматизаций.</p></div><button class="text-action" type="button" data-view-link="messages">Открыть сообщения <svg><use href="#i-chevron"/></svg></button></article>
+              <article class="start-card"><span class="start-card__icon"><svg><use href="#i-puzzle"/></svg></span><div><span class="panel-label">Расширения</span><h2>Автоматизация под задачу</h2><p>Подключайте модули с прозрачными разрешениями и журналом действий.</p></div><button class="text-action" type="button" data-view-link="plugins">Открыть каталог <svg><use href="#i-chevron"/></svg></button></article>
             </section>
           </section>
 
@@ -367,10 +308,10 @@
 
     <div class="modal-backdrop" data-modal-backdrop></div>
     <section class="connect-modal" role="dialog" aria-modal="true" aria-labelledby="connect-modal-title" hidden>
-      <header><div><span class="panel-label">Connection wizard / Demo</span><h2 id="connect-modal-title">Подключение магазина</h2></div><button class="icon-button" type="button" aria-label="Закрыть" data-close-connect><svg><use href="#i-close"/></svg></button></header>
-      <div class="connect-progress"><span class="is-active"><b>01</b><small>Тариф</small></span><i></i><span><b>02</b><small>Telegram</small></span><i></i><span><b>03</b><small>FunPay</small></span><i></i><span><b>04</b><small>Готово</small></span></div>
+      <header><div><span class="panel-label" data-connection-mode>Per-store connection</span><h2 id="connect-modal-title">Подключение магазина</h2></div><button class="icon-button" type="button" aria-label="Закрыть" data-close-connect><svg><use href="#i-close"/></svg></button></header>
+      <div class="connect-progress"><span class="is-active"><b>01</b><small>Магазин</small></span><i></i><span><b>02</b><small>Golden Key</small></span><i></i><span><b>03</b><small>Прокси</small></span><i></i><span><b>04</b><small>Проверка</small></span></div>
       <div class="connect-modal__body"><span class="connect-illustration"><svg><use href="#i-lock"/></svg><i></i></span><h3>Безопасное подключение</h3><p>ZenLot сначала проверит подписку и Telegram, затем предложит защищённые поля для Golden Key и прокси. Секреты никогда не отправляются сообщениями.</p><ul><li><svg><use href="#i-check"/></svg> Тариф «Про» активен</li><li><svg><use href="#i-check"/></svg> Одноразовая привязка Telegram</li><li><svg><use href="#i-check"/></svg> Read-only проверка перед автоматизацией</li></ul></div>
-      <footer><button class="button button--ghost" type="button" data-close-connect>Отмена</button><button class="button button--primary" type="button" data-connect-next>Начать подключение <svg><use href="#i-chevron"/></svg></button></footer>
+      <footer><span class="connect-safe-note">Секреты не отображаются повторно</span><button class="button button--ghost" type="button" data-close-connect>Отмена</button><button class="button button--primary" type="button" data-connect-next>Начать подключение <svg><use href="#i-chevron"/></svg></button></footer>
     </section>
 
     <div class="auth-backdrop" data-auth-close></div>
