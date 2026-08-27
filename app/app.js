@@ -48,6 +48,8 @@ const state = {
     ]
   },
   finance: { stores: [], withdrawalIntents: [], liveWithdrawalEnabled: false },
+  storeContent: { observedAt: null, orders: [], messages: [], lots: [] },
+  onboarding: null,
   analytics: [
     { day: 'Пн', revenue: 42, orders: 26 }, { day: 'Вт', revenue: 58, orders: 36 },
     { day: 'Ср', revenue: 47, orders: 31 }, { day: 'Чт', revenue: 76, orders: 49 },
@@ -87,11 +89,26 @@ const iconNames = {
 const icon = (name) => `<svg aria-hidden="true"><use href="#i-${iconNames[name] || name}"></use></svg>`;
 const byId = (id) => document.getElementById(id);
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
-const API_BASE_URL = (window.ZENLOT_API_BASE_URL || document.querySelector('meta[name="zenlot-api-base-url"]')?.content || '').replace(/\/$/, '');
+const configuredApiUrl = (window.ZENLOT_API_BASE_URL || document.querySelector('meta[name="zenlot-api-base-url"]')?.content || '').replace(/\/$/, '');
+const API_BASE_URL = !['localhost', '127.0.0.1'].includes(location.hostname) && /localhost|127\.0\.0\.1/.test(configuredApiUrl) ? '' : configuredApiUrl;
 const authState = { mode: 'login', token: sessionStorage.getItem('zenlot_session') || '', user: null };
 
+const errorMessages = {
+  API_URL_MISSING: 'Backend ZenLot ещё не подключён к опубликованному кабинету.',
+  INVALID_SESSION: 'Сессия истекла. Войдите в аккаунт ещё раз.',
+  PLAN_REQUIRED: 'Для этого действия нужен активный тариф.',
+  INVALID_STATE: 'Действие недоступно в текущем состоянии магазина.',
+  AUTH_REJECTED: 'Golden Key отклонён или устарел. Получите новый ключ и повторите подключение.',
+  PROXY_UNAVAILABLE: 'Прокси недоступен. Проверьте адрес, порт и данные авторизации.',
+  CAPTCHA_REQUIRED: 'FunPay запросил CAPTCHA. ZenLot остановил подключение — подтвердите вход вручную.',
+  RATE_LIMITED: 'Слишком много запросов. Подождите и повторите попытку.',
+  TELEGRAM_BOT_REJECTED: 'Bot Token не прошёл проверку Telegram.',
+  EMAIL_VERIFICATION_REQUIRED: 'Подтвердите email по ссылке из письма.',
+};
+const humanError = (error) => errorMessages[error?.code] || (error?.message === 'Failed to fetch' ? 'Backend ZenLot недоступен. Проверьте адрес API и состояние сервера.' : error?.message) || 'Не удалось выполнить действие.';
+
 async function apiRequest(path, { method = 'GET', body, authenticated = false } = {}) {
-  if (!API_BASE_URL) throw new Error('API_URL_MISSING');
+  if (!API_BASE_URL) { const error = new Error('API_URL_MISSING'); error.code = 'API_URL_MISSING'; throw error; }
   const headers = { accept: 'application/json' };
   if (body) headers['content-type'] = 'application/json';
   if (authenticated && authState.token) headers.authorization = `Bearer ${authState.token}`;
@@ -185,12 +202,12 @@ async function submitAuth(form) {
     await loadPluginCatalog().catch(() => {});
     await loadStoreFleet().catch(() => {});
     await loadFinance().catch(() => {});
+    await loadOnboarding().catch(() => {});
+    await syncStoreContent({ silent: true }).catch(() => {});
     showToast('Вход выполнен через защищённый API', 'success');
   } catch (error) {
     message.classList.add('is-error');
-    message.textContent = error.message === 'Failed to fetch' || error.message === 'API_URL_MISSING'
-      ? 'API пока недоступен. Запустите локальный backend или укажите адрес сервера.'
-      : error.message;
+    message.textContent = humanError(error);
   } finally {
     submit.disabled = false;
   }
@@ -212,8 +229,27 @@ async function restoreSession() {
     await loadPluginAudit().catch(() => {});
     await loadStoreFleet().catch(() => {});
     await loadFinance().catch(() => {});
+    await loadOnboarding().catch(() => {});
+    await syncStoreContent({ silent: true }).catch(() => {});
   } else {
     renderPluginAudit();
+    renderTelegramOnboarding();
+  }
+}
+
+async function verifyEmailFromUrl() {
+  const token = new URLSearchParams(location.search).get('verify');
+  if (!token) return;
+  setAuthMode('login');
+  setAuthModal(true);
+  const message = document.querySelector('[data-auth-message]');
+  if (message) { message.className = 'auth-message'; message.textContent = 'Подтверждаем email…'; }
+  try {
+    await apiRequest('/api/v1/auth/verify-email', { method: 'POST', body: { token } });
+    if (message) { message.classList.add('is-success'); message.textContent = 'Email подтверждён. Теперь войдите в ZenLot.'; }
+    const cleanUrl = new URL(location.href); cleanUrl.searchParams.delete('verify'); history.replaceState(null, '', `${cleanUrl.pathname}${cleanUrl.search}${cleanUrl.hash}`);
+  } catch (error) {
+    if (message) { message.classList.add('is-error'); message.textContent = humanError(error); }
   }
 }
 
@@ -222,16 +258,18 @@ function formatMinor(amountMinor, currency = 'RUB') {
 }
 
 const storeStatus = (store) => store.status === 'connected_read_only'
-  ? { label: 'Read-only активен', tone: 'online' }
+  ? { label: 'Работает · read-only', tone: 'online' }
   : store.status === 'attention'
     ? { label: 'Требует внимания', tone: 'attention' }
     : store.status === 'paused'
-      ? { label: 'На паузе', tone: 'paused' }
+      ? { label: 'Остановлен', tone: 'paused' }
       : { label: 'Ожидает подключения', tone: 'waiting' };
+
+const selectedStore = () => state.storeFleet.stores.find((store) => store.id === state.storeFleet.selectedStoreId) || state.storeFleet.stores[0] || null;
 
 function renderStoreFleet() {
   const fleet = state.storeFleet;
-  const selected = fleet.stores.find((store) => store.id === fleet.selectedStoreId) || fleet.stores[0];
+  const selected = selectedStore();
   if (selected && !fleet.selectedStoreId) fleet.selectedStoreId = selected.id;
   document.querySelectorAll('[data-selected-store-name]').forEach((node) => { node.textContent = selected?.displayName || 'Нет магазинов'; });
   const activeName = document.querySelector('[data-active-store-name]');
@@ -245,6 +283,20 @@ function renderStoreFleet() {
   if (balance) balance.textContent = activeMetrics.balance ?? '—';
   if (lots) lots.textContent = activeMetrics.lots ?? '—';
   if (unread) unread.textContent = activeMetrics.unread ?? '—';
+  const runtimeButton = document.querySelector('[data-store-runtime]');
+  if (runtimeButton) {
+    const awaiting = !selected || selected.status === 'awaiting_credentials';
+    const paused = selected?.status === 'paused';
+    runtimeButton.disabled = !selected;
+    runtimeButton.classList.toggle('button--danger', Boolean(selected && !paused && !awaiting));
+    runtimeButton.classList.toggle('button--primary', !selected || paused || awaiting);
+    runtimeButton.innerHTML = `${icon(awaiting ? 'shield' : paused ? 'bolt' : 'pause')} ${awaiting ? 'Настроить' : paused ? 'Запустить' : 'Остановить'}`;
+  }
+  const systemHealth = document.querySelector('[data-system-health]');
+  if (systemHealth) {
+    systemHealth.classList.toggle('is-online', selected?.status === 'connected_read_only');
+    systemHealth.innerHTML = `<i></i> ${!authState.user ? 'Гостевой режим' : !selected ? 'Нет магазина' : storeStatus(selected).label}`;
+  }
   const capacityText = `${fleet.capacity?.used ?? fleet.stores.length} из ${fleet.capacity?.limit ?? 10}`;
   document.querySelectorAll('[data-fleet-capacity]').forEach((node) => { node.textContent = capacityText; });
   document.querySelectorAll('[data-store-capacity]').forEach((node) => { node.textContent = capacityText.replace('из', '/'); });
@@ -282,11 +334,29 @@ async function selectStore(storeId) {
     state.storeFleet.selectedStoreId = storeId;
   }
   renderStoreFleet();
+  await syncStoreContent({ silent: true }).catch(() => {});
   const panel = document.querySelector('[data-store-switcher-panel]');
   const trigger = document.querySelector('[data-store-switcher]');
   if (panel) panel.hidden = true;
   trigger?.setAttribute('aria-expanded', 'false');
   showToast(`Активный контекст: ${state.storeFleet.stores.find((store) => store.id === storeId)?.displayName}`, 'success');
+}
+
+async function setStoreRuntime() {
+  const store = selectedStore();
+  if (!authState.user) { setAuthModal(true); showToast('Войдите, чтобы управлять магазином'); return; }
+  if (!store || store.status === 'awaiting_credentials') { setModal(true); return; }
+  const operation = store.status === 'paused' ? 'start' : 'stop';
+  try {
+    const updated = await apiRequest(`/api/v1/stores/${encodeURIComponent(store.id)}/${operation}`, { method: 'POST', authenticated: true, body: {} });
+    const index = state.storeFleet.stores.findIndex((item) => item.id === updated.id);
+    if (index >= 0) state.storeFleet.stores[index] = { ...state.storeFleet.stores[index], ...updated };
+    renderStoreFleet();
+    if (operation === 'start') await syncStoreContent({ silent: true });
+    showToast(operation === 'start' ? 'Магазин запущен, read-only worker активен' : 'Магазин остановлен', 'success');
+  } catch (error) {
+    showToast(humanError(error), 'error');
+  }
 }
 
 function renderFinance() {
@@ -335,7 +405,7 @@ async function refreshFinance() {
     await loadFinance();
     showToast('Read-only баланс обновлён через закреплённый proxy worker', 'success');
   } catch (error) {
-    showToast(error.code === 'INVALID_STATE' ? 'Сначала завершите read-only подключение магазина' : error.message);
+    showToast(humanError(error), 'error');
   }
 }
 
@@ -351,7 +421,7 @@ async function createWithdrawalIntent(form) {
     showToast(`Создано намерение ${formatMinor(intent.amountMinor, intent.currency)}. Деньги не отправлены.`, 'success');
     form.elements.amount.value = '';
   } catch (error) {
-    showToast(error.message);
+    showToast(humanError(error), 'error');
   }
 }
 
@@ -425,28 +495,153 @@ async function loadPluginAudit() {
 function renderOrders() {
   const target = byId('orders-table-body');
   if (!target) return;
-  target.innerHTML = state.orders.map((order) => `
+  target.innerHTML = state.orders.length ? state.orders.map((order) => `
     <tr>
-      <td><strong>${order.id}</strong></td>
-      <td><strong>${order.product}</strong></td>
-      <td>${order.buyer}</td>
-      <td><strong>${order.total}</strong></td>
+      <td><strong>${escapeHtml(order.id)}</strong></td>
+      <td><strong>${escapeHtml(order.product)}</strong></td>
+      <td>${escapeHtml(order.buyer)}</td>
+      <td><strong>${escapeHtml(order.total)}</strong></td>
       <td><span class="source-pill ${order.status === 'Новый' ? 'source-pill--web' : 'source-pill--auto'}"><i></i>${order.status === 'Новый' ? 'Web' : 'Автопилот'}</span></td>
-      <td><span class="table-status ${order.tone === 'green' || order.tone === 'muted' ? 'table-status--success' : order.tone === 'yellow' || order.tone === 'violet' ? 'table-status--processing' : ''}">${order.status}</span></td>
-      <td>${order.time} назад</td>
-      <td><button class="row-action" data-toast="Карточка ${order.id} открыта в демо-режиме" aria-label="Открыть ${order.id}">${icon('chevron-right')}</button></td>
-    </tr>`).join('');
+      <td><span class="table-status ${order.tone === 'green' || order.tone === 'muted' ? 'table-status--success' : order.tone === 'yellow' || order.tone === 'violet' ? 'table-status--processing' : ''}">${escapeHtml(order.status)}</span></td>
+      <td>${escapeHtml(order.time)}</td>
+      <td><button class="row-action" data-toast="Заказ ${escapeHtml(order.id)} открыт в read-only режиме" aria-label="Открыть ${escapeHtml(order.id)}">${icon('chevron-right')}</button></td>
+    </tr>`).join('') : '<tr><td colspan="8"><div class="content-empty">Запустите магазин и выполните синхронизацию.</div></td></tr>';
+  const total = state.orders.length;
+  const active = state.orders.filter((order) => !['Завершён', 'Выдан'].includes(order.status)).length;
+  document.querySelector('[data-orders-total]')?.replaceChildren(document.createTextNode(String(total)));
+  document.querySelector('[data-orders-active]')?.replaceChildren(document.createTextNode(String(active)));
+  document.querySelector('[data-orders-done]')?.replaceChildren(document.createTextNode(String(total - active)));
+  document.querySelector('[data-orders-updated]')?.replaceChildren(document.createTextNode(state.storeContent.observedAt ? new Date(state.storeContent.observedAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }) : '—'));
+  document.querySelector('[data-orders-count]')?.replaceChildren(document.createTextNode(total ? `Показано ${total} заказов` : 'Нет синхронизированных заказов'));
 }
 
 function renderConversations() {
   const target = byId('conversation-items');
   if (!target) return;
-  target.innerHTML = state.conversations.map((chat) => `
-    <button class="conversation-item${chat.active ? ' is-active' : ''}" type="button" data-chat="${chat.name}">
-      <span class="chat-avatar">${chat.initials}</span>
-      <span><strong>${chat.name}</strong><p>${chat.preview}</p></span>
-      <time>${chat.time}</time>${chat.unread ? `<b>${chat.unread}</b>` : ''}
-    </button>`).join('');
+  target.innerHTML = state.conversations.length ? state.conversations.map((chat) => `
+    <button class="conversation-item${chat.active ? ' is-active' : ''}" type="button" data-chat="${escapeHtml(chat.threadId || chat.name)}">
+      <span class="chat-avatar">${escapeHtml(chat.initials)}</span>
+      <span><strong>${escapeHtml(chat.name)}</strong><p>${escapeHtml(chat.preview)}</p></span>
+      <time>${escapeHtml(chat.time)}</time>${chat.unread ? `<b>${chat.unread}</b>` : ''}
+    </button>`).join('') : '<div class="content-empty">Сообщений пока нет.</div>';
+  document.querySelector('[data-message-count]')?.replaceChildren(document.createTextNode(String(state.conversations.length)));
+  renderActiveConversation();
+}
+
+function renderActiveConversation() {
+  const chat = state.conversations.find((item) => item.active) || state.conversations[0];
+  const body = document.querySelector('[data-chat-body]');
+  const name = document.querySelector('[data-chat-name]');
+  const avatar = document.querySelector('[data-chat-avatar]');
+  if (name) name.textContent = chat?.name || 'Выберите диалог';
+  if (avatar) avatar.textContent = chat?.initials || '—';
+  if (!body) return;
+  if (!chat?.messages?.length) { body.innerHTML = '<div class="chat-empty">Запустите магазин и синхронизируйте сообщения.</div>'; return; }
+  body.innerHTML = `<div class="chat-date">Read-only синхронизация</div>${chat.messages.map((message) => `<article class="chat-message ${message.sender === 'seller' ? 'chat-message--seller' : 'chat-message--buyer'}"><p>${escapeHtml(message.text || 'Сообщение без текста')}</p><time>${escapeHtml(message.time || '')}</time></article>`).join('')}`;
+}
+
+function normalizeStoreContent(content) {
+  const statusLabels = { paid: 'Новый', processing: 'В работе', completed: 'Завершён', delivered: 'Выдан', refunded: 'Спор' };
+  state.storeContent = content;
+  state.orders = (content.orders || []).map((order, index) => {
+    const status = statusLabels[String(order.status || '').toLowerCase()] || String(order.status || 'Новый');
+    return {
+      id: String(order.id || `order-${index + 1}`).replace(/^([^#])/, '#$1'),
+      product: order.product || order.title || 'Заказ FunPay',
+      buyer: order.buyer || order.buyerName || 'Покупатель FunPay',
+      total: order.totalMinor != null ? formatMinor(order.totalMinor, order.currency || 'RUB') : '—',
+      status,
+      tone: ['Завершён', 'Выдан'].includes(status) ? 'green' : status === 'Спор' ? 'red' : 'yellow',
+      time: order.createdAt ? new Date(order.createdAt).toLocaleString('ru-RU') : 'только что'
+    };
+  });
+  const grouped = new Map();
+  (content.messages || []).forEach((message, index) => {
+    const threadId = String(message.threadId || `thread-${index + 1}`);
+    const group = grouped.get(threadId) || { threadId, name: message.buyer || message.author || threadId, messages: [] };
+    group.messages.push({ text: message.text, sender: message.sender, time: message.createdAt ? new Date(message.createdAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }) : '' });
+    grouped.set(threadId, group);
+  });
+  state.conversations = [...grouped.values()].map((group, index) => ({ ...group, initials: group.name.slice(0, 2).toUpperCase(), preview: group.messages.at(-1)?.text || 'Новое сообщение', time: group.messages.at(-1)?.time || 'сейчас', unread: group.messages.length, active: index === 0 }));
+  state.lots = (content.lots || []).map((lot) => ({ tag: String(lot.id || 'LOT').slice(0, 12).toUpperCase(), title: lot.title || 'Лот FunPay', price: lot.priceMinor != null ? formatMinor(lot.priceMinor, lot.currency || 'RUB') : '—', stock: lot.stock ?? '—', sales: lot.sales ?? '—', position: lot.position ?? '—', active: lot.status !== 'paused' }));
+}
+
+async function syncStoreContent({ silent = false } = {}) {
+  const store = selectedStore();
+  if (!authState.user || !API_BASE_URL || !store || store.status !== 'connected_read_only') return;
+  try {
+    const content = await apiRequest(`/api/v1/stores/${encodeURIComponent(store.id)}/content`, { authenticated: true });
+    normalizeStoreContent(content);
+    store.metrics = { balance: formatMinor(content.balance?.availableMinor, content.balance?.currency || 'RUB'), lots: content.lots?.length || 0, unread: content.messages?.length || 0 };
+    renderStoreFleet(); renderOrders(); renderConversations(); renderLots();
+    const health = document.querySelector('[data-messages-health]');
+    if (health) { health.className = 'health-pill health-pill--active'; health.innerHTML = '<i></i> Синхронизировано'; }
+    if (!silent) showToast('Заказы и сообщения обновлены', 'success');
+  } catch (error) {
+    if (!silent) showToast(humanError(error), 'error');
+    throw error;
+  }
+}
+
+function renderTelegramOnboarding() {
+  const onboarding = state.onboarding;
+  const configured = Boolean(onboarding?.telegram?.botConfigured);
+  const linked = Boolean(onboarding?.telegram?.linked);
+  const form = document.querySelector('[data-telegram-onboarding-form]');
+  const issue = document.querySelector('[data-telegram-issue-code]');
+  const health = document.querySelector('[data-telegram-health]');
+  const stateLabel = document.querySelector('[data-telegram-state]');
+  const botName = document.querySelector('[data-telegram-bot-name]');
+  const message = document.querySelector('[data-telegram-message]');
+  if (form) form.hidden = configured;
+  if (issue) issue.hidden = !configured || linked;
+  if (health) {
+    health.className = `health-pill ${linked ? 'health-pill--active' : 'health-pill--waiting'}`;
+    health.innerHTML = `<i></i> ${linked ? 'Подключён' : configured ? 'Ожидает /start' : 'Не подключён'}`;
+  }
+  if (stateLabel) stateLabel.textContent = linked ? 'Telegram подключён' : configured ? 'Bot Token сохранён' : authState.user ? 'Ожидает Bot Token' : 'Ожидает входа';
+  if (botName) botName.textContent = onboarding?.telegram?.bot?.username ? `@${onboarding.telegram.bot.username}` : 'Бот ещё не настроен';
+  if (message) message.textContent = linked ? 'Привязка подтверждена. Теперь можно включить Telegram-уведомления в каталоге плагинов.' : configured ? 'Получите код и отправьте боту команду /start с этим кодом.' : authState.user ? 'Создайте бота через BotFather и вставьте Bot Token.' : 'Войдите в аккаунт, чтобы начать подключение.';
+}
+
+async function loadOnboarding() {
+  if (!authState.token || !API_BASE_URL) { renderTelegramOnboarding(); return; }
+  state.onboarding = await apiRequest('/api/v1/onboarding', { authenticated: true });
+  renderTelegramOnboarding();
+}
+
+async function issueTelegramCode() {
+  if (!authState.user) { setAuthModal(true); return; }
+  try {
+    const result = await apiRequest('/api/v1/onboarding/telegram/link-code', { method: 'POST', authenticated: true, body: {} });
+    state.onboarding = result.onboarding;
+    const block = document.querySelector('[data-telegram-link-code]');
+    if (block) {
+      block.hidden = false;
+      block.querySelector('span').textContent = result.code;
+    }
+    renderTelegramOnboarding();
+    showToast('Одноразовый Telegram-код создан', 'success');
+  } catch (error) {
+    showToast(humanError(error), 'error');
+  }
+}
+
+async function submitTelegramOnboarding(form) {
+  if (!authState.user) { setAuthModal(true); return; }
+  const button = form.querySelector('button[type="submit"]');
+  const token = new FormData(form).get('token');
+  button.disabled = true;
+  try {
+    state.onboarding = await apiRequest('/api/v1/onboarding/telegram/bot', { method: 'POST', authenticated: true, body: { token } });
+    form.reset();
+    renderTelegramOnboarding();
+    await issueTelegramCode();
+  } catch (error) {
+    showToast(humanError(error), 'error');
+  } finally {
+    button.disabled = false;
+  }
 }
 
 function renderLots() {
@@ -523,7 +718,7 @@ async function changePluginState(pluginId) {
     await loadPluginCatalog();
     await loadPluginAudit().catch(() => {});
   } catch (error) {
-    showToast(error.code === 'PLAN_REQUIRED' ? 'Для установки нужен активный тариф' : error.message);
+    showToast(humanError(error), 'error');
   }
 }
 
@@ -557,7 +752,7 @@ async function savePluginSettings(form) {
     await loadPluginAudit().catch(() => {});
     showToast('Настройки автоответчика сохранены', 'success');
   } catch (error) {
-    showToast(error.code === 'PLAN_REQUIRED' ? 'Для настройки нужен активный тариф' : error.message);
+    showToast(humanError(error), 'error');
   }
 }
 
@@ -572,7 +767,7 @@ async function saveTelegramSettings(form) {
     await loadPluginAudit().catch(() => {});
     showToast('Настройки Telegram сохранены', 'success');
   } catch (error) {
-    showToast(error.code === 'PLAN_REQUIRED' ? 'Для настройки нужен активный тариф' : error.message);
+    showToast(humanError(error), 'error');
   }
 }
 
@@ -594,7 +789,7 @@ async function simulatePluginEvent(form) {
       : 'Действий нет: плагин выключен либо сообщение не прошло выбранные условия или тихие часы.';
     await loadPluginAudit().catch(() => {});
   } catch (error) {
-    if (output) output.textContent = error.code === 'PLAN_REQUIRED' ? 'Для симуляции нужен активный тариф.' : error.message;
+    if (output) output.textContent = humanError(error);
   }
 }
 
@@ -651,7 +846,7 @@ function showToast(message, tone = 'default') {
   if (!stack) return;
   const toast = document.createElement('div');
   toast.className = `toast toast--${tone}`;
-  toast.innerHTML = `<i>${tone === 'success' ? '✓' : 'ZL'}</i><span><strong>${tone === 'success' ? 'Готово' : 'ZenLot Demo'}</strong><span>${message}</span></span>`;
+  toast.innerHTML = `<i>${tone === 'success' ? '✓' : tone === 'error' ? '!' : 'ZL'}</i><span><strong>${tone === 'success' ? 'Готово' : tone === 'error' ? 'Нужно внимание' : 'ZenLot'}</strong><span>${escapeHtml(message)}</span></span>`;
   stack.append(toast);
   window.setTimeout(() => {
     toast.style.opacity = '0';
@@ -777,6 +972,7 @@ async function advanceConnectionWizard() {
     } else if (connectionStep === 3) {
       connectionStatus = await apiRequest(`/api/v1/stores/${encodeURIComponent(connectionDraftId)}/connection/preflight`, { method: 'POST', authenticated: true, body: {} });
       await loadStoreFleet();
+      await syncStoreContent({ silent: true });
       setModal(false);
       showToast('Магазин подключён в read-only режиме через отдельный worker', 'success');
       return;
@@ -784,7 +980,7 @@ async function advanceConnectionWizard() {
     connectionStep += 1;
     showToast(`Шаг ${connectionStep + 1} из 4`, 'success');
   } catch (error) {
-    showToast(error.message);
+    showToast(humanError(error), 'error');
   } finally {
     connectionBusy = false;
     renderConnectionWizard();
@@ -806,7 +1002,9 @@ function bindInteractions() {
     const viewButton = event.target.closest('[data-view-target], [data-view-link]');
     if (viewButton) {
       event.preventDefault();
-      setView(viewButton.dataset.viewTarget || viewButton.dataset.viewLink);
+      const targetView = viewButton.dataset.viewTarget || viewButton.dataset.viewLink;
+      setView(targetView);
+      if (targetView === 'telegram') loadOnboarding().catch((error) => showToast(humanError(error), 'error'));
       return;
     }
 
@@ -833,9 +1031,13 @@ function bindInteractions() {
     }
     const selectedStore = event.target.closest('[data-select-store]');
     if (selectedStore) {
-      selectStore(selectedStore.dataset.selectStore).catch((error) => showToast(error.message));
+      selectStore(selectedStore.dataset.selectStore).catch((error) => showToast(humanError(error), 'error'));
       return;
     }
+
+    if (event.target.closest('[data-store-runtime]')) { setStoreRuntime(); return; }
+    if (event.target.closest('[data-sync-content]')) { syncStoreContent().catch(() => {}); return; }
+    if (event.target.closest('[data-telegram-issue-code]')) { issueTelegramCode(); return; }
     if (event.target.closest('[data-close-connect]') || event.target.matches('.modal-backdrop')) {
       setModal(false);
       return;
@@ -893,9 +1095,8 @@ function bindInteractions() {
 
     const conversation = event.target.closest('[data-chat]');
     if (conversation) {
-      document.querySelectorAll('[data-chat]').forEach((item) => item.classList.remove('is-active'));
-      conversation.classList.add('is-active');
-      showToast(`Диалог с ${conversation.dataset.chat} выбран`);
+      state.conversations.forEach((item) => { item.active = (item.threadId || item.name) === conversation.dataset.chat; });
+      renderConversations();
       return;
     }
 
@@ -923,7 +1124,7 @@ function bindInteractions() {
       return;
     }
     composer.value = '';
-    showToast('Сообщение отправлено в демо-режиме', 'success');
+    showToast('Отправка отключена: кабинет работает в безопасном read-only режиме.');
   });
 }
 
@@ -973,12 +1174,17 @@ function init() {
     event.preventDefault();
     saveTelegramSettings(event.currentTarget);
   });
+  document.querySelector('[data-telegram-onboarding-form]')?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    submitTelegramOnboarding(event.currentTarget);
+  });
   document.querySelector('[data-withdrawal-intent-form]')?.addEventListener('submit', (event) => {
     event.preventDefault();
     createWithdrawalIntent(event.currentTarget);
   });
   renderFinance();
   renderStoreFleet();
+  renderTelegramOnboarding();
   restoreSession();
   setView(location.hash.slice(1) || 'dashboard', false);
   const requestedAuthMode = new URLSearchParams(location.search).get('auth');
@@ -986,6 +1192,7 @@ function init() {
     setAuthMode(requestedAuthMode);
     setAuthModal(true);
   }
+  verifyEmailFromUrl();
   updateClock();
   window.setInterval(updateClock, 1000);
   window.addEventListener('hashchange', () => setView(location.hash.slice(1), false));
