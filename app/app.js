@@ -39,12 +39,10 @@ const state = {
   pluginAudit: [],
   storeFleet: {
     selectedStoreId: 'demo-store-main',
-    capacity: { used: 3, limit: 10 },
+    capacity: { used: 1, limit: 1 },
     liveActionsEnabled: false,
     stores: [
-      { id: 'demo-store-main', displayName: 'Digital Hub', status: 'connected_read_only', proxyConfigured: true, workerId: 'worker-fi-01', lastSeenAt: new Date().toISOString(), demo: true, metrics: { balance: '1 842 ₽', lots: 84, unread: 2 } },
-      { id: 'demo-store-games', displayName: 'Game Market', status: 'connected_read_only', proxyConfigured: true, workerId: 'worker-de-02', lastSeenAt: new Date().toISOString(), demo: true, metrics: { balance: '3 116 ₽', lots: 126, unread: 1 } },
-      { id: 'demo-store-new', displayName: 'Новый магазин', status: 'awaiting_credentials', proxyConfigured: false, workerId: 'worker-pending-03', lastSeenAt: null, demo: true, metrics: { balance: '—', lots: '—', unread: '—' } },
+      { id: 'demo-store-main', displayName: 'Digital Hub', status: 'connected_read_only', proxyConfigured: true, workerId: 'worker-main-01', lastSeenAt: new Date().toISOString(), demo: true, metrics: { balance: '1 842 ₽', lots: 84, unread: 2 } },
     ]
   },
   finance: { stores: [], withdrawalIntents: [], liveWithdrawalEnabled: false },
@@ -266,6 +264,11 @@ const storeStatus = (store) => store.status === 'connected_read_only'
       : { label: 'Ожидает подключения', tone: 'waiting' };
 
 const selectedStore = () => state.storeFleet.stores.find((store) => store.id === state.storeFleet.selectedStoreId) || state.storeFleet.stores[0] || null;
+const storeAvatar = (store) => {
+  const label = escapeHtml((store?.displayName || 'FunPay').slice(0, 2).toUpperCase());
+  const avatarUrl = typeof store?.avatarUrl === 'string' && /^https:\/\/(?:[a-z0-9-]+\.)*funpay\.com\//i.test(store.avatarUrl) ? store.avatarUrl : '';
+  return avatarUrl ? `<img src="${escapeHtml(avatarUrl)}" alt="" referrerpolicy="no-referrer">` : label;
+};
 
 function renderStoreFleet() {
   const fleet = state.storeFleet;
@@ -283,6 +286,7 @@ function renderStoreFleet() {
   if (balance) balance.textContent = activeMetrics.balance ?? '—';
   if (lots) lots.textContent = activeMetrics.lots ?? '—';
   if (unread) unread.textContent = activeMetrics.unread ?? '—';
+  document.querySelectorAll('[data-active-store-avatar], [data-selected-store-avatar]').forEach((node) => { node.innerHTML = storeAvatar(selected); });
   const runtimeButton = document.querySelector('[data-store-runtime]');
   if (runtimeButton) {
     const awaiting = !selected || selected.status === 'awaiting_credentials';
@@ -297,26 +301,15 @@ function renderStoreFleet() {
     systemHealth.classList.toggle('is-online', selected?.status === 'connected_read_only');
     systemHealth.innerHTML = `<i></i> ${!authState.user ? 'Гостевой режим' : !selected ? 'Нет магазина' : storeStatus(selected).label}`;
   }
-  const capacityText = `${fleet.capacity?.used ?? fleet.stores.length} из ${fleet.capacity?.limit ?? 10}`;
+  const capacityText = `${fleet.capacity?.used ?? fleet.stores.length} из ${fleet.capacity?.limit ?? 1}`;
   document.querySelectorAll('[data-fleet-capacity]').forEach((node) => { node.textContent = capacityText; });
   document.querySelectorAll('[data-store-capacity]').forEach((node) => { node.textContent = capacityText.replace('из', '/'); });
 
-  const switcherList = document.querySelector('[data-store-switcher-list]');
-  if (switcherList) switcherList.innerHTML = fleet.stores.map((store) => {
-    const status = storeStatus(store);
-    return `<button type="button" data-select-store="${escapeHtml(store.id)}" class="${store.id === selected?.id ? 'is-active' : ''}"><span class="store-mini-logo">FP</span><span><strong>${escapeHtml(store.displayName)}</strong><small>${escapeHtml(status.label)}</small></span><i class="store-health store-health--${status.tone}"></i></button>`;
-  }).join('') || '<p>Подключённых магазинов пока нет.</p>';
-
-  const grid = document.querySelector('[data-fleet-grid]');
-  if (grid) grid.innerHTML = fleet.stores.map((store) => {
-    const status = storeStatus(store);
-    const metrics = store.metrics || {};
-    return `<button type="button" class="fleet-card ${store.id === selected?.id ? 'is-active' : ''}" data-select-store="${escapeHtml(store.id)}">
-      <span class="fleet-card__top"><span class="store-logo">FP</span><span><strong>${escapeHtml(store.displayName)}</strong><small>${store.demo ? 'Демонстрация · ' : ''}${escapeHtml(store.workerId)}</small></span><i class="store-health store-health--${status.tone}"></i></span>
-      <span class="fleet-card__metrics"><span><small>Баланс</small><strong>${escapeHtml(metrics.balance ?? '—')}</strong></span><span><small>Лоты</small><strong>${escapeHtml(metrics.lots ?? '—')}</strong></span><span><small>Новые</small><strong>${escapeHtml(metrics.unread ?? '—')}</strong></span></span>
-      <span class="fleet-card__footer"><span>${escapeHtml(status.label)}</span><b>${store.proxyConfigured ? 'Proxy закреплён' : 'Proxy не настроен'}</b></span>
-    </button>`;
-  }).join('') || '<div class="finance-empty">Подключите первый магазин, чтобы создать отдельный proxy worker.</div>';
+  document.querySelectorAll('[data-open-connect]').forEach((button) => {
+    const connected = selected?.status === 'connected_read_only' || selected?.status === 'paused';
+    button.disabled = connected;
+    button.title = connected ? 'ZenLot поддерживает один аккаунт FunPay.' : '';
+  });
 }
 
 async function loadStoreFleet() {
@@ -860,9 +853,9 @@ let connectionDraftId = null;
 let connectionStatus = null;
 let connectionBusy = false;
 const connectionDemoSteps = [
-  { icon: 'card', title: 'Отдельный контекст магазина', text: 'Каждый магазин получает собственный worker и закреплённое соединение. В демонстрации реальные секретные поля отключены.', points: ['До 10 магазинов в workspace', 'Отдельный workerId', 'Изоляция данных магазина'], action: 'Посмотреть Golden Key' },
-  { icon: 'lock', title: 'Golden Key выбранного магазина', text: 'Ключ передаётся только защищённому API, шифруется в vault и никогда не возвращается в интерфейс.', points: ['Отдельная vault-ссылка', 'Нет ключа в PostgreSQL', 'Поле очищается после отправки'], action: 'Посмотреть прокси' },
-  { icon: 'shield', title: 'Закреплённый прокси', text: 'Прокси хранится отдельно от Golden Key и используется только worker этого магазина.', points: ['Один магазин — один прокси', 'Пароль не отображается повторно', 'Нет общего IP между магазинами'], action: 'Посмотреть проверку' },
+  { icon: 'card', title: 'Один аккаунт FunPay', text: 'ZenLot подключает только один аккаунт к одному рабочему пространству. В демонстрации реальные секретные поля отключены.', points: ['Один аккаунт FunPay', 'Один worker', 'Один закреплённый proxy'], action: 'Посмотреть Golden Key' },
+  { icon: 'lock', title: 'Golden Key вашего аккаунта', text: 'Ключ передаётся только защищённому API, шифруется в vault и никогда не возвращается в интерфейс.', points: ['Отдельная vault-ссылка', 'Нет ключа в PostgreSQL', 'Поле очищается после отправки'], action: 'Посмотреть прокси' },
+  { icon: 'shield', title: 'Обязательный закреплённый прокси', text: 'Прокси хранится отдельно от Golden Key и используется только worker вашего магазина.', points: ['Один аккаунт — один прокси', 'Пароль не отображается повторно', 'Стабильный маршрут соединения'], action: 'Посмотреть проверку' },
   { icon: 'check', title: 'Read-only проверка', text: 'Preflight проверяет пару Golden Key + прокси, не выполняя действий в FunPay.', points: ['Доступен безопасный режим чтения', 'Worker закреплён за магазином', 'Автоматические действия заблокированы'], action: 'Закрыть демонстрацию' },
 ];
 
@@ -887,18 +880,18 @@ function renderConnectionWizard() {
     if (action) action.innerHTML = `${step.action} ${icon('chevron-right')}`;
     return;
   }
-  if (mode) mode.textContent = 'Protected per-store connection';
+  if (mode) mode.textContent = 'Protected single-account connection';
   const store = selectedConnectionStore();
   const worker = store?.workerId ? escapeHtml(store.workerId) : 'будет создан автоматически';
   const pages = [
-    `<span class="connect-illustration">${icon('plus')}<i></i></span><h3>${store?.status === 'awaiting_credentials' ? 'Продолжить подключение' : 'Новый магазин'}</h3><p>Подключение создаётся внутри текущего workspace и получает отдельный worker.</p>${store?.status === 'awaiting_credentials' ? `<div class="connection-store-badge"><span class="store-logo">FP</span><span><strong>${escapeHtml(store.displayName)}</strong><small>${worker}</small></span></div>` : '<div class="connection-form"><label>Название магазина<input name="storeName" maxlength="80" placeholder="Например, Магазин Финляндия" autocomplete="off"></label><small>Название обновится после read-only проверки профиля.</small></div>'}`,
-    `<span class="connect-illustration">${icon('lock')}<i></i></span><h3>Golden Key</h3><p>Ключ отправляется напрямую в vault для магазина «${escapeHtml(store?.displayName || 'Новый магазин')}» и не возвращается обратно.</p><div class="connection-form"><label>Golden Key<input type="password" name="goldenKey" minlength="12" maxlength="4096" autocomplete="off" spellcheck="false" placeholder="Вставьте ключ один раз"></label><small>Не отправляйте Golden Key в Telegram или поддержку.</small></div>`,
-    `<span class="connect-illustration">${icon('shield')}<i></i></span><h3>Закреплённый прокси</h3><p>Этот прокси будет использовать только worker <strong>${worker}</strong>.</p><div class="connection-form"><label>Proxy URL<input type="password" name="proxyUrl" maxlength="2048" autocomplete="off" spellcheck="false" placeholder="socks5://user:password@host:port"></label><small>Поддерживаются http, https и socks5. Адрес и пароль не появятся в ответе API.</small></div>`,
+    `<span class="connect-illustration">${icon('plus')}<i></i></span><h3>${store?.status === 'awaiting_credentials' ? 'Продолжить подключение' : 'Один аккаунт FunPay'}</h3><p>ZenLot создаст один защищённый worker для вашего аккаунта. Имя и аватар появятся после read-only проверки профиля.</p>${store?.status === 'awaiting_credentials' ? `<div class="connection-store-badge"><span class="store-logo">FP</span><span><strong>${escapeHtml(store.displayName)}</strong><small>${worker}</small></span></div>` : ''}`,
+    `<span class="connect-illustration">${icon('lock')}<i></i></span><h3>Golden Key</h3><p>Ключ отправляется напрямую в vault для вашего единственного аккаунта и не возвращается обратно.</p><div class="connection-form"><label>Golden Key<input type="password" name="goldenKey" minlength="12" maxlength="4096" autocomplete="off" spellcheck="false" placeholder="Вставьте ключ один раз"></label><small>Не отправляйте Golden Key в Telegram или поддержку.</small></div>`,
+    `<span class="connect-illustration">${icon('shield')}<i></i></span><h3>Обязательный прокси</h3><p>Этот прокси будет использовать только worker <strong>${worker}</strong> для стабильного подключения.</p><div class="connection-form"><label>Proxy URL<input type="password" name="proxyUrl" maxlength="2048" autocomplete="off" spellcheck="false" placeholder="socks5://user:password@host:port"></label><small>Поддерживаются http, https и socks5. Адрес и пароль не появятся в ответе API.</small></div>`,
     `<span class="connect-illustration connect-illustration--success">${icon('check')}<i></i></span><h3>Read-only проверка</h3><p>ZenLot проверит авторизацию через закреплённый прокси. Сообщения, лоты, заказы и деньги не изменяются.</p><div class="connection-checks"><span>Golden Key <b>${connectionStatus?.credential?.configured ? 'Добавлен' : 'Ожидается'}</b></span><span>Прокси <b>${connectionStatus?.proxy?.configured ? 'Добавлен' : 'Ожидается'}</b></span><span>Live-действия <b>Отключены</b></span></div>`,
   ];
   if (body) body.innerHTML = pages[connectionStep];
   if (action) {
-    const labels = [store?.status === 'awaiting_credentials' ? 'Продолжить' : 'Создать магазин', 'Сохранить Golden Key', 'Закрепить прокси', 'Запустить read-only проверку'];
+    const labels = [store?.status === 'awaiting_credentials' ? 'Продолжить' : 'Начать подключение', 'Сохранить Golden Key', 'Закрепить прокси', 'Запустить read-only проверку'];
     action.disabled = connectionBusy;
     action.innerHTML = `${connectionBusy ? 'Проверяем…' : labels[connectionStep]} ${icon('chevron-right')}`;
   }
@@ -944,10 +937,6 @@ async function advanceConnectionWizard() {
   if (connectionBusy) return;
   const modal = document.querySelector('.connect-modal');
   let submittedValue = null;
-  if (connectionStep === 0 && !connectionDraftId) {
-    submittedValue = modal.querySelector('input[name="storeName"]')?.value.trim();
-    if (!submittedValue) { showToast('Введите название магазина'); return; }
-  }
   if (connectionStep === 1) {
     submittedValue = modal.querySelector('input[name="goldenKey"]')?.value;
     if (!submittedValue) { showToast('Введите Golden Key'); return; }
@@ -960,7 +949,7 @@ async function advanceConnectionWizard() {
   renderConnectionWizard();
   try {
     if (connectionStep === 0 && !connectionDraftId) {
-      const draft = await apiRequest('/api/v1/stores', { method: 'POST', authenticated: true, body: { displayName: submittedValue } });
+      const draft = await apiRequest('/api/v1/stores', { method: 'POST', authenticated: true, body: { displayName: 'Мой магазин FunPay' } });
       connectionDraftId = draft.id;
       await loadStoreFleet();
     } else if (connectionStep === 1) {
