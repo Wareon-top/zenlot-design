@@ -53,15 +53,9 @@
           <button class="icon-button sidebar__close" type="button" aria-label="Закрыть меню" data-sidebar-close><svg><use href="#i-close"/></svg></button>
         </div>
 
-        <button class="workspace-switcher" type="button" data-store-switcher aria-expanded="false">
-          <span class="workspace-switcher__avatar">ZL</span>
-          <span><small>Активный магазин</small><strong data-selected-store-name>Мой магазин</strong></span>
-          <svg><use href="#i-chevron"/></svg>
-        </button>
-        <div class="store-switcher-panel" data-store-switcher-panel hidden>
-          <header><span>Магазины</span><b data-store-capacity>3 / 10</b></header>
-          <div data-store-switcher-list></div>
-          <button type="button" data-open-connect><svg><use href="#i-plus"/></svg> Подключить магазин</button>
+        <div class="workspace-switcher workspace-switcher--single" aria-label="Подключённый магазин">
+          <span class="workspace-switcher__avatar" data-selected-store-avatar>FP</span>
+          <span><small>Ваш магазин FunPay</small><strong data-selected-store-name>Подключите аккаунт</strong></span>
         </div>
 
         <nav class="sidebar-nav">
@@ -113,20 +107,14 @@
         <div class="view-stack">
           <section class="view is-active" data-view="dashboard" aria-labelledby="dashboard-title">
             <div class="view-heading zen-heading">
-              <div><span class="eyebrow">ZenLot · рабочее пространство</span><h1 id="dashboard-title">Управляйте магазинами<br>в одном месте</h1><p>Выберите магазин и переходите к заказам, сообщениям или настройке автоматизации.</p></div>
-              <button class="button button--primary" type="button" data-open-connect><svg><use href="#i-plus"/></svg> Добавить магазин</button>
+              <div><span class="eyebrow">ZenLot · ваш магазин</span><h1 id="dashboard-title">Один магазин.<br>Всё под контролем.</h1><p>Заказы, сообщения и настройки автоматизации — в одной спокойной панели.</p></div>
+              <button class="button button--primary" type="button" data-open-connect><svg><use href="#i-plus"/></svg> Подключить FunPay</button>
             </div>
 
-            <section class="focus-store panel" aria-label="Выбранный магазин">
-              <div class="focus-store__identity"><span class="store-logo">FP</span><div><span class="panel-label">Выбранный магазин</span><strong data-active-store-name>Мой цифровой магазин</strong><small data-active-store-status>FunPay · ожидает подключения</small></div></div>
+            <section class="focus-store panel" aria-label="Подключённый магазин">
+              <div class="focus-store__identity"><span class="store-logo" data-active-store-avatar>FP</span><div><span class="panel-label">Ваш магазин FunPay</span><strong data-active-store-name>Подключите аккаунт</strong><small data-active-store-status>FunPay · ожидает подключения</small></div></div>
               <div class="focus-store__metrics"><span><small>Баланс</small><strong data-active-store-balance>— ₽</strong></span><span><small>Лоты</small><strong data-active-store-lots>—</strong></span><span><small>Новые сообщения</small><strong data-active-store-unread>—</strong></span></div>
               <div class="focus-store__actions"><button class="button button--primary" type="button" data-store-runtime><svg><use href="#i-bolt"/></svg> Запустить</button><button class="button button--ghost" type="button" data-view-link="orders">Открыть заказы <svg><use href="#i-chevron"/></svg></button></div>
-            </section>
-
-            <section class="simple-section">
-              <div class="section-intro"><div><span class="eyebrow">Мои магазины</span><h2>Все аккаунты на виду</h2></div><span class="fleet-capacity" data-fleet-capacity>3 из 10</span></div>
-              <div class="fleet-grid" data-fleet-grid></div>
-              <button class="inline-action" type="button" data-open-connect><svg><use href="#i-plus"/></svg> Подключить ещё один магазин</button>
             </section>
 
             <section class="start-grid">
@@ -297,7 +285,7 @@
     <div class="modal-backdrop" data-modal-backdrop></div>
     <section class="connect-modal" role="dialog" aria-modal="true" aria-labelledby="connect-modal-title" hidden>
       <header><div><span class="panel-label" data-connection-mode>Per-store connection</span><h2 id="connect-modal-title">Подключение магазина</h2></div><button class="icon-button" type="button" aria-label="Закрыть" data-close-connect><svg><use href="#i-close"/></svg></button></header>
-      <div class="connect-progress"><span class="is-active"><b>01</b><small>Магазин</small></span><i></i><span><b>02</b><small>Golden Key</small></span><i></i><span><b>03</b><small>Прокси</small></span><i></i><span><b>04</b><small>Проверка</small></span></div>
+      <div class="connect-progress"><span class="is-active"><b>01</b><small>Аккаунт</small></span><i></i><span><b>02</b><small>Golden Key</small></span><i></i><span><b>03</b><small>Прокси</small></span><i></i><span><b>04</b><small>Проверка</small></span></div>
       <div class="connect-modal__body"><span class="connect-illustration"><svg><use href="#i-lock"/></svg><i></i></span><h3>Безопасное подключение</h3><p>ZenLot сначала проверит подписку и Telegram, затем предложит защищённые поля для Golden Key и прокси. Секреты никогда не отправляются сообщениями.</p><ul><li><svg><use href="#i-check"/></svg> Тариф «Про» активен</li><li><svg><use href="#i-check"/></svg> Одноразовая привязка Telegram</li><li><svg><use href="#i-check"/></svg> Read-only проверка перед автоматизацией</li></ul></div>
       <footer><span class="connect-safe-note">Секреты не отображаются повторно</span><button class="button button--ghost" type="button" data-close-connect>Отмена</button><button class="button button--primary" type="button" data-connect-next>Начать подключение <svg><use href="#i-chevron"/></svg></button></footer>
     </section>
@@ -308,11 +296,11 @@
         <a class="auth-modal__brand" href="../"><span class="brand__mark"></span><strong>ZenLot</strong></a>
         <div class="auth-promo__copy">
           <span>Единое рабочее пространство</span>
-          <h2>Все магазины остаются под контролем.</h2>
+          <h2>Ваш магазин остаётся под контролем.</h2>
           <p>Заказы, сообщения, лоты и автоматизация в одной спокойной панели.</p>
         </div>
         <div class="auth-promo__points">
-          <span><i>✓</i> Отдельное подключение каждого магазина</span>
+          <span><i>✓</i> Один аккаунт FunPay на ZenLot</span>
           <span><i>✓</i> Секреты не отображаются повторно</span>
           <span><i>✓</i> Прозрачный журнал действий</span>
         </div>
