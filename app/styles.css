@@ -149,7 +149,8 @@ svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.7;
 
 .store-strip { display:grid; grid-template-columns:minmax(260px,1.2fr) minmax(190px,.7fr) minmax(250px,1fr) auto; align-items:center; gap:25px; min-height:84px; margin-bottom:14px; padding:13px 15px; }
 .store-strip__identity { display:flex; align-items:center; gap:12px; }
-.store-logo { display:grid; place-items:center; width:43px; height:43px; border:1px solid rgba(255,210,28,.18); border-radius:12px; background:rgba(255,210,28,.08); color:var(--yellow); font-size:9px; font-weight:800; }
+.store-logo { display:grid; place-items:center; width:43px; height:43px; border:1px solid rgba(255,210,28,.18); border-radius:12px; background:rgba(255,210,28,.08); color:var(--yellow); font-size:9px; font-weight:800; overflow:hidden; }
+.store-logo img,.workspace-switcher__avatar img { display:block; width:100%; height:100%; object-fit:cover; }
 .store-strip__identity strong,.store-strip__identity .panel-label { display:block; }
 .store-strip__identity strong { margin-top:5px; font-size:12px; }
 .store-strip__status small { display:block; margin-top:5px; color:var(--muted-2); font-size:7px; }
