@@ -9,7 +9,7 @@
     <title>ZenLot Control — личный кабинет</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
@@ -40,6 +40,7 @@
       <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
       <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
       <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></symbol>
+      <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2.5M12 19.5V22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M2 12h2.5M19.5 12H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></symbol>
       <symbol id="i-gift" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="9" rx="1.5"/><path d="M12 11v9M4 15h16M12 11s-4 .2-5.5-1.2C5.2 8.6 6 6.5 8 6.5c2.2 0 3.3 2.3 4 4.5Zm0 0s4 .2 5.5-1.2C18.8 8.6 18 6.5 16 6.5c-2.2 0-3.3 2.3-4 4.5Z"/></symbol>
     </svg>
 
@@ -49,7 +50,7 @@
         <div class="sidebar__top">
           <a class="brand" href="../index.html" aria-label="ZenLot — на главную">
             <span class="brand__mark" aria-hidden="true"></span>
-            <span>ZenLot <small>CONTROL</small></span>
+            <span>ZenLot<small>Кабинет продавца</small></span>
           </a>
           <button class="icon-button sidebar__close" type="button" aria-label="Закрыть меню" data-sidebar-close><svg><use href="#i-close"/></svg></button>
         </div>
@@ -60,32 +61,29 @@
         </div>
 
         <nav class="sidebar-nav">
-          <button class="nav-item is-active" type="button" data-view-target="dashboard"><svg><use href="#i-grid"/></svg><span>Панель</span></button>
-          <details class="nav-group" open>
-            <summary><svg><use href="#i-bag"/></svg><span>Магазин</span><svg><use href="#i-chevron"/></svg></summary>
-            <div>
-              <button class="nav-item nav-item--nested" type="button" data-view-target="orders"><span>Заказы</span><b>12</b></button>
-              <button class="nav-item nav-item--nested" type="button" data-view-target="messages"><span>Сообщения</span><b class="nav-item__alert">3</b></button>
-              <button class="nav-item nav-item--nested" type="button" data-view-target="lots"><span>Лоты и товары</span></button>
-              <button class="nav-item nav-item--nested" type="button" data-view-target="analytics"><span>Аналитика</span></button>
-            </div>
-          </details>
+          <span class="sidebar-nav__label">Обзор</span>
+          <button class="nav-item is-active" type="button" data-view-target="dashboard"><svg><use href="#i-grid"/></svg><span>Главная</span></button>
+          <button class="nav-item" type="button" data-view-target="orders"><svg><use href="#i-bag"/></svg><span>Заказы</span><b>6</b></button>
+          <button class="nav-item" type="button" data-view-target="messages"><svg><use href="#i-chat"/></svg><span>Сообщения</span><b>3</b></button>
+          <span class="sidebar-nav__label">Магазин</span>
+          <button class="nav-item" type="button" data-view-target="lots"><svg><use href="#i-box"/></svg><span>Лоты и товары</span></button>
           <button class="nav-item" type="button" data-view-target="automations"><svg><use href="#i-bolt"/></svg><span>Автоматизация</span><i></i></button>
           <button class="nav-item" type="button" data-view-target="plugins"><svg><use href="#i-puzzle"/></svg><span>Плагины</span></button>
+          <button class="nav-item" type="button" data-view-target="analytics"><svg><use href="#i-chart"/></svg><span>Аналитика</span></button>
+          <span class="sidebar-nav__label">Сервисы и настройки</span>
           <button class="nav-item" type="button" data-view-target="billing"><svg><use href="#i-card"/></svg><span>Финансы</span></button>
+          <button class="nav-item" type="button" data-view-target="telegram"><svg><use href="#i-send"/></svg><span>Telegram</span></button>
+          <button class="nav-item" type="button" data-view-target="security"><svg><use href="#i-shield"/></svg><span>Безопасность</span></button>
+          <button class="nav-item" type="button" data-view-target="events"><svg><use href="#i-list"/></svg><span>Журнал событий</span></button>
           <button class="nav-item" type="button" data-view-target="guide"><svg><use href="#i-help"/></svg><span>База знаний</span></button>
-          <details class="nav-group">
-            <summary><svg><use href="#i-more"/></svg><span>Настройки</span><svg><use href="#i-chevron"/></svg></summary>
-            <div>
-              <button class="nav-item nav-item--nested" type="button" data-view-target="telegram"><span>Telegram</span></button>
-              <button class="nav-item nav-item--nested" type="button" data-view-target="security"><span>Безопасность</span></button>
-              <button class="nav-item nav-item--nested" type="button" data-view-target="events"><span>Журнал событий</span></button>
-            </div>
-          </details>
         </nav>
 
         <div class="sidebar__bottom">
-          <button class="support-link" type="button" data-toast="Центр поддержки будет подключён перед закрытой beta"><svg><use href="#i-help"/></svg><span>Поддержка</span><b>24/7</b></button>
+          <div class="support-card">
+            <span class="support-card__icon"><svg><use href="#i-help"/></svg></span>
+            <div><strong>Поддержка 24/7</strong><small>Онлайн · ответим в течение часа</small></div>
+            <button class="support-card__button" type="button" data-toast="Центр поддержки будет подключён перед закрытой beta">Написать в поддержку</button>
+          </div>
           <div class="user-card" data-auth-open>
             <span class="user-card__avatar">WA</span>
             <span><strong>Wareon</strong><small>Тариф Про · Demo</small></span>
@@ -100,8 +98,12 @@
           <div class="topbar-context"><strong id="current-view-label">Главная</strong><small>ZenLot Control</small></div>
           <div class="topbar__actions">
             <span class="prototype-chip" data-system-health><i></i> Гостевой режим</span>
+            <span class="balance-chip"><svg><use href="#i-card"/></svg><span><small>Баланс</small><strong data-topbar-balance>—</strong></span></span>
+            <button class="button button--light" type="button" data-open-connect><svg><use href="#i-plus"/></svg> Подключить FunPay</button>
+            <span class="lang-switch"><button class="is-active" type="button">RU</button><button type="button" data-toast="Английская версия появится после beta">EN</button></span>
             <button class="icon-button notification-button" type="button" aria-label="Уведомления" data-toast="3 демонстрационных уведомления"><svg><use href="#i-bell"/></svg><b>3</b></button>
-            <button class="topbar-profile" type="button" data-auth-open><span data-auth-avatar>WA</span><strong data-auth-name>Войти</strong><svg><use href="#i-chevron"/></svg></button>
+            <button class="icon-button" type="button" aria-label="Безопасность" data-view-link="security"><svg><use href="#i-gear"/></svg></button>
+            <button class="topbar-profile" type="button" data-auth-open><span data-auth-avatar>WA</span><span class="topbar-profile__meta"><strong data-auth-name>Войти</strong><small>Free</small></span><svg><use href="#i-chevron"/></svg></button>
           </div>
         </header>
 
@@ -149,10 +151,26 @@
             </div>
 
             <div class="stat-grid">
-              <article class="stat-card"><span class="stat-card__icon"><svg><use href="#i-card"/></svg></span><small>Доступный баланс</small><strong data-dash-balance>—</strong><span class="stat-card__hint">FunPay · read-only</span></article>
-              <article class="stat-card"><span class="stat-card__icon"><svg><use href="#i-bag"/></svg></span><small>Заказов за период</small><strong data-dash-orders>—</strong><span class="stat-card__hint">синхронизировано</span></article>
-              <article class="stat-card"><span class="stat-card__icon"><svg><use href="#i-chat"/></svg></span><small>Новых сообщений</small><strong data-dash-unread>—</strong><span class="stat-card__hint">требуют ответа</span></article>
-              <article class="stat-card"><span class="stat-card__icon"><svg><use href="#i-shield"/></svg></span><small>Тарифный план</small><strong data-dash-plan>—</strong><span class="stat-card__hint">автопродление под контролем</span></article>
+              <article class="stat-card"><small>Доступный баланс</small><span class="stat-card__icon stat-card__icon--amber"><svg><use href="#i-card"/></svg></span><strong data-dash-balance>—</strong><span class="stat-card__hint">FunPay · read-only</span></article>
+              <article class="stat-card"><small>Заказов за период</small><span class="stat-card__icon stat-card__icon--blue"><svg><use href="#i-bag"/></svg></span><strong data-dash-orders>—</strong><span class="stat-card__hint">синхронизировано</span></article>
+              <article class="stat-card"><small>Новых сообщений</small><span class="stat-card__icon stat-card__icon--violet"><svg><use href="#i-chat"/></svg></span><strong data-dash-unread>—</strong><span class="stat-card__hint">требуют ответа</span></article>
+              <article class="stat-card"><small>Тарифный план</small><span class="stat-card__icon stat-card__icon--green"><svg><use href="#i-shield"/></svg></span><strong data-dash-plan>—</strong><span class="stat-card__hint">автопродление под контролем</span></article>
+            </div>
+
+            <div class="dash-panels dash-panels--charts">
+              <section class="panel dash-panel dash-panel--chart" aria-label="Динамика заказов">
+                <header><span class="dash-panel__icon"><svg><use href="#i-chart"/></svg></span><div><h2>Динамика заказов</h2><small>Оборот и отгрузка по дням недели</small></div><button class="panel-link" type="button" data-view-link="analytics">Вся аналитика <svg><use href="#i-chevron"/></svg></button></header>
+                <div class="dash-chart" id="dash-chart"></div>
+                <div class="dash-chart__days" id="dash-chart-days"></div>
+              </section>
+              <section class="panel dash-panel dash-panel--donut" aria-label="Структура заказов">
+                <header><span class="dash-panel__icon"><svg><use href="#i-list"/></svg></span><div><h2>Структура заказов</h2><small>Распределение по статусам</small></div></header>
+                <div class="dash-donut">
+                  <svg viewBox="0 0 132 132" id="dash-donut-svg" role="img" aria-label="Диаграмма структуры заказов"></svg>
+                  <span class="dash-donut__center"><strong id="dash-donut-total">0</strong><small>Всего заказов</small></span>
+                </div>
+                <div class="dash-status-legend" id="dash-status-legend"></div>
+              </section>
             </div>
 
             <div class="dash-panels">

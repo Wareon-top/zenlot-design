@@ -494,6 +494,7 @@ function renderDashboard() {
     if (node) node.textContent = value;
   };
   setText('[data-dash-balance]', metrics.balance ?? '—');
+  setText('[data-topbar-balance]', metrics.balance ?? '—');
   setText('[data-dash-orders]', String(state.orders.length));
   setText('[data-dash-unread]', metrics.unread != null ? String(metrics.unread) : String(state.conversations.reduce((sum, chat) => sum + (chat.unread || 0), 0)));
   setText('[data-dash-plan]', authState.user ? 'Про' : 'Гостевой');
@@ -526,6 +527,70 @@ function renderDashboard() {
         <b>${formatMinor(store.pendingMinor, store.currency)}</b>
       </article>`).join('') : '<div class="content-empty">Движение средств появится после read-only подключения магазина.</div>';
   }
+
+  renderDashChart();
+  renderDashDonut();
+}
+
+function renderDashChart() {
+  const target = byId('dash-chart');
+  const days = byId('dash-chart-days');
+  if (!target || !days) return;
+  const data = state.analytics;
+  if (!data.length) { target.innerHTML = '<div class="content-empty">Данные появятся после первой недели работы магазина.</div>'; days.innerHTML = ''; return; }
+  const width = 560;
+  const height = 150;
+  const pad = 8;
+  const values = data.map((point) => point.revenue);
+  const max = Math.max(...values, 1);
+  const step = (width - pad * 2) / Math.max(values.length - 1, 1);
+  const points = values.map((value, index) => [pad + index * step, height - 16 - (value / max) * (height - 34)]);
+  const curve = points.map((point, index) => {
+    if (index === 0) return `M${point[0]},${point[1]}`;
+    const [prevX, prevY] = points[index - 1];
+    const midX = (prevX + point[0]) / 2;
+    return `C${midX},${prevY} ${midX},${point[1]} ${point[0]},${point[1]}`;
+  }).join(' ');
+  const area = `${curve} L${points.at(-1)[0]},${height - 4} L${points[0][0]},${height - 4} Z`;
+  target.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-hidden="true">
+      <defs><linearGradient id="dash-area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f9b32e" stop-opacity=".22"/><stop offset="1" stop-color="#f9b32e" stop-opacity="0"/></linearGradient></defs>
+      <path d="${area}" fill="url(#dash-area)"/>
+      <path d="${curve}" fill="none" stroke="#f9b32e" stroke-width="2.2" stroke-linecap="round"/>
+      ${points.map((point) => `<circle cx="${point[0]}" cy="${point[1]}" r="3" fill="#f9b32e" stroke="#12141a" stroke-width="2"/>`).join('')}
+    </svg>`;
+  days.innerHTML = data.map((point) => `<span>${escapeHtml(point.day)}</span>`).join('');
+}
+
+function renderDashDonut() {
+  const svg = byId('dash-donut-svg');
+  const legend = byId('dash-status-legend');
+  const totalNode = byId('dash-donut-total');
+  if (!svg || !legend || !totalNode) return;
+  const tones = { 'Новый': '#f9b32e', 'В работе': '#a78bfa', 'Выдан': '#34d399', 'Спор': '#f87171', 'Завершён': '#5b616e' };
+  const counts = {};
+  state.orders.forEach((order) => { counts[order.status] = (counts[order.status] || 0) + 1; });
+  const entries = Object.entries(counts);
+  const total = state.orders.length;
+  totalNode.textContent = String(total);
+  if (!total) {
+    svg.innerHTML = '<circle cx="66" cy="66" r="50" fill="none" stroke="#1c1f26" stroke-width="12"/>';
+    legend.innerHTML = '<div class="content-empty">Структура появится после синхронизации заказов.</div>';
+    return;
+  }
+  const radius = 50;
+  const circumference = 2 * Math.PI * radius;
+  let offset = 0;
+  svg.innerHTML = '<circle cx="66" cy="66" r="50" fill="none" stroke="#1c1f26" stroke-width="12"/>' + entries.map(([status, count]) => {
+    const share = count / total;
+    const segment = `${share * circumference} ${circumference}`;
+    const circle = `<circle cx="66" cy="66" r="50" fill="none" stroke="${tones[status] || '#5b616e'}" stroke-width="12" stroke-dasharray="${segment}" stroke-dashoffset="${-offset}" transform="rotate(-90 66 66)" stroke-linecap="butt"/>`;
+    offset += share * circumference;
+    return circle;
+  }).join('');
+  legend.innerHTML = entries.map(([status, count]) => `
+    <div><span><i style="background:${tones[status] || '#5b616e'}"></i>${escapeHtml(status)}</span><b>${count}</b><em>${Math.round((count / total) * 100)}%</em></div>
+  `).join('');
 }
 
 function renderOrders() {
