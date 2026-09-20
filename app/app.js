@@ -555,9 +555,10 @@ function renderDashChart() {
   target.innerHTML = `
     <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-hidden="true">
       <defs><linearGradient id="dash-area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f9b32e" stop-opacity=".22"/><stop offset="1" stop-color="#f9b32e" stop-opacity="0"/></linearGradient></defs>
+      ${[0.25, 0.5, 0.75].map((ratio) => `<line x1="${pad}" x2="${width - pad}" y1="${16 + ratio * (height - 34)}" y2="${16 + ratio * (height - 34)}" stroke="#1e2129" stroke-dasharray="3 5" stroke-width="1"/>`).join('')}
       <path d="${area}" fill="url(#dash-area)"/>
       <path d="${curve}" fill="none" stroke="#f9b32e" stroke-width="2.2" stroke-linecap="round"/>
-      ${points.map((point) => `<circle cx="${point[0]}" cy="${point[1]}" r="3" fill="#f9b32e" stroke="#12141a" stroke-width="2"/>`).join('')}
+      ${points.map((point) => `<circle cx="${point[0]}" cy="${point[1]}" r="3.5" fill="#f9b32e" stroke="#12141a" stroke-width="2.5"/>`).join('')}
     </svg>`;
   days.innerHTML = data.map((point) => `<span>${escapeHtml(point.day)}</span>`).join('');
 }
@@ -593,20 +594,27 @@ function renderDashDonut() {
   `).join('');
 }
 
+const AVATAR_TONES = ['avatar--amber', 'avatar--blue', 'avatar--violet', 'avatar--green', 'avatar--red'];
+const avatarTone = (name) => {
+  let hash = 0;
+  for (const char of String(name || 'Z')) hash = (hash + char.charCodeAt(0)) % AVATAR_TONES.length;
+  return AVATAR_TONES[hash];
+};
+
 function renderOrders() {
   const target = byId('orders-table-body');
   if (!target) return;
   target.innerHTML = state.orders.length ? state.orders.map((order) => `
     <tr>
-      <td><strong>${escapeHtml(order.id)}</strong></td>
-      <td><strong>${escapeHtml(order.product)}</strong></td>
-      <td>${escapeHtml(order.buyer)}</td>
-      <td><strong>${escapeHtml(order.total)}</strong></td>
+      <td><div class="order-cell"><strong>${escapeHtml(order.id)}</strong><small>${escapeHtml(order.time)} назад</small></div></td>
+      <td><div class="product-cell"><i>${escapeHtml(String(order.product).slice(0, 2).toUpperCase())}</i><span>${escapeHtml(order.product)}</span></div></td>
+      <td><div class="buyer-cell"><span class="avatar ${avatarTone(order.buyer)}">${escapeHtml(String(order.buyer).slice(0, 2).toUpperCase())}</span><span>${escapeHtml(order.buyer)}</span></div></td>
+      <td class="cell-right"><strong class="order-amount">${escapeHtml(order.total)}</strong></td>
       <td><span class="source-pill ${order.status === 'Новый' ? 'source-pill--web' : 'source-pill--auto'}"><i></i>${order.status === 'Новый' ? 'Web' : 'Автопилот'}</span></td>
-      <td><span class="table-status ${order.tone === 'green' || order.tone === 'muted' ? 'table-status--success' : order.tone === 'yellow' || order.tone === 'violet' ? 'table-status--processing' : ''}">${escapeHtml(order.status)}</span></td>
-      <td>${escapeHtml(order.time)}</td>
-      <td><button class="row-action" data-toast="Заказ ${escapeHtml(order.id)} открыт в read-only режиме" aria-label="Открыть ${escapeHtml(order.id)}">${icon('chevron-right')}</button></td>
-    </tr>`).join('') : '<tr><td colspan="8"><div class="content-empty">Запустите магазин и выполните синхронизацию.</div></td></tr>';
+      <td><span class="table-status ${order.tone === 'green' || order.tone === 'muted' ? 'table-status--success' : order.tone === 'yellow' || order.tone === 'violet' ? 'table-status--processing' : ''}"><i></i>${escapeHtml(order.status)}</span></td>
+      <td><span class="cell-muted">${escapeHtml(order.time)}</span></td>
+      <td class="cell-right"><button class="row-action" data-toast="Заказ ${escapeHtml(order.id)} открыт в read-only режиме" aria-label="Открыть ${escapeHtml(order.id)}">${icon('chevron-right')}</button></td>
+    </tr>`).join('') : '<tr><td colspan="8"><div class="content-empty"><span class="chat-empty__icon"><svg><use href="#i-bag"/></svg></span><strong>Заказов пока нет</strong><p>Запустите магазин и выполните синхронизацию — заказы появятся здесь.</p></div></td></tr>';
   const total = state.orders.length;
   const active = state.orders.filter((order) => !['Завершён', 'Выдан'].includes(order.status)).length;
   document.querySelector('[data-orders-total]')?.replaceChildren(document.createTextNode(String(total)));
@@ -622,9 +630,9 @@ function renderConversations() {
   if (!target) return;
   target.innerHTML = state.conversations.length ? state.conversations.map((chat) => `
     <button class="conversation-item${chat.active ? ' is-active' : ''}" type="button" data-chat="${escapeHtml(chat.threadId || chat.name)}">
-      <span class="chat-avatar">${escapeHtml(chat.initials)}</span>
+      <span class="chat-avatar ${avatarTone(chat.name)}">${escapeHtml(chat.initials)}</span>
       <span><strong>${escapeHtml(chat.name)}</strong><p>${escapeHtml(chat.preview)}</p></span>
-      <time>${escapeHtml(chat.time)}</time>${chat.unread ? `<b>${chat.unread}</b>` : ''}
+      <span class="conversation-item__meta"><time>${escapeHtml(chat.time)}</time>${chat.unread ? `<b>${chat.unread}</b>` : ''}</span>
     </button>`).join('') : '<div class="content-empty">Сообщений пока нет.</div>';
   document.querySelector('[data-message-count]')?.replaceChildren(document.createTextNode(String(state.conversations.length)));
   renderActiveConversation();
@@ -636,9 +644,13 @@ function renderActiveConversation() {
   const name = document.querySelector('[data-chat-name]');
   const avatar = document.querySelector('[data-chat-avatar]');
   if (name) name.textContent = chat?.name || 'Выберите диалог';
-  if (avatar) avatar.textContent = chat?.initials || '—';
+  if (avatar) {
+    avatar.textContent = chat?.initials || '—';
+    avatar.className = `chat-avatar chat-avatar--header ${chat ? avatarTone(chat.name) : ''}`;
+  }
   if (!body) return;
-  if (!chat?.messages?.length) { body.innerHTML = '<div class="chat-empty">Запустите магазин и синхронизируйте сообщения.</div>'; return; }
+  const emptyState = '<div class="chat-empty"><span class="chat-empty__icon"><svg><use href="#i-chat"/></svg></span><strong>Диалог не выбран</strong><p>Запустите магазин и синхронизируйте сообщения — здесь появится переписка.</p></div>';
+  if (!chat?.messages?.length) { body.innerHTML = emptyState; return; }
   body.innerHTML = `<div class="chat-date">Read-only синхронизация</div>${chat.messages.map((message) => `<article class="chat-message ${message.sender === 'seller' ? 'chat-message--seller' : 'chat-message--buyer'}"><p>${escapeHtml(message.text || 'Сообщение без текста')}</p><time>${escapeHtml(message.time || '')}</time></article>`).join('')}`;
 }
 
