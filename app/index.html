@@ -40,6 +40,7 @@
       <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
       <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
       <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></symbol>
+      <symbol id="i-gift" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="9" rx="1.5"/><path d="M12 11v9M4 15h16M12 11s-4 .2-5.5-1.2C5.2 8.6 6 6.5 8 6.5c2.2 0 3.3 2.3 4 4.5Zm0 0s4 .2 5.5-1.2C18.8 8.6 18 6.5 16 6.5c-2.2 0-3.3 2.3-4 4.5Z"/></symbol>
     </svg>
 
     <div class="app-shell">
@@ -106,22 +107,64 @@
 
         <div class="view-stack">
           <section class="view is-active" data-view="dashboard" aria-labelledby="dashboard-title">
-            <div class="view-heading zen-heading">
-              <div><span class="eyebrow">ZenLot · ваш магазин</span><h1 id="dashboard-title">Один магазин.<br>Всё под контролем.</h1><p>Заказы, сообщения и настройки автоматизации — в одной спокойной панели.</p></div>
-              <button class="button button--primary" type="button" data-open-connect><svg><use href="#i-plus"/></svg> Подключить FunPay</button>
+            <div class="dash-notices">
+              <section class="notice-banner notice-banner--neutral">
+                <span class="notice-banner__icon"><svg><use href="#i-shield"/></svg></span>
+                <div>
+                  <strong>Рекомендация по безопасности <b class="notice-tag">2FA</b></strong>
+                  <p>Включите второй фактор входа: он закроет посторонним доступ к балансу, Golden Key и журналу автоматизаций.</p>
+                </div>
+                <div class="notice-banner__actions">
+                  <button class="button button--primary" type="button" data-view-link="security">Включить 2FA <svg><use href="#i-chevron"/></svg></button>
+                  <button class="notice-dismiss" type="button" data-notice-dismiss>Позже</button>
+                </div>
+              </section>
+              <section class="notice-banner notice-banner--gift">
+                <span class="notice-banner__icon"><svg><use href="#i-gift"/></svg></span>
+                <div>
+                  <strong>7 дней тарифа «Максимум» без оплаты <b class="notice-tag">Подарок</b></strong>
+                  <p>Весь каталог плагинов, расширенная аналитика и приоритетные лимиты автоматизации. Автопродления нет.</p>
+                </div>
+                <div class="notice-banner__actions">
+                  <button class="button button--primary" type="button" data-toast="Подарочный период включится вместе с платёжным контуром">Забрать 7 дней <svg><use href="#i-chevron"/></svg></button>
+                  <button class="notice-dismiss notice-dismiss--icon" type="button" data-notice-dismiss aria-label="Скрыть предложение"><svg><use href="#i-close"/></svg></button>
+                </div>
+              </section>
             </div>
 
-            <section class="focus-store panel" aria-label="Подключённый магазин">
-              <div class="focus-store__identity"><span class="store-logo" data-active-store-avatar>FP</span><div><span class="panel-label">Ваш магазин FunPay</span><strong data-active-store-name>Подключите аккаунт</strong><small data-active-store-status>FunPay · ожидает подключения</small></div></div>
-              <div class="focus-store__metrics"><span><small>Баланс</small><strong data-active-store-balance>— ₽</strong></span><span><small>Лоты</small><strong data-active-store-lots>—</strong></span><span><small>Новые сообщения</small><strong data-active-store-unread>—</strong></span></div>
-              <div class="focus-store__actions"><button class="button button--primary" type="button" data-store-runtime><svg><use href="#i-bolt"/></svg> Запустить</button><button class="button button--ghost" type="button" data-view-link="orders">Открыть заказы <svg><use href="#i-chevron"/></svg></button></div>
+            <section class="dash-hero panel">
+              <div>
+                <span class="eyebrow">ZenLot · кабинет продавца</span>
+                <h1 id="dashboard-title">Панель управления</h1>
+                <p>Статистика магазина, сообщения и автоматизации — в одном спокойном окне. FunPay подключается в read-only режиме через закреплённый proxy.</p>
+              </div>
+              <button class="button button--primary" type="button" data-open-connect><svg><use href="#i-plus"/></svg> Подключить FunPay</button>
             </section>
 
-            <section class="start-grid">
-              <article class="start-card start-card--accent"><span class="start-card__icon"><svg><use href="#i-shield"/></svg></span><div><span class="panel-label">Следующий шаг</span><h2>Завершите подключение</h2><p>Добавьте Golden Key и закреплённый прокси. ZenLot выполнит только read-only проверку.</p></div><button class="button button--primary" type="button" data-open-connect>Открыть мастер <svg><use href="#i-chevron"/></svg></button></article>
-              <article class="start-card start-card--messages"><span class="start-card__icon"><svg><use href="#i-chat"/></svg></span><div><span class="panel-label">Входящие</span><h2>Сообщения покупателей</h2><p>Диалоги, быстрые ответы и проверка предложенных автоматизаций.</p></div><button class="text-action" type="button" data-view-link="messages">Открыть сообщения <svg><use href="#i-chevron"/></svg></button></article>
-              <article class="start-card start-card--plugins"><span class="start-card__icon"><svg><use href="#i-puzzle"/></svg></span><div><span class="panel-label">Расширения</span><h2>Автоматизация под задачу</h2><p>Подключайте модули с прозрачными разрешениями и журналом действий.</p></div><button class="text-action" type="button" data-view-link="plugins">Открыть каталог <svg><use href="#i-chevron"/></svg></button></article>
-            </section>
+            <div class="quick-grid">
+              <button class="quick-tile" type="button" data-view-link="orders"><span class="quick-tile__icon quick-tile__icon--amber"><svg><use href="#i-bag"/></svg></span><span>Заказы</span><svg class="quick-tile__arrow"><use href="#i-external"/></svg></button>
+              <button class="quick-tile" type="button" data-view-link="messages"><span class="quick-tile__icon quick-tile__icon--blue"><svg><use href="#i-chat"/></svg></span><span>Сообщения</span><svg class="quick-tile__arrow"><use href="#i-external"/></svg></button>
+              <button class="quick-tile" type="button" data-view-link="plugins"><span class="quick-tile__icon quick-tile__icon--violet"><svg><use href="#i-puzzle"/></svg></span><span>Плагины</span><svg class="quick-tile__arrow"><use href="#i-external"/></svg></button>
+              <button class="quick-tile" type="button" data-view-link="analytics"><span class="quick-tile__icon quick-tile__icon--green"><svg><use href="#i-chart"/></svg></span><span>Аналитика</span><svg class="quick-tile__arrow"><use href="#i-external"/></svg></button>
+            </div>
+
+            <div class="stat-grid">
+              <article class="stat-card"><span class="stat-card__icon"><svg><use href="#i-card"/></svg></span><small>Доступный баланс</small><strong data-dash-balance>—</strong><span class="stat-card__hint">FunPay · read-only</span></article>
+              <article class="stat-card"><span class="stat-card__icon"><svg><use href="#i-bag"/></svg></span><small>Заказов за период</small><strong data-dash-orders>—</strong><span class="stat-card__hint">синхронизировано</span></article>
+              <article class="stat-card"><span class="stat-card__icon"><svg><use href="#i-chat"/></svg></span><small>Новых сообщений</small><strong data-dash-unread>—</strong><span class="stat-card__hint">требуют ответа</span></article>
+              <article class="stat-card"><span class="stat-card__icon"><svg><use href="#i-shield"/></svg></span><small>Тарифный план</small><strong data-dash-plan>—</strong><span class="stat-card__hint">автопродление под контролем</span></article>
+            </div>
+
+            <div class="dash-panels">
+              <section class="panel dash-panel" aria-label="Последние заказы">
+                <header><span class="dash-panel__icon"><svg><use href="#i-bag"/></svg></span><h2>Последние заказы</h2><button class="panel-link" type="button" data-view-link="orders">Все заказы <svg><use href="#i-chevron"/></svg></button></header>
+                <div class="dash-list" id="dash-orders-list"></div>
+              </section>
+              <section class="panel dash-panel" aria-label="Движение средств">
+                <header><span class="dash-panel__icon"><svg><use href="#i-chart"/></svg></span><h2>Движение средств</h2><button class="panel-link" type="button" data-view-link="billing">Все операции <svg><use href="#i-chevron"/></svg></button></header>
+                <div class="dash-list" id="dash-finance-list"></div>
+              </section>
+            </div>
           </section>
 
           <section class="view" data-view="orders" aria-labelledby="orders-title">

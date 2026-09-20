@@ -310,6 +310,7 @@ function renderStoreFleet() {
     button.disabled = connected;
     button.title = connected ? 'ZenLot поддерживает один аккаунт FunPay.' : '';
   });
+  renderDashboard();
 }
 
 async function loadStoreFleet() {
@@ -485,6 +486,48 @@ async function loadPluginAudit() {
   renderPluginAudit();
 }
 
+function renderDashboard() {
+  const selected = selectedStore();
+  const metrics = selected?.metrics || {};
+  const setText = (selector, value) => {
+    const node = document.querySelector(selector);
+    if (node) node.textContent = value;
+  };
+  setText('[data-dash-balance]', metrics.balance ?? '—');
+  setText('[data-dash-orders]', String(state.orders.length));
+  setText('[data-dash-unread]', metrics.unread != null ? String(metrics.unread) : String(state.conversations.reduce((sum, chat) => sum + (chat.unread || 0), 0)));
+  setText('[data-dash-plan]', authState.user ? 'Про' : 'Гостевой');
+
+  const statusClass = (tone) => (tone === 'green' || tone === 'muted' ? 'table-status--success' : tone === 'yellow' || tone === 'violet' ? 'table-status--processing' : '');
+  const ordersTarget = byId('dash-orders-list');
+  if (ordersTarget) {
+    ordersTarget.innerHTML = state.orders.length ? state.orders.slice(0, 4).map((order) => `
+      <article>
+        <span class="dash-list__icon"><svg><use href="#i-bag"/></svg></span>
+        <div><strong>${escapeHtml(order.id)} · ${escapeHtml(order.product)}</strong><small>${escapeHtml(order.buyer)} · ${escapeHtml(order.time)} назад</small></div>
+        <span class="table-status ${statusClass(order.tone)}">${escapeHtml(order.status)}</span>
+        <b>${escapeHtml(order.total)}</b>
+      </article>`).join('') : '<div class="content-empty">Заказы появятся после синхронизации магазина.</div>';
+  }
+
+  const financeTarget = byId('dash-finance-list');
+  if (financeTarget) {
+    financeTarget.innerHTML = state.finance.stores.length ? state.finance.stores.map((store) => `
+      <article>
+        <span class="dash-list__icon"><svg><use href="#i-card"/></svg></span>
+        <div><strong>${escapeHtml(store.displayName)}</strong><small>read-only снимок баланса</small></div>
+        <span class="table-status table-status--success">Доступно</span>
+        <b>${formatMinor(store.availableMinor, store.currency)}</b>
+      </article>
+      <article>
+        <span class="dash-list__icon"><svg><use href="#i-clock"/></svg></span>
+        <div><strong>Ожидает подтверждения</strong><small>вывод средств отключён политикой безопасности</small></div>
+        <span class="table-status table-status--processing">Ожидает</span>
+        <b>${formatMinor(store.pendingMinor, store.currency)}</b>
+      </article>`).join('') : '<div class="content-empty">Движение средств появится после read-only подключения магазина.</div>';
+  }
+}
+
 function renderOrders() {
   const target = byId('orders-table-body');
   if (!target) return;
@@ -506,6 +549,7 @@ function renderOrders() {
   document.querySelector('[data-orders-done]')?.replaceChildren(document.createTextNode(String(total - active)));
   document.querySelector('[data-orders-updated]')?.replaceChildren(document.createTextNode(state.storeContent.observedAt ? new Date(state.storeContent.observedAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }) : '—'));
   document.querySelector('[data-orders-count]')?.replaceChildren(document.createTextNode(total ? `Показано ${total} заказов` : 'Нет синхронизированных заказов'));
+  renderDashboard();
 }
 
 function renderConversations() {
@@ -978,6 +1022,8 @@ async function advanceConnectionWizard() {
 
 function bindInteractions() {
   document.addEventListener('click', (event) => {
+    const noticeDismiss = event.target.closest('[data-notice-dismiss]');
+    if (noticeDismiss) { noticeDismiss.closest('.notice-banner')?.remove(); return; }
     const authMode = event.target.closest('[data-auth-mode]');
     if (authMode) { setAuthMode(authMode.dataset.authMode); return; }
     if (event.target.closest('[data-auth-open]')) { setAuthModal(true); return; }
