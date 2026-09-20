@@ -29,13 +29,15 @@ const state = {
     { icon: 'alert-triangle', name: 'Эскалация спорного заказа', description: 'Уведомляет владельца и ставит автоматизацию на паузу', runs: '3 запуска', active: false },
   ],
   plugins: [
-    { id: 'zenlot.auto-reply', icon: 'zap', name: 'Автоответчик', vendor: 'ZenLot Core', description: 'Безопасно ставит ответ покупателю в очередь и защищён от циклических сообщений.', permissions: ['Сообщения', 'Очередь ответов'], installed: false, active: false, config: { text: 'Здравствуйте! Сообщение получено — скоро вернёмся с ответом.', scenario: 'all', keywords: [], excludeKeywords: [], quietHours: { enabled: false, start: '22:00', end: '08:00', timeZone: 'Asia/Almaty', behavior: 'pause', text: 'Сейчас мы офлайн. Ответим утром.' } } },
-    { id: 'zenlot.telegram-notifications', icon: 'send', name: 'Telegram-уведомления', vendor: 'ZenLot Core', description: 'Сообщает владельцу о новых сообщениях и оплаченных заказах.', permissions: ['Сообщения', 'Заказы', 'Telegram'], installed: false, active: false, config: { messages: true, paidOrders: true } },
-    { id: 'planned.fraud-watch', icon: 'shield', name: 'Fraud Watch', vendor: 'Планируется', description: 'Отмечает подозрительные заказы до автоматической выдачи.', permissions: ['Заказы'], planned: true },
-    { id: 'planned.price-pilot', icon: 'trending-up', name: 'Price Pilot', vendor: 'Планируется', description: 'Помогает сравнивать цену и позицию активного лота.', permissions: ['Лоты', 'Аналитика'], planned: true },
-    { id: 'planned.quiet-hours', icon: 'clock', name: 'Quiet Hours', vendor: 'Планируется', description: 'Меняет сценарии ответов в заданное владельцем время.', permissions: ['Расписание'], planned: true },
-    { id: 'planned.order-notes', icon: 'file-text', name: 'Order Notes', vendor: 'Планируется', description: 'Добавляет внутренние заметки к покупателям и заказам.', permissions: ['Заказы'], planned: true },
+    { id: 'zenlot.auto-reply', icon: 'zap', name: 'Автоответчик', vendor: 'ZenLot Core', category: 'chat', price: 'от 490 ₽', description: 'Безопасно ставит ответ покупателю в очередь и защищён от циклических сообщений.', permissions: ['Сообщения', 'Очередь ответов'], installed: false, active: false, config: { text: 'Здравствуйте! Сообщение получено — скоро вернёмся с ответом.', scenario: 'all', keywords: [], excludeKeywords: [], quietHours: { enabled: false, start: '22:00', end: '08:00', timeZone: 'Asia/Almaty', behavior: 'pause', text: 'Сейчас мы офлайн. Ответим утром.' } } },
+    { id: 'zenlot.telegram-notifications', icon: 'send', name: 'Telegram-уведомления', vendor: 'ZenLot Core', category: 'control', price: 'от 290 ₽', description: 'Сообщает владельцу о новых сообщениях и оплаченных заказах.', permissions: ['Сообщения', 'Заказы', 'Telegram'], installed: false, active: false, config: { messages: true, paidOrders: true } },
+    { id: 'planned.fraud-watch', icon: 'shield', name: 'Fraud Watch', vendor: 'Планируется', category: 'control', price: 'от 690 ₽', description: 'Отмечает подозрительные заказы до автоматической выдачи.', permissions: ['Заказы'], planned: true },
+    { id: 'planned.price-pilot', icon: 'trending-up', name: 'Price Pilot', vendor: 'Планируется', category: 'sales', price: 'от 590 ₽', description: 'Помогает сравнивать цену и позицию активного лота.', permissions: ['Лоты', 'Аналитика'], planned: true },
+    { id: 'planned.quiet-hours', icon: 'clock', name: 'Quiet Hours', vendor: 'Планируется', category: 'chat', price: 'от 190 ₽', description: 'Меняет сценарии ответов в заданное владельцем время.', permissions: ['Расписание'], planned: true },
+    { id: 'planned.order-notes', icon: 'file-text', name: 'Order Notes', vendor: 'Планируется', category: 'sales', price: 'от 390 ₽', description: 'Добавляет внутренние заметки к покупателям и заказам.', permissions: ['Заказы'], planned: true },
   ],
+  pluginFilter: { cat: 'all', query: '' },
+  pluginCoverAdmin: false,
   pluginAudit: [],
   storeFleet: {
     selectedStoreId: 'demo-store-main',
@@ -793,18 +795,55 @@ function renderAutomations() {
 function renderPlugins() {
   const target = byId('plugin-grid');
   if (!target) return;
-  const colors = ['255,210,28', '143,114,255', '109,157,255', '112,223,160', '255,138,78', '203,128,255'];
+  const colors = ['249,179,46', '167,139,250', '96,165,250', '52,211,153', '248,113,113', '203,128,255'];
   const installed = state.plugins.filter((plugin) => plugin.installed).length;
   const total = state.plugins.filter((plugin) => !plugin.planned).length;
   if (byId('plugin-total')) byId('plugin-total').textContent = `${total} доступно`;
   if (byId('plugin-installed')) byId('plugin-installed').textContent = `${installed} установлено`;
-  target.innerHTML = state.plugins.map((plugin, index) => `
-    <article class="plugin-card${plugin.planned ? ' is-planned' : ''}" style="--plugin-rgb:${colors[index % colors.length]}">
-      <div class="plugin-card__top"><span class="plugin-card__mark">${icon(plugin.icon)}</span><small>${plugin.vendor}</small></div>
-      <h3>${plugin.name}</h3><p>${plugin.description}</p>
-      <div class="plugin-permissions">${plugin.permissions.map((permission) => `<span>${permission}</span>`).join('')}</div>
-      <div class="plugin-card__bottom"><span>${plugin.planned ? 'Следующий этап' : plugin.active ? 'Работает' : plugin.installed ? 'На паузе' : 'Не установлен'}</span><button data-plugin-id="${plugin.id}" ${plugin.planned ? 'disabled' : ''}>${plugin.planned ? 'Скоро' : plugin.active ? 'Отключить' : plugin.installed ? 'Включить' : 'Установить'}</button></div>
-    </article>`).join('');
+
+  const catNames = { sales: 'Продажи', chat: 'Общение', analytics: 'Аналитика', control: 'Контроль' };
+  const catLabel = byId('plugin-cat-label');
+  if (catLabel) catLabel.textContent = state.pluginFilter.cat === 'all' ? `Все категории (${state.plugins.length})` : (catNames[state.pluginFilter.cat] || 'Все категории');
+  document.querySelectorAll('[data-plugin-cat]').forEach((button) => button.classList.toggle('is-active', button.dataset.pluginCat === state.pluginFilter.cat));
+
+  const query = state.pluginFilter.query.trim().toLowerCase();
+  const list = state.plugins.filter((plugin) => {
+    if (state.pluginFilter.cat !== 'all' && plugin.category !== state.pluginFilter.cat) return false;
+    if (query && !`${plugin.name} ${plugin.description}`.toLowerCase().includes(query)) return false;
+    return true;
+  });
+
+  const badgeOf = (plugin) => {
+    if (plugin.active) return { cls: 'plugin-card__badge--work', label: 'Работает' };
+    if (plugin.installed) return { cls: 'plugin-card__badge--pause', label: 'На паузе' };
+    if (plugin.planned) return { cls: 'plugin-card__badge--soon', label: 'Скоро' };
+    return { cls: 'plugin-card__badge--idle', label: 'Не установлен' };
+  };
+  const statusOf = (plugin) => (plugin.planned ? 'Следующий этап' : plugin.active ? 'Работает' : plugin.installed ? 'На паузе' : 'Не установлен');
+  const actionOf = (plugin) => (plugin.planned ? 'Скоро' : plugin.active ? 'Отключить' : plugin.installed ? 'Включить' : 'Установить');
+
+  target.innerHTML = list.length ? list.map((plugin) => {
+    const index = state.plugins.indexOf(plugin);
+    const badge = badgeOf(plugin);
+    const cover = plugin.cover ? `<img src="${plugin.cover}" alt="${plugin.name}" loading="lazy">` : `<span class="plugin-cover__placeholder"><svg><use href="#i-puzzle"/></svg></span>`;
+    const adminMark = state.pluginCoverAdmin ? `<button class="plugin-cover__edit" type="button" data-cover-plugin="${plugin.id}" aria-label="Загрузить обложку для ${plugin.name}"><svg><use href="#i-plus"/></svg></button>` : '';
+    return `
+    <article class="plugin-card" style="--plugin-rgb:${colors[index % colors.length]}">
+      <div class="plugin-card__cover">${cover}${adminMark}<span class="plugin-card__badge ${badge.cls}">${badge.label}</span></div>
+      <div class="plugin-card__body">
+        <h3>${plugin.name}</h3>
+        <p>${plugin.description}</p>
+        <div class="plugin-permissions">${plugin.permissions.map((permission) => `<span>${permission}</span>`).join('')}</div>
+        <div class="plugin-card__bottom">
+          <div class="plugin-card__price"><small>Цена</small><strong>${plugin.price}</strong></div>
+          <div class="plugin-card__actions">
+            <span class="plugin-card__status">${statusOf(plugin)}</span>
+            <button type="button" data-plugin-id="${plugin.id}" ${plugin.planned ? 'disabled' : ''} aria-label="${actionOf(plugin)} ${plugin.name}">${actionOf(plugin)}<svg><use href="#i-chevron"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </article>`;
+  }).join('') : '<div class="content-empty" style="grid-column:1/-1"><span class="chat-empty__icon"><svg><use href="#i-puzzle"/></svg></span><strong>Ничего не найдено</strong><p>Попробуйте другой запрос или категорию.</p></div>';
 }
 
 async function changePluginState(pluginId) {
@@ -1195,6 +1234,25 @@ function bindInteractions() {
       return;
     }
 
+    const coverEdit = event.target.closest('[data-cover-plugin]');
+    if (coverEdit) {
+      const input = document.querySelector('[data-plugin-cover-input]');
+      if (input) { input.dataset.coverFor = coverEdit.dataset.coverPlugin; input.click(); }
+      return;
+    }
+    if (event.target.closest('[data-plugin-cover-admin]')) {
+      state.pluginCoverAdmin = !state.pluginCoverAdmin;
+      renderPlugins();
+      showToast(state.pluginCoverAdmin ? 'Режим обложек: нажмите + на карточке, чтобы загрузить изображение' : 'Режим обложек выключен', state.pluginCoverAdmin ? 'success' : 'default');
+      return;
+    }
+    const catButton = event.target.closest('[data-plugin-cat]');
+    if (catButton) {
+      state.pluginFilter.cat = catButton.dataset.pluginCat;
+      renderPlugins();
+      return;
+    }
+
     const quickReply = event.target.closest('[data-quick-reply]');
     if (quickReply) {
       const composer = byId('message-composer');
@@ -1228,6 +1286,28 @@ function bindInteractions() {
   });
 
   document.querySelector('[data-connect-next]')?.addEventListener('click', () => advanceConnectionWizard());
+
+  document.querySelector('[data-plugin-search]')?.addEventListener('input', (event) => {
+    state.pluginFilter.query = event.target.value || '';
+    renderPlugins();
+  });
+  document.querySelector('[data-plugin-cover-input]')?.addEventListener('change', (event) => {
+    const file = event.target.files?.[0];
+    const pluginId = event.target.dataset.coverFor;
+    if (!file || !pluginId) return;
+    if (file.size > 2 * 1024 * 1024) { showToast('Обложка должна быть легче 2 МБ', 'error'); event.target.value = ''; return; }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const plugin = state.plugins.find((item) => item.id === pluginId);
+      if (plugin) {
+        plugin.cover = String(reader.result);
+        renderPlugins();
+        showToast(`Обложка «${plugin.name}» обновлена (в браузере, до backend)`, 'success');
+      }
+    };
+    reader.readAsDataURL(file);
+    event.target.value = '';
+  });
 
   byId('send-message')?.addEventListener('click', () => {
     const composer = byId('message-composer');

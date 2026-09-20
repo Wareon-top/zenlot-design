@@ -233,8 +233,19 @@
           </section>
 
           <section class="view" data-view="plugins" aria-labelledby="plugins-title">
-            <div class="view-heading view-heading--compact"><div><span class="eyebrow">Маркетплейс</span><h1 id="plugins-title">Каталог плагинов</h1><p>Расширения с явными разрешениями, безопасным отключением и журналом действий.</p></div><div class="catalog-count"><span id="plugin-total">2 доступно</span><strong id="plugin-installed">0 установлено</strong></div></div>
-            <div class="plugin-toolbar"><div class="segmented"><button class="is-active" type="button">Все</button><button type="button">Продажи</button><button type="button">Общение</button><button type="button">Аналитика</button><button type="button">Контроль</button></div><div class="search-field"><svg><use href="#i-search"/></svg><input type="search" placeholder="Найти модуль" aria-label="Поиск модулей"></div></div>
+            <div class="view-heading view-heading--compact"><div><span class="eyebrow">Маркетплейс</span><h1 id="plugins-title">Каталог плагинов</h1><p>Расширения с явными разрешениями, безопасным отключением и журналом действий.</p></div><div class="view-heading__actions"><span class="catalog-count"><span id="plugin-total">2 доступно</span><strong id="plugin-installed">0 установлено</strong></span><button class="button button--ghost" type="button" data-plugin-cover-admin><svg><use href="#i-external"/></svg> Загрузить обложки</button><input type="file" accept="image/png,image/jpeg,image/webp" hidden data-plugin-cover-input></div></div>
+            <div class="cat-pills" id="plugin-categories">
+              <button class="is-active" type="button" data-plugin-cat="all"><svg><use href="#i-grid"/></svg> Все</button>
+              <button type="button" data-plugin-cat="sales"><svg><use href="#i-bag"/></svg> Продажи</button>
+              <button type="button" data-plugin-cat="chat"><svg><use href="#i-chat"/></svg> Общение</button>
+              <button type="button" data-plugin-cat="analytics"><svg><use href="#i-chart"/></svg> Аналитика</button>
+              <button type="button" data-plugin-cat="control"><svg><use href="#i-shield"/></svg> Контроль</button>
+            </div>
+            <section class="panel catalog-hero"><h2>Плагины ZenLot</h2><p>Каталог расширений с прозрачными разрешениями и безопасной песочницей.</p></section>
+            <section class="panel catalog-search">
+              <div><span class="panel-label">Поиск</span><div class="search-field search-field--wide"><svg><use href="#i-search"/></svg><input type="search" placeholder="Поиск плагинов и модулей..." aria-label="Поиск плагинов" data-plugin-search></div></div>
+              <div><span class="panel-label">Категории</span><div class="catalog-select"><span id="plugin-cat-label">Все категории</span><svg><use href="#i-chevron"/></svg></div></div>
+            </section>
             <div class="plugin-grid" id="plugin-grid"></div>
             <section class="plugin-lab panel" aria-labelledby="plugin-lab-title">
               <div class="plugin-lab__heading"><div><span class="eyebrow">Безопасная песочница</span><h2 id="plugin-lab-title">Настрой и проверь плагин</h2><p>Событие обрабатывается в симуляторе: никаких сообщений в FunPay не отправляется.</p></div><span class="health-pill health-pill--waiting"><i></i> Только симуляция</span></div>
