@@ -1,8 +1,8 @@
-# ZenLot security policy
+# ZetSlay security policy
 
 ## Repository boundary
 
-The ZenLot source repository is private. Private visibility limits who can read source, but it is not a secret store and not a customer-data system.
+The ZetSlay source repository is private. Private visibility limits who can read source, but it is not a secret store and not a customer-data system.
 
 Never commit:
 

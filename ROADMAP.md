@@ -1,4 +1,4 @@
-# ZenLot delivery roadmap
+# ZetSlay delivery roadmap
 
 The roadmap is ordered by dependency. A later stage cannot start as a production commitment until the previous gate is accepted.
 
@@ -63,7 +63,7 @@ Exit gate: a test user can create an account and reach a connected-store shell s
 - Telegram Control, Smart Alerts, Profit Analytics, and Sales Export.
 - Reconciliation, stale-data warnings, and connector diagnostics.
 
-Exit gate: 5–10 sellers can use ZenLot without any automatic FunPay write action.
+Exit gate: 5–10 sellers can use ZetSlay without any automatic FunPay write action.
 
 ## Stage 6 — first automation
 

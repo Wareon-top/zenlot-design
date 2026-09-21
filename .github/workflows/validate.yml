@@ -1,4 +1,4 @@
-name: Validate ZenLot
+name: Validate ZetSlay
 
 on:
   push:

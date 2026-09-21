@@ -1,17 +1,17 @@
-# ZenLot product definition
+# ZetSlay product definition
 
 Status: approved baseline, 2026-08-14.
 
 ## Vision
 
-ZenLot gives a growing FunPay seller one understandable control room for store events, stock, communication, analytics, and permitted automations. The product should make the store feel observable and manageable around the clock without hiding risk or pretending that an unverified action succeeded.
+ZetSlay gives a growing FunPay seller one understandable control room for store events, stock, communication, analytics, and permitted automations. The product should make the store feel observable and manageable around the clock without hiding risk or pretending that an unverified action succeeded.
 
 ## Positioning
 
 - Category: seller-tech SaaS for FunPay sellers.
 - Public wording: for new and growing FunPay sellers; the brand is not positioned specifically at minors.
 - Brand character: dark, precise, energetic, premium, and approachable.
-- Independence: ZenLot is not an official FunPay product.
+- Independence: ZetSlay is not an official FunPay product.
 - Core promise: the seller sees what is happening and delegates only explicitly configured, reliable actions.
 
 ## Primary users
@@ -68,7 +68,7 @@ The displayed prices of 189 / 349 / 499 RUB are hypotheses. They are not final c
 
 ## Success metrics
 
-North-star metric: orders correctly processed by ZenLot without manual seller intervention.
+North-star metric: orders correctly processed by ZetSlay without manual seller intervention.
 
 Guardrail metrics:
 

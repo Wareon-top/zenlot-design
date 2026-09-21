@@ -28,7 +28,7 @@ npm run serve
 - Branch: `main`.
 - Configuration: `config/environments/production.json`.
 - Current surface: marketing-only GitHub Pages site.
-- Public URL: `https://wareon-top.github.io/zenlot-design/`.
+- Public URL: `https://wareon-top.github.io/zetslay-design/`.
 - Data: no customer data exists in the current static site.
 - Source: private repository; only the reviewed site artefact is public.
 

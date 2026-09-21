@@ -1,4 +1,4 @@
-# ZenLot target architecture
+# ZetSlay target architecture
 
 Status: Stage 0 reference architecture. It becomes implementation architecture only after the Stage 1 integration gate.
 
@@ -21,9 +21,9 @@ The product should begin as a modular monolith plus isolated workers. Independen
 
 ## Surfaces
 
-- `zenlot.ru` or the current Pages URL: marketing.
-- `app.zenlot.ru`: authenticated seller product.
-- `api.zenlot.ru`: versioned backend API.
+- `zetslay.ru` or the current Pages URL: marketing.
+- `app.zetslay.ru`: authenticated seller product.
+- `api.zetslay.ru`: versioned backend API.
 - connector worker: isolated platform communication.
 - automation worker: executes permitted rules from canonical events.
 - admin surface: support, billing, diagnostics, and kill switches.
@@ -31,7 +31,7 @@ The product should begin as a modular monolith plus isolated workers. Independen
 ## Canonical event flow
 
 1. Connector observes a platform change.
-2. The payload is normalized into a ZenLot event.
+2. The payload is normalized into a ZetSlay event.
 3. Event identity is checked for duplication.
 4. The event is stored before downstream processing.
 5. Subscribed modules receive queued work.

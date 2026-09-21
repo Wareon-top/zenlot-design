@@ -29,8 +29,8 @@ const state = {
     { icon: 'alert-triangle', name: 'Эскалация спорного заказа', description: 'Уведомляет владельца и ставит автоматизацию на паузу', runs: '3 запуска', active: false },
   ],
   plugins: [
-    { id: 'zenlot.auto-reply', icon: 'zap', name: 'Автоответчик', vendor: 'ZenLot Core', category: 'chat', price: 'от 490 ₽', description: 'Безопасно ставит ответ покупателю в очередь и защищён от циклических сообщений.', permissions: ['Сообщения', 'Очередь ответов'], installed: false, active: false, config: { text: 'Здравствуйте! Сообщение получено — скоро вернёмся с ответом.', scenario: 'all', keywords: [], excludeKeywords: [], quietHours: { enabled: false, start: '22:00', end: '08:00', timeZone: 'Asia/Almaty', behavior: 'pause', text: 'Сейчас мы офлайн. Ответим утром.' } } },
-    { id: 'zenlot.telegram-notifications', icon: 'send', name: 'Telegram-уведомления', vendor: 'ZenLot Core', category: 'control', price: 'от 290 ₽', description: 'Сообщает владельцу о новых сообщениях и оплаченных заказах.', permissions: ['Сообщения', 'Заказы', 'Telegram'], installed: false, active: false, config: { messages: true, paidOrders: true } },
+    { id: 'zetslay.auto-reply', icon: 'zap', name: 'Автоответчик', vendor: 'ZetSlay Core', category: 'chat', price: 'от 490 ₽', description: 'Безопасно ставит ответ покупателю в очередь и защищён от циклических сообщений.', permissions: ['Сообщения', 'Очередь ответов'], installed: false, active: false, config: { text: 'Здравствуйте! Сообщение получено — скоро вернёмся с ответом.', scenario: 'all', keywords: [], excludeKeywords: [], quietHours: { enabled: false, start: '22:00', end: '08:00', timeZone: 'Asia/Almaty', behavior: 'pause', text: 'Сейчас мы офлайн. Ответим утром.' } } },
+    { id: 'zetslay.telegram-notifications', icon: 'send', name: 'Telegram-уведомления', vendor: 'ZetSlay Core', category: 'control', price: 'от 290 ₽', description: 'Сообщает владельцу о новых сообщениях и оплаченных заказах.', permissions: ['Сообщения', 'Заказы', 'Telegram'], installed: false, active: false, config: { messages: true, paidOrders: true } },
     { id: 'planned.fraud-watch', icon: 'shield', name: 'Fraud Watch', vendor: 'Планируется', category: 'control', price: 'от 690 ₽', description: 'Отмечает подозрительные заказы до автоматической выдачи.', permissions: ['Заказы'], planned: true },
     { id: 'planned.price-pilot', icon: 'trending-up', name: 'Price Pilot', vendor: 'Планируется', category: 'sales', price: 'от 590 ₽', description: 'Помогает сравнивать цену и позицию активного лота.', permissions: ['Лоты', 'Аналитика'], planned: true },
     { id: 'planned.quiet-hours', icon: 'clock', name: 'Quiet Hours', vendor: 'Планируется', category: 'chat', price: 'от 190 ₽', description: 'Меняет сценарии ответов в заданное владельцем время.', permissions: ['Расписание'], planned: true },
@@ -89,23 +89,23 @@ const iconNames = {
 const icon = (name) => `<svg aria-hidden="true"><use href="#i-${iconNames[name] || name}"></use></svg>`;
 const byId = (id) => document.getElementById(id);
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
-const configuredApiUrl = (window.ZENLOT_API_BASE_URL || document.querySelector('meta[name="zenlot-api-base-url"]')?.content || '').replace(/\/$/, '');
+const configuredApiUrl = (window.ZETSLAY_API_BASE_URL || document.querySelector('meta[name="zetslay-api-base-url"]')?.content || '').replace(/\/$/, '');
 const API_BASE_URL = !['localhost', '127.0.0.1'].includes(location.hostname) && /localhost|127\.0\.0\.1/.test(configuredApiUrl) ? '' : configuredApiUrl;
-const authState = { mode: 'login', token: sessionStorage.getItem('zenlot_session') || '', user: null };
+const authState = { mode: 'login', token: sessionStorage.getItem('zetslay_session') || '', user: null };
 
 const errorMessages = {
-  API_URL_MISSING: 'Backend ZenLot ещё не подключён к опубликованному кабинету.',
+  API_URL_MISSING: 'Backend ZetSlay ещё не подключён к опубликованному кабинету.',
   INVALID_SESSION: 'Сессия истекла. Войдите в аккаунт ещё раз.',
   PLAN_REQUIRED: 'Для этого действия нужен активный тариф.',
   INVALID_STATE: 'Действие недоступно в текущем состоянии магазина.',
   AUTH_REJECTED: 'Golden Key отклонён или устарел. Получите новый ключ и повторите подключение.',
   PROXY_UNAVAILABLE: 'Прокси недоступен. Проверьте адрес, порт и данные авторизации.',
-  CAPTCHA_REQUIRED: 'FunPay запросил CAPTCHA. ZenLot остановил подключение — подтвердите вход вручную.',
+  CAPTCHA_REQUIRED: 'FunPay запросил CAPTCHA. ZetSlay остановил подключение — подтвердите вход вручную.',
   RATE_LIMITED: 'Слишком много запросов. Подождите и повторите попытку.',
   TELEGRAM_BOT_REJECTED: 'Bot Token не прошёл проверку Telegram.',
   EMAIL_VERIFICATION_REQUIRED: 'Подтвердите email по ссылке из письма.',
 };
-const humanError = (error) => errorMessages[error?.code] || (error?.message === 'Failed to fetch' ? 'Backend ZenLot недоступен. Проверьте адрес API и состояние сервера.' : error?.message) || 'Не удалось выполнить действие.';
+const humanError = (error) => errorMessages[error?.code] || (error?.message === 'Failed to fetch' ? 'Backend ZetSlay недоступен. Проверьте адрес API и состояние сервера.' : error?.message) || 'Не удалось выполнить действие.';
 
 async function apiRequest(path, { method = 'GET', body, authenticated = false } = {}) {
   if (!API_BASE_URL) { const error = new Error('API_URL_MISSING'); error.code = 'API_URL_MISSING'; throw error; }
@@ -133,7 +133,7 @@ function renderAuthState() {
   const sidebar = document.querySelector('.user-card');
   if (sidebar) {
     sidebar.querySelector('strong').textContent = email || 'Гостевой режим';
-    sidebar.querySelector('small').textContent = email ? 'Защищённая сессия' : 'Войти в ZenLot';
+    sidebar.querySelector('small').textContent = email ? 'Защищённая сессия' : 'Войти в ZetSlay';
     sidebar.querySelector('.user-card__avatar').textContent = accountInitials(email);
   }
   const form = document.querySelector('[data-auth-form]');
@@ -156,8 +156,8 @@ function setAuthMode(mode) {
   if (title) title.textContent = authState.mode === 'register' ? 'Создать аккаунт' : 'Вход в кабинет';
   if (submit) submit.textContent = authState.mode === 'register' ? 'Зарегистрироваться' : 'Войти';
   if (intro) intro.textContent = authState.mode === 'register'
-    ? 'Создайте единый аккаунт для управления магазинами ZenLot.'
-    : 'Войдите, чтобы продолжить работу с магазинами ZenLot.';
+    ? 'Создайте единый аккаунт для управления магазинами ZetSlay.'
+    : 'Войдите, чтобы продолжить работу с магазинами ZetSlay.';
   if (password) password.autocomplete = authState.mode === 'register' ? 'new-password' : 'current-password';
   const message = document.querySelector('[data-auth-message]');
   if (message) { message.textContent = ''; message.className = 'auth-message'; }
@@ -197,7 +197,7 @@ async function submitAuth(form) {
     const session = await apiRequest('/api/v1/auth/login', { method: 'POST', body });
     authState.token = session.token;
     authState.user = session.user;
-    sessionStorage.setItem('zenlot_session', session.token);
+    sessionStorage.setItem('zetslay_session', session.token);
     renderAuthState();
     await loadPluginCatalog().catch(() => {});
     await loadStoreFleet().catch(() => {});
@@ -221,7 +221,7 @@ async function restoreSession() {
     authState.user = context.user;
   } catch {
     authState.token = '';
-    sessionStorage.removeItem('zenlot_session');
+    sessionStorage.removeItem('zetslay_session');
   }
   renderAuthState();
   if (authState.user) {
@@ -246,7 +246,7 @@ async function verifyEmailFromUrl() {
   if (message) { message.className = 'auth-message'; message.textContent = 'Подтверждаем email…'; }
   try {
     await apiRequest('/api/v1/auth/verify-email', { method: 'POST', body: { token } });
-    if (message) { message.classList.add('is-success'); message.textContent = 'Email подтверждён. Теперь войдите в ZenLot.'; }
+    if (message) { message.classList.add('is-success'); message.textContent = 'Email подтверждён. Теперь войдите в ZetSlay.'; }
     const cleanUrl = new URL(location.href); cleanUrl.searchParams.delete('verify'); history.replaceState(null, '', `${cleanUrl.pathname}${cleanUrl.search}${cleanUrl.hash}`);
   } catch (error) {
     if (message) { message.classList.add('is-error'); message.textContent = humanError(error); }
@@ -310,7 +310,7 @@ function renderStoreFleet() {
   document.querySelectorAll('[data-open-connect]').forEach((button) => {
     const connected = selected?.status === 'connected_read_only' || selected?.status === 'paused';
     button.disabled = connected;
-    button.title = connected ? 'ZenLot поддерживает один аккаунт FunPay.' : '';
+    button.title = connected ? 'ZetSlay поддерживает один аккаунт FunPay.' : '';
   });
   renderDashboard();
 }
@@ -443,7 +443,7 @@ async function loadPluginCatalog() {
   });
   renderPlugins();
   const autoReplyForm = document.querySelector('[data-plugin-settings]');
-  const autoReply = state.plugins.find((plugin) => plugin.id === 'zenlot.auto-reply');
+  const autoReply = state.plugins.find((plugin) => plugin.id === 'zetslay.auto-reply');
   if (autoReplyForm && autoReply) {
     const config = autoReply.config || {};
     autoReplyForm.elements.replyText.value = config.text || '';
@@ -457,7 +457,7 @@ async function loadPluginCatalog() {
     autoReplyForm.elements.quietBehavior.value = config.quietHours?.behavior || 'pause';
     autoReplyForm.elements.quietText.value = config.quietHours?.text || '';
   }
-  const telegram = state.plugins.find((plugin) => plugin.id === 'zenlot.telegram-notifications');
+  const telegram = state.plugins.find((plugin) => plugin.id === 'zetslay.telegram-notifications');
   const telegramForm = document.querySelector('[data-telegram-settings]');
   if (telegramForm) {
     telegramForm.elements.messages.checked = telegram?.config?.messages !== false;
@@ -476,7 +476,7 @@ function renderPluginAudit() {
   };
   target.innerHTML = state.pluginAudit.map((entry) => {
     const time = new Intl.DateTimeFormat('ru-RU', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date(entry.at || entry.createdAt));
-    const plugin = state.plugins.find((item) => item.id === entry.pluginId)?.name || entry.pluginId || 'ZenLot';
+    const plugin = state.plugins.find((item) => item.id === entry.pluginId)?.name || entry.pluginId || 'ZetSlay';
     const detail = entry.actionCount != null ? `${entry.actionCount} предлож. действий · simulated` : plugin;
     return `<article class="plugin-audit__entry"><time>${time}</time><strong>${labels[entry.event] || 'Событие плагина'}</strong><span>${detail}</span></article>`;
   }).join('');
@@ -857,7 +857,7 @@ async function changePluginState(pluginId) {
   try {
     if (!plugin.installed) {
       await apiRequest(`/api/v1/plugins/${encodeURIComponent(plugin.id)}/install`, {
-        method: 'POST', authenticated: true, body: { permissions: plugin.permissionsRaw || (plugin.id === 'zenlot.auto-reply' ? ['messages:read', 'replies:queue'] : ['messages:read', 'orders:read', 'telegram:send']), config: {} }
+        method: 'POST', authenticated: true, body: { permissions: plugin.permissionsRaw || (plugin.id === 'zetslay.auto-reply' ? ['messages:read', 'replies:queue'] : ['messages:read', 'orders:read', 'telegram:send']), config: {} }
       });
       await apiRequest(`/api/v1/plugins/${encodeURIComponent(plugin.id)}/enable`, { method: 'POST', authenticated: true });
       showToast(`${plugin.name} установлен и включён`, 'success');
@@ -876,7 +876,7 @@ async function changePluginState(pluginId) {
 }
 
 async function savePluginSettings(form) {
-  const autoReply = state.plugins.find((plugin) => plugin.id === 'zenlot.auto-reply');
+  const autoReply = state.plugins.find((plugin) => plugin.id === 'zetslay.auto-reply');
   const values = new FormData(form);
   const text = values.get('replyText')?.trim();
   if (!text) { showToast('Введите текст автоответа'); return; }
@@ -900,7 +900,7 @@ async function savePluginSettings(form) {
   if (config.scenario === 'keywords' && !config.keywords.length) { showToast('Добавьте хотя бы одно ключевое слово'); return; }
   if (config.quietHours.enabled && config.quietHours.behavior === 'alternate' && !config.quietHours.text) { showToast('Введите ответ для тихих часов'); return; }
   try {
-    await apiRequest('/api/v1/plugins/zenlot.auto-reply/config', { method: 'POST', authenticated: true, body: { config } });
+    await apiRequest('/api/v1/plugins/zetslay.auto-reply/config', { method: 'POST', authenticated: true, body: { config } });
     autoReply.config = config;
     await loadPluginAudit().catch(() => {});
     showToast('Настройки автоответчика сохранены', 'success');
@@ -910,12 +910,12 @@ async function savePluginSettings(form) {
 }
 
 async function saveTelegramSettings(form) {
-  const telegram = state.plugins.find((plugin) => plugin.id === 'zenlot.telegram-notifications');
+  const telegram = state.plugins.find((plugin) => plugin.id === 'zetslay.telegram-notifications');
   if (!authState.token) { setAuthModal(true); showToast('Войдите, чтобы сохранить уведомления'); return; }
   if (!telegram?.installed) { showToast('Сначала установите Telegram-уведомления'); return; }
   const config = { messages: form.elements.messages.checked, paidOrders: form.elements.paidOrders.checked };
   try {
-    await apiRequest('/api/v1/plugins/zenlot.telegram-notifications/config', { method: 'POST', authenticated: true, body: { config } });
+    await apiRequest('/api/v1/plugins/zetslay.telegram-notifications/config', { method: 'POST', authenticated: true, body: { config } });
     telegram.config = config;
     await loadPluginAudit().catch(() => {});
     showToast('Настройки Telegram сохранены', 'success');
@@ -982,7 +982,7 @@ function setView(viewName, updateHash = true) {
   });
   const label = byId('current-view-label');
   if (label) label.textContent = viewTitles[resolvedView];
-  document.title = `${viewTitles[resolvedView]} — ZenLot Control`;
+  document.title = `${viewTitles[resolvedView]} — ZetSlay Control`;
   setSidebar(false);
   if (updateHash) history.replaceState(null, '', `#${resolvedView}`);
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -999,7 +999,7 @@ function showToast(message, tone = 'default') {
   if (!stack) return;
   const toast = document.createElement('div');
   toast.className = `toast toast--${tone}`;
-  toast.innerHTML = `<i>${tone === 'success' ? '✓' : tone === 'error' ? '!' : 'ZL'}</i><span><strong>${tone === 'success' ? 'Готово' : tone === 'error' ? 'Нужно внимание' : 'ZenLot'}</strong><span>${escapeHtml(message)}</span></span>`;
+  toast.innerHTML = `<i>${tone === 'success' ? '✓' : tone === 'error' ? '!' : 'ZL'}</i><span><strong>${tone === 'success' ? 'Готово' : tone === 'error' ? 'Нужно внимание' : 'ZetSlay'}</strong><span>${escapeHtml(message)}</span></span>`;
   stack.append(toast);
   window.setTimeout(() => {
     toast.style.opacity = '0';
@@ -1013,7 +1013,7 @@ let connectionDraftId = null;
 let connectionStatus = null;
 let connectionBusy = false;
 const connectionDemoSteps = [
-  { icon: 'card', title: 'Один аккаунт FunPay', text: 'ZenLot подключает только один аккаунт к одному рабочему пространству. В демонстрации реальные секретные поля отключены.', points: ['Один аккаунт FunPay', 'Один worker', 'Один закреплённый proxy'], action: 'Посмотреть Golden Key' },
+  { icon: 'card', title: 'Один аккаунт FunPay', text: 'ZetSlay подключает только один аккаунт к одному рабочему пространству. В демонстрации реальные секретные поля отключены.', points: ['Один аккаунт FunPay', 'Один worker', 'Один закреплённый proxy'], action: 'Посмотреть Golden Key' },
   { icon: 'lock', title: 'Golden Key вашего аккаунта', text: 'Ключ передаётся только защищённому API, шифруется в vault и никогда не возвращается в интерфейс.', points: ['Отдельная vault-ссылка', 'Нет ключа в PostgreSQL', 'Поле очищается после отправки'], action: 'Посмотреть прокси' },
   { icon: 'shield', title: 'Обязательный закреплённый прокси', text: 'Прокси хранится отдельно от Golden Key и используется только worker вашего магазина.', points: ['Один аккаунт — один прокси', 'Пароль не отображается повторно', 'Стабильный маршрут соединения'], action: 'Посмотреть проверку' },
   { icon: 'check', title: 'Read-only проверка', text: 'Preflight проверяет пару Golden Key + прокси, не выполняя действий в FunPay.', points: ['Доступен безопасный режим чтения', 'Worker закреплён за магазином', 'Автоматические действия заблокированы'], action: 'Закрыть демонстрацию' },
@@ -1044,10 +1044,10 @@ function renderConnectionWizard() {
   const store = selectedConnectionStore();
   const worker = store?.workerId ? escapeHtml(store.workerId) : 'будет создан автоматически';
   const pages = [
-    `<span class="connect-illustration">${icon('plus')}<i></i></span><h3>${store?.status === 'awaiting_credentials' ? 'Продолжить подключение' : 'Один аккаунт FunPay'}</h3><p>ZenLot создаст один защищённый worker для вашего аккаунта. Имя и аватар появятся после read-only проверки профиля.</p>${store?.status === 'awaiting_credentials' ? `<div class="connection-store-badge"><span class="store-logo">FP</span><span><strong>${escapeHtml(store.displayName)}</strong><small>${worker}</small></span></div>` : ''}`,
+    `<span class="connect-illustration">${icon('plus')}<i></i></span><h3>${store?.status === 'awaiting_credentials' ? 'Продолжить подключение' : 'Один аккаунт FunPay'}</h3><p>ZetSlay создаст один защищённый worker для вашего аккаунта. Имя и аватар появятся после read-only проверки профиля.</p>${store?.status === 'awaiting_credentials' ? `<div class="connection-store-badge"><span class="store-logo">FP</span><span><strong>${escapeHtml(store.displayName)}</strong><small>${worker}</small></span></div>` : ''}`,
     `<span class="connect-illustration">${icon('lock')}<i></i></span><h3>Golden Key</h3><p>Ключ отправляется напрямую в vault для вашего единственного аккаунта и не возвращается обратно.</p><div class="connection-form"><label>Golden Key<input type="password" name="goldenKey" minlength="12" maxlength="4096" autocomplete="off" spellcheck="false" placeholder="Вставьте ключ один раз"></label><small>Не отправляйте Golden Key в Telegram или поддержку.</small></div>`,
     `<span class="connect-illustration">${icon('shield')}<i></i></span><h3>Обязательный прокси</h3><p>Этот прокси будет использовать только worker <strong>${worker}</strong> для стабильного подключения.</p><div class="connection-form"><label>Proxy URL<input type="password" name="proxyUrl" maxlength="2048" autocomplete="off" spellcheck="false" placeholder="socks5://user:password@host:port"></label><small>Поддерживаются http, https и socks5. Адрес и пароль не появятся в ответе API.</small></div>`,
-    `<span class="connect-illustration connect-illustration--success">${icon('check')}<i></i></span><h3>Read-only проверка</h3><p>ZenLot проверит авторизацию через закреплённый прокси. Сообщения, лоты, заказы и деньги не изменяются.</p><div class="connection-checks"><span>Golden Key <b>${connectionStatus?.credential?.configured ? 'Добавлен' : 'Ожидается'}</b></span><span>Прокси <b>${connectionStatus?.proxy?.configured ? 'Добавлен' : 'Ожидается'}</b></span><span>Live-действия <b>Отключены</b></span></div>`,
+    `<span class="connect-illustration connect-illustration--success">${icon('check')}<i></i></span><h3>Read-only проверка</h3><p>ZetSlay проверит авторизацию через закреплённый прокси. Сообщения, лоты, заказы и деньги не изменяются.</p><div class="connection-checks"><span>Golden Key <b>${connectionStatus?.credential?.configured ? 'Добавлен' : 'Ожидается'}</b></span><span>Прокси <b>${connectionStatus?.proxy?.configured ? 'Добавлен' : 'Ожидается'}</b></span><span>Live-действия <b>Отключены</b></span></div>`,
   ];
   if (body) body.innerHTML = pages[connectionStep];
   if (action) {
@@ -1146,7 +1146,7 @@ function bindInteractions() {
     if (event.target.closest('[data-auth-close]')) { setAuthModal(false); return; }
     if (event.target.closest('[data-auth-logout]')) {
       apiRequest('/api/v1/auth/logout', { method: 'POST', authenticated: true }).catch(() => {}).finally(() => {
-        authState.token = ''; authState.user = null; state.finance = { stores: [], withdrawalIntents: [], liveWithdrawalEnabled: false }; sessionStorage.removeItem('zenlot_session'); resetPluginCatalog(); renderFinance(); renderStoreFleet(); renderAuthState(); setAuthMode('login');
+        authState.token = ''; authState.user = null; state.finance = { stores: [], withdrawalIntents: [], liveWithdrawalEnabled: false }; sessionStorage.removeItem('zetslay_session'); resetPluginCatalog(); renderFinance(); renderStoreFleet(); renderAuthState(); setAuthMode('login');
       });
       return;
     }

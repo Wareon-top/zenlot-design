@@ -107,9 +107,9 @@ for (const file of textFiles) {
 }
 
 if (errors.length) {
-  console.error("ZenLot validation failed:\n");
+  console.error("ZetSlay validation failed:\n");
   for (const error of errors) console.error(`- ${error}`);
   process.exit(1);
 }
 
-console.log(`ZenLot validation passed: ${requiredFiles.length} required files, ${ids.length + appIds.length} unique ids across two surfaces, ${environments.length} environments, ${trackedFiles.length} tracked files scanned.`);
+console.log(`ZetSlay validation passed: ${requiredFiles.length} required files, ${ids.length + appIds.length} unique ids across two surfaces, ${environments.length} environments, ${trackedFiles.length} tracked files scanned.`);

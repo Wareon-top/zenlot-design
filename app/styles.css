@@ -363,7 +363,7 @@ svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.7;
   *,*::before,*::after { scroll-behavior:auto!important; animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
 }
 
-/* ZenLot Clean Control v2 ------------------------------------------------- */
+/* ZetSlay Clean Control v2 ------------------------------------------------- */
 :root {
   --bg:#090a0f;
   --surface:#101118;
@@ -825,7 +825,7 @@ body {
   .fleet-card__metrics { grid-template-columns:repeat(3,1fr); }
 }
 
-/* ZenLot refresh: calm SaaS workspace */
+/* ZetSlay refresh: calm SaaS workspace */
 ::-webkit-scrollbar-track { background:#f2f3f8; }
 ::-webkit-scrollbar-thumb { border-color:#f2f3f8; background:#cdd1df; }
 .sidebar { background:rgba(255,255,255,.94); box-shadow:none; }
@@ -950,7 +950,7 @@ body {
   .auth-content h2 { font-size:30px; }
 }
 
-/* ZenLot unified dark brand theme */
+/* ZetSlay unified dark brand theme */
 :root {
   --bg:#070806;
   --surface:#11120f;

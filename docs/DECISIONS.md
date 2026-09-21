@@ -6,8 +6,8 @@ Decisions are append-only. A replaced decision remains in this file and points t
 
 - Date: 2026-08-14
 - Status: accepted
-- Decision: the dark seller-tech system with yellow and violet accents, live store metrics, compact controls, and adult language is the permanent ZenLot design foundation.
-- Baseline: commit `b48bf68`; local tag `zenlot-style-v1`; remote checkpoint branch `archive/zenlot-style-v1`.
+- Decision: the dark seller-tech system with yellow and violet accents, live store metrics, compact controls, and adult language is the permanent ZetSlay design foundation.
+- Baseline: commit `b48bf68`; local tag `zetslay-style-v1`; remote checkpoint branch `archive/zetslay-style-v1`.
 - Consequence: future product screens extend this system and do not restart visual exploration without a new explicit decision.
 
 ## ADR-002 — Marketing and product are separate surfaces
@@ -56,5 +56,5 @@ Decisions are append-only. A replaced decision remains in this file and points t
 
 - Date: 2026-08-14
 - Status: accepted
-- Decision: the ZenLot source repository is private. Only reviewed build artefacts intended for customers may be publicly deployed.
+- Decision: the ZetSlay source repository is private. Only reviewed build artefacts intended for customers may be publicly deployed.
 - Consequence: repository visibility never authorizes committing secrets or customer data. Credentials, FunPay session material, databases, exports, uploads, logs with personal data, and backups use dedicated secret or data storage outside Git.

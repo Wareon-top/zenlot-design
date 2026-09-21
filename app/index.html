@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="#08090d">
     <meta name="robots" content="noindex,nofollow">
-    <meta name="zenlot-api-base-url" content="http://localhost:3000">
-    <title>ZenLot Control — личный кабинет</title>
+    <meta name="zetslay-api-base-url" content="http://localhost:3000">
+    <title>ZetSlay Control — личный кабинет</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -48,9 +48,9 @@
       <div class="sidebar-backdrop" data-sidebar-close></div>
       <aside class="sidebar" aria-label="Основная навигация">
         <div class="sidebar__top">
-          <a class="brand" href="../index.html" aria-label="ZenLot — на главную">
+          <a class="brand" href="../index.html" aria-label="ZetSlay — на главную">
             <span class="brand__mark" aria-hidden="true"></span>
-            <span>ZenLot<small>Кабинет продавца</small></span>
+            <span>ZetSlay<small>Кабинет продавца</small></span>
           </a>
           <button class="icon-button sidebar__close" type="button" aria-label="Закрыть меню" data-sidebar-close><svg><use href="#i-close"/></svg></button>
         </div>
@@ -95,7 +95,7 @@
       <main class="workspace">
         <header class="topbar">
           <button class="icon-button mobile-menu" type="button" aria-label="Открыть меню" data-sidebar-open><svg><use href="#i-menu"/></svg></button>
-          <div class="topbar-context"><strong id="current-view-label">Главная</strong><small>ZenLot Control</small></div>
+          <div class="topbar-context"><strong id="current-view-label">Главная</strong><small>ZetSlay Control</small></div>
           <div class="topbar__actions">
             <span class="prototype-chip" data-system-health><i></i> Гостевой режим</span>
             <span class="balance-chip"><svg><use href="#i-card"/></svg><span><small>Баланс</small><strong data-topbar-balance>—</strong></span></span>
@@ -136,7 +136,7 @@
 
             <section class="dash-hero panel">
               <div>
-                <span class="eyebrow">ZenLot · кабинет продавца</span>
+                <span class="eyebrow">ZetSlay · кабинет продавца</span>
                 <h1 id="dashboard-title">Панель управления</h1>
                 <p>Статистика магазина, сообщения и автоматизации — в одном спокойном окне. FunPay подключается в read-only режиме через закреплённый proxy.</p>
               </div>
@@ -241,7 +241,7 @@
               <button type="button" data-plugin-cat="analytics"><svg><use href="#i-chart"/></svg> Аналитика</button>
               <button type="button" data-plugin-cat="control"><svg><use href="#i-shield"/></svg> Контроль</button>
             </div>
-            <section class="panel catalog-hero"><h2>Плагины ZenLot</h2><p>Каталог расширений с прозрачными разрешениями и безопасной песочницей.</p></section>
+            <section class="panel catalog-hero"><h2>Плагины ZetSlay</h2><p>Каталог расширений с прозрачными разрешениями и безопасной песочницей.</p></section>
             <section class="panel catalog-search">
               <div><span class="panel-label">Поиск</span><div class="search-field search-field--wide"><svg><use href="#i-search"/></svg><input type="search" placeholder="Поиск плагинов и модулей..." aria-label="Поиск плагинов" data-plugin-search></div></div>
               <div><span class="panel-label">Категории</span><div class="catalog-select"><span id="plugin-cat-label">Все категории</span><svg><use href="#i-chevron"/></svg></div></div>
@@ -290,7 +290,7 @@
 
           <section class="view" data-view="telegram" aria-labelledby="telegram-title">
             <div class="view-heading view-heading--compact"><div><span class="eyebrow">Remote control / Telegram</span><h1 id="telegram-title">Telegram</h1><p>Подключите собственного бота для уведомлений о сообщениях и оплаченных заказах.</p></div><span class="health-pill health-pill--waiting" data-telegram-health><i></i> Не подключён</span></div>
-            <div class="telegram-layout"><section class="telegram-connect panel"><div class="telegram-visual"><span><svg><use href="#i-send"/></svg></span><i></i><i></i><i></i></div><h2>Подключение Telegram</h2><p>Bot Token передаётся защищённому API и хранится в зашифрованном vault. Golden Key в Telegram не отправляется.</p><form class="telegram-onboarding-form" data-telegram-onboarding-form><label>Bot Token<input type="password" name="token" minlength="10" maxlength="256" autocomplete="off" spellcheck="false" placeholder="123456789:AA..."></label><button class="button button--primary button--wide" type="submit">Сохранить Bot Token <svg><use href="#i-chevron"/></svg></button></form><div class="telegram-link-code" data-telegram-link-code hidden><small>Отправьте боту команду</small><strong>/start <span>000000</span></strong><p>Код действует 10 минут и показывается только один раз.</p></div><button class="button button--ghost button--wide" type="button" data-telegram-issue-code hidden>Получить новый код</button><div class="inline-status" data-telegram-message>Войдите в аккаунт, чтобы начать подключение.</div></section><section class="telegram-preview panel"><div class="telegram-state-card"><span><svg><use href="#i-shield"/></svg></span><div><small>Состояние подключения</small><strong data-telegram-state>Ожидает входа</strong><p data-telegram-bot-name>Бот ещё не настроен</p></div></div><ol class="telegram-steps"><li><b>01</b><span><strong>Создайте бота</strong><small>Через официальный BotFather</small></span></li><li><b>02</b><span><strong>Сохраните Bot Token</strong><small>Только в защищённом поле ZenLot</small></span></li><li><b>03</b><span><strong>Отправьте /start с кодом</strong><small>Backend подтвердит Telegram ID</small></span></li></ol></section></div>
+            <div class="telegram-layout"><section class="telegram-connect panel"><div class="telegram-visual"><span><svg><use href="#i-send"/></svg></span><i></i><i></i><i></i></div><h2>Подключение Telegram</h2><p>Bot Token передаётся защищённому API и хранится в зашифрованном vault. Golden Key в Telegram не отправляется.</p><form class="telegram-onboarding-form" data-telegram-onboarding-form><label>Bot Token<input type="password" name="token" minlength="10" maxlength="256" autocomplete="off" spellcheck="false" placeholder="123456789:AA..."></label><button class="button button--primary button--wide" type="submit">Сохранить Bot Token <svg><use href="#i-chevron"/></svg></button></form><div class="telegram-link-code" data-telegram-link-code hidden><small>Отправьте боту команду</small><strong>/start <span>000000</span></strong><p>Код действует 10 минут и показывается только один раз.</p></div><button class="button button--ghost button--wide" type="button" data-telegram-issue-code hidden>Получить новый код</button><div class="inline-status" data-telegram-message>Войдите в аккаунт, чтобы начать подключение.</div></section><section class="telegram-preview panel"><div class="telegram-state-card"><span><svg><use href="#i-shield"/></svg></span><div><small>Состояние подключения</small><strong data-telegram-state>Ожидает входа</strong><p data-telegram-bot-name>Бот ещё не настроен</p></div></div><ol class="telegram-steps"><li><b>01</b><span><strong>Создайте бота</strong><small>Через официальный BotFather</small></span></li><li><b>02</b><span><strong>Сохраните Bot Token</strong><small>Только в защищённом поле ZetSlay</small></span></li><li><b>03</b><span><strong>Отправьте /start с кодом</strong><small>Backend подтвердит Telegram ID</small></span></li></ol></section></div>
           </section>
 
           <section class="view" data-view="analytics" aria-labelledby="analytics-title">
@@ -305,7 +305,7 @@
           </section>
 
           <section class="view" data-view="guide" aria-labelledby="guide-title">
-            <div class="guide-heading"><span class="eyebrow">Центр подключения</span><h1 id="guide-title">База знаний</h1><p>Короткие и безопасные инструкции по настройке ZenLot.</p></div>
+            <div class="guide-heading"><span class="eyebrow">Центр подключения</span><h1 id="guide-title">База знаний</h1><p>Короткие и безопасные инструкции по настройке ZetSlay.</p></div>
             <div class="guide-tabs" role="tablist" aria-label="Разделы инструкции"><button class="is-active" type="button" data-guide-target="key"><span><svg><use href="#i-lock"/></svg></span><strong>Шаг 1. Golden Key</strong><small>Подготовка доступа FunPay</small></button><button type="button" data-guide-target="proxy"><span><svg><use href="#i-shield"/></svg></span><strong>Шаг 2. Прокси</strong><small>Закреплённое соединение</small></button></div>
             <section class="guide-card panel is-active" data-guide-panel="key">
               <header><span><svg><use href="#i-lock"/></svg></span><div><h2>Подготовка Golden Key</h2><p>Используйте только свой аккаунт FunPay и выполняйте настройку на личном устройстве.</p></div></header>
@@ -313,7 +313,7 @@
               <ol class="instruction-list">
                 <li><b>01</b><div><strong>Войдите в свой аккаунт</strong><p>Откройте FunPay в отдельной вкладке и убедитесь, что используете нужный магазин.</p></div></li>
                 <li><b>02</b><div><strong>Получите значение golden_key</strong><p>Следуйте инструкции для своего браузера. Никому не отправляйте найденное значение и не вставляйте его в сообщения.</p></div></li>
-                <li><b>03</b><div><strong>Вернитесь в защищённый мастер ZenLot</strong><p>Вставьте ключ только в поле кабинета. После сохранения интерфейс покажет маску, а не само значение.</p></div></li>
+                <li><b>03</b><div><strong>Вернитесь в защищённый мастер ZetSlay</strong><p>Вставьте ключ только в поле кабинета. После сохранения интерфейс покажет маску, а не само значение.</p></div></li>
               </ol>
               <div class="guide-warning"><span><svg><use href="#i-shield"/></svg></span><div><strong>Важно</strong><p>Не публикуйте ключ в GitHub, Telegram, логах или обращениях поддержки. При потере доступа замените ключ в FunPay.</p></div></div>
               <button class="button button--primary" type="button" data-open-connect>Открыть мастер подключения</button>
@@ -322,7 +322,7 @@
               <header><span><svg><use href="#i-shield"/></svg></span><div><h2>Настройка закреплённого прокси</h2><p>Один магазин должен работать через стабильный адрес, выбранный при подключении.</p></div></header>
               <ol class="instruction-list">
                 <li><b>01</b><div><strong>Подготовьте приватный прокси</strong><p>Укажите адрес, порт и данные авторизации в поддерживаемом формате.</p></div></li>
-                <li><b>02</b><div><strong>Проверьте локацию и стабильность</strong><p>ZenLot выполнит диагностический запрос без запуска автоматических действий.</p></div></li>
+                <li><b>02</b><div><strong>Проверьте локацию и стабильность</strong><p>ZetSlay выполнит диагностический запрос без запуска автоматических действий.</p></div></li>
                 <li><b>03</b><div><strong>Закрепите соединение</strong><p>После проверки магазин, Telegram и Connector будут использовать один согласованный маршрут.</p></div></li>
               </ol>
               <div class="guide-warning guide-warning--violet"><span><svg><use href="#i-help"/></svg></span><div><strong>Совет</strong><p>Не меняйте прокси во время активной сессии. Сначала остановите процессы и повторите проверку подключения.</p></div></div>
@@ -363,21 +363,21 @@
     <section class="connect-modal" role="dialog" aria-modal="true" aria-labelledby="connect-modal-title" hidden>
       <header><div><span class="panel-label" data-connection-mode>Per-store connection</span><h2 id="connect-modal-title">Подключение магазина</h2></div><button class="icon-button" type="button" aria-label="Закрыть" data-close-connect><svg><use href="#i-close"/></svg></button></header>
       <div class="connect-progress"><span class="is-active"><b>01</b><small>Аккаунт</small></span><i></i><span><b>02</b><small>Golden Key</small></span><i></i><span><b>03</b><small>Прокси</small></span><i></i><span><b>04</b><small>Проверка</small></span></div>
-      <div class="connect-modal__body"><span class="connect-illustration"><svg><use href="#i-lock"/></svg><i></i></span><h3>Безопасное подключение</h3><p>ZenLot сначала проверит подписку и Telegram, затем предложит защищённые поля для Golden Key и прокси. Секреты никогда не отправляются сообщениями.</p><ul><li><svg><use href="#i-check"/></svg> Тариф «Про» активен</li><li><svg><use href="#i-check"/></svg> Одноразовая привязка Telegram</li><li><svg><use href="#i-check"/></svg> Read-only проверка перед автоматизацией</li></ul></div>
+      <div class="connect-modal__body"><span class="connect-illustration"><svg><use href="#i-lock"/></svg><i></i></span><h3>Безопасное подключение</h3><p>ZetSlay сначала проверит подписку и Telegram, затем предложит защищённые поля для Golden Key и прокси. Секреты никогда не отправляются сообщениями.</p><ul><li><svg><use href="#i-check"/></svg> Тариф «Про» активен</li><li><svg><use href="#i-check"/></svg> Одноразовая привязка Telegram</li><li><svg><use href="#i-check"/></svg> Read-only проверка перед автоматизацией</li></ul></div>
       <footer><span class="connect-safe-note">Секреты не отображаются повторно</span><button class="button button--ghost" type="button" data-close-connect>Отмена</button><button class="button button--primary" type="button" data-connect-next>Начать подключение <svg><use href="#i-chevron"/></svg></button></footer>
     </section>
 
     <div class="auth-backdrop"></div>
     <section class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title" hidden>
       <aside class="auth-promo">
-        <a class="auth-modal__brand" href="../"><span class="brand__mark"></span><strong>ZenLot</strong></a>
+        <a class="auth-modal__brand" href="../"><span class="brand__mark"></span><strong>ZetSlay</strong></a>
         <div class="auth-promo__copy">
           <span>Единое рабочее пространство</span>
           <h2>Ваш магазин остаётся под контролем.</h2>
           <p>Заказы, сообщения, лоты и автоматизация в одной спокойной панели.</p>
         </div>
         <div class="auth-promo__points">
-          <span><i>✓</i> Один аккаунт FunPay на ZenLot</span>
+          <span><i>✓</i> Один аккаунт FunPay на ZetSlay</span>
           <span><i>✓</i> Секреты не отображаются повторно</span>
           <span><i>✓</i> Прозрачный журнал действий</span>
         </div>
@@ -386,7 +386,7 @@
         <a class="auth-modal__close" href="../" aria-label="Вернуться на главную"><svg><use href="#i-close"/></svg></a>
         <span class="panel-label">Защищённый доступ</span>
         <h2 id="auth-modal-title">Вход в кабинет</h2>
-        <p class="auth-intro">Войдите, чтобы продолжить работу с магазинами ZenLot.</p>
+        <p class="auth-intro">Войдите, чтобы продолжить работу с магазинами ZetSlay.</p>
         <div class="auth-tabs" role="tablist">
           <button class="is-active" type="button" role="tab" data-auth-mode="login">Вход</button>
           <button type="button" role="tab" data-auth-mode="register">Регистрация</button>

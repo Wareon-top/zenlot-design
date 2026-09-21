@@ -1,6 +1,6 @@
-# ZenLot
+# ZetSlay
 
-ZenLot is an independent seller-tech product for managing and automating a FunPay store. The approved visual baseline is the seller-tech landing page in `index.html`; the product application and backend will be developed as separate surfaces without redesigning that baseline.
+ZetSlay is an independent seller-tech product for managing and automating a FunPay store. The approved visual baseline is the seller-tech landing page in `index.html`; the product application and backend will be developed as separate surfaces without redesigning that baseline.
 
 The source repository is private. Public deployment contains only the built marketing or product artefacts intended for users.
 
@@ -49,4 +49,4 @@ Changes move only in the direction `development -> staging -> main`. See `docs/E
 
 ## Product constraints
 
-ZenLot does not store FunPay passwords, bypass CAPTCHA, or ship an automated action before its platform compatibility and failure behaviour are verified. All twenty catalogue modules are roadmap items until they meet the module definition of done. Private repository access is not permission to commit credentials, customer data, session cookies, database dumps, or backups.
+ZetSlay does not store FunPay passwords, bypass CAPTCHA, or ship an automated action before its platform compatibility and failure behaviour are verified. All twenty catalogue modules are roadmap items until they meet the module definition of done. Private repository access is not permission to commit credentials, customer data, session cookies, database dumps, or backups.
