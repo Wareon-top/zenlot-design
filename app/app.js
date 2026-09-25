@@ -89,7 +89,20 @@ const iconNames = {
 const icon = (name) => `<svg aria-hidden="true"><use href="#i-${iconNames[name] || name}"></use></svg>`;
 const byId = (id) => document.getElementById(id);
 const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
-const configuredApiUrl = (window.ZETSLAY_API_BASE_URL || document.querySelector('meta[name="zetslay-api-base-url"]')?.content || '').replace(/\/$/, '');
+// Optional dev override: open the cabinet with ?api=http://host:port to point it
+// at a running backend (stored in localStorage; use ?api=clear to reset).
+const apiOverrideRaw = new URLSearchParams(location.search).get('api');
+if (apiOverrideRaw === 'clear') {
+  localStorage.removeItem('zetslay_api_base_url');
+} else if (apiOverrideRaw) {
+  try {
+    const parsedOverride = new URL(apiOverrideRaw);
+    if (['http:', 'https:'].includes(parsedOverride.protocol) && parsedOverride.host) {
+      localStorage.setItem('zetslay_api_base_url', `${parsedOverride.protocol}//${parsedOverride.host}`);
+    }
+  } catch { /* ignore malformed override */ }
+}
+const configuredApiUrl = (localStorage.getItem('zetslay_api_base_url') || window.ZETSLAY_API_BASE_URL || document.querySelector('meta[name="zetslay-api-base-url"]')?.content || '').replace(/\/$/, '');
 const API_BASE_URL = !['localhost', '127.0.0.1'].includes(location.hostname) && /localhost|127\.0\.0\.1/.test(configuredApiUrl) ? '' : configuredApiUrl;
 const authState = { mode: 'login', token: sessionStorage.getItem('zetslay_session') || '', user: null };
 
