@@ -226,6 +226,57 @@ async function submitAuth(form) {
   }
 }
 
+let telegramLoginTimer = null;
+
+function stopTelegramLoginPolling() {
+  if (telegramLoginTimer) { clearInterval(telegramLoginTimer); telegramLoginTimer = null; }
+}
+
+async function startTelegramLogin(button) {
+  const statusBox = document.querySelector('[data-telegram-login-status]');
+  const link = document.querySelector('[data-telegram-login-link]');
+  button.disabled = true;
+  try {
+    const started = await apiRequest('/api/v1/auth/telegram/start', { method: 'POST', body: {} });
+    if (link) link.href = started.url;
+    if (statusBox) statusBox.hidden = false;
+    window.open(started.url, '_blank', 'noopener');
+    stopTelegramLoginPolling();
+    const deadline = Date.now() + 10 * 60 * 1000;
+    telegramLoginTimer = setInterval(async () => {
+      if (Date.now() > deadline) {
+        stopTelegramLoginPolling();
+        if (statusBox) statusBox.hidden = true;
+        showToast('Ссылка входа истекла. Запросите новую', 'error');
+        return;
+      }
+      try {
+        const poll = await apiRequest(`/api/v1/auth/telegram/poll?ticket=${encodeURIComponent(started.ticket)}`);
+        if (poll.status === 'confirmed') {
+          stopTelegramLoginPolling();
+          if (statusBox) statusBox.hidden = true;
+          authState.token = poll.token;
+          authState.user = poll.user;
+          sessionStorage.setItem('zetslay_session', poll.token);
+          setAuthModal(false);
+          renderAuthState();
+          await loadPluginCatalog().catch(() => {});
+          await loadStoreFleet().catch(() => {});
+          await loadFinance().catch(() => {});
+          await loadOnboarding().catch(() => {});
+          showToast('Вход через Telegram выполнен', 'success');
+        }
+      } catch {
+        stopTelegramLoginPolling();
+      }
+    }, 2500);
+  } catch (error) {
+    showToast(humanError(error), 'error');
+  } finally {
+    button.disabled = false;
+  }
+}
+
 async function restoreSession() {
   document.querySelector('[data-api-state]').textContent = API_BASE_URL || 'не настроен';
   if (!authState.token) { renderAuthState(); return; }
@@ -1155,8 +1206,10 @@ function bindInteractions() {
     if (noticeDismiss) { noticeDismiss.closest('.notice-banner')?.remove(); return; }
     const authMode = event.target.closest('[data-auth-mode]');
     if (authMode) { setAuthMode(authMode.dataset.authMode); return; }
+    const telegramLogin = event.target.closest('[data-telegram-login]');
+    if (telegramLogin) { startTelegramLogin(telegramLogin); return; }
     if (event.target.closest('[data-auth-open]')) { setAuthModal(true); return; }
-    if (event.target.closest('[data-auth-close]')) { setAuthModal(false); return; }
+    if (event.target.closest('[data-auth-close]')) { stopTelegramLoginPolling(); setAuthModal(false); return; }
     if (event.target.closest('[data-auth-logout]')) {
       apiRequest('/api/v1/auth/logout', { method: 'POST', authenticated: true }).catch(() => {}).finally(() => {
         authState.token = ''; authState.user = null; state.finance = { stores: [], withdrawalIntents: [], liveWithdrawalEnabled: false }; sessionStorage.removeItem('zetslay_session'); resetPluginCatalog(); renderFinance(); renderStoreFleet(); renderAuthState(); setAuthMode('login');

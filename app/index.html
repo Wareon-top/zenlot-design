@@ -397,6 +397,13 @@
           <div class="auth-message" data-auth-message aria-live="polite"></div>
           <button class="button button--primary button--wide" type="submit" data-auth-submit>Войти</button>
         </form>
+        <div class="auth-divider"><span>или</span></div>
+        <button class="button button--telegram button--wide" type="button" data-telegram-login><svg><use href="#i-send"/></svg> Войти через Telegram</button>
+        <div class="telegram-login-status" data-telegram-login-status hidden>
+          <strong>Почти готово</strong>
+          <p>Открылся чат с ботом ZetSlay — нажмите «Начать». Вход завершится автоматически.</p>
+          <a href="#" target="_blank" rel="noopener" data-telegram-login-link>Открыть бота ещё раз</a>
+        </div>
         <div class="auth-session" data-auth-session hidden>
           <span class="auth-session__avatar" data-auth-session-avatar>ZL</span>
           <div><strong data-auth-session-email></strong><small>Защищённая сессия активна</small></div>
