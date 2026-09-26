@@ -379,44 +379,51 @@ function renderStoreFleet() {
   renderDashboard();
 }
 
-async function loadStoreFleet() {
-  if (!authState.token || !API_BASE_URL) { renderStoreFleet(); return; }
-  state.storeFleet = await apiRequest('/api/v1/stores', { authenticated: true });
-  renderStoreFleet();
+// Maps the single FunPay connection to the fleet-shaped view state the
+// cabinet already renders (ZetSlay deliberately keeps exactly one account).
+function mapConnectionToFleet(connection) {
+  const stores = [];
+  if (connection.externalStoreId) {
+    const existing = state.storeFleet.stores.find((store) => store.id === connection.externalStoreId);
+    stores.push({
+      id: connection.externalStoreId,
+      displayName: connection.displayName || connection.externalStoreId,
+      avatarUrl: connection.avatarUrl || '',
+      status: connection.status === 'blocked' ? 'attention' : connection.status,
+      workerId: connection.workerId,
+      lastSeenAt: connection.lastSeenAt,
+      proxyConfigured: connection.proxyConfigured,
+      metrics: existing?.metrics || null
+    });
+  }
+  return {
+    selectedStoreId: stores[0]?.id || null,
+    capacity: { used: stores.length, limit: 1 },
+    liveActionsEnabled: false,
+    stores
+  };
 }
 
-async function selectStore(storeId) {
-  const exists = state.storeFleet.stores.some((store) => store.id === storeId);
-  if (!exists) return;
-  if (authState.token && API_BASE_URL) {
-    state.storeFleet = await apiRequest(`/api/v1/stores/${encodeURIComponent(storeId)}/select`, { method: 'POST', authenticated: true, body: {} });
-  } else {
-    state.storeFleet.selectedStoreId = storeId;
-  }
+async function loadStoreFleet() {
+  if (!authState.token || !API_BASE_URL) { renderStoreFleet(); return; }
+  const connection = await apiRequest('/api/v1/funpay/connection', { authenticated: true });
+  state.storeFleet = mapConnectionToFleet(connection);
   renderStoreFleet();
-  await syncStoreContent({ silent: true }).catch(() => {});
-  const panel = document.querySelector('[data-store-switcher-panel]');
-  const trigger = document.querySelector('[data-store-switcher]');
-  if (panel) panel.hidden = true;
-  trigger?.setAttribute('aria-expanded', 'false');
-  showToast(`Активный контекст: ${state.storeFleet.stores.find((store) => store.id === storeId)?.displayName}`, 'success');
 }
 
 async function setStoreRuntime() {
   const store = selectedStore();
   if (!authState.user) { setAuthModal(true); showToast('Войдите, чтобы управлять магазином'); return; }
   if (!store || store.status === 'awaiting_credentials') { setModal(true); return; }
-  const operation = store.status === 'paused' ? 'start' : 'stop';
-  try {
-    const updated = await apiRequest(`/api/v1/stores/${encodeURIComponent(store.id)}/${operation}`, { method: 'POST', authenticated: true, body: {} });
-    const index = state.storeFleet.stores.findIndex((item) => item.id === updated.id);
-    if (index >= 0) state.storeFleet.stores[index] = { ...state.storeFleet.stores[index], ...updated };
-    renderStoreFleet();
-    if (operation === 'start') await syncStoreContent({ silent: true });
-    showToast(operation === 'start' ? 'Магазин запущен, read-only worker активен' : 'Магазин остановлен', 'success');
-  } catch (error) {
-    showToast(humanError(error), 'error');
+  if (API_BASE_URL) {
+    showToast('Управление запуском появится после разрешённой write-автоматизации. Сейчас режим read-only.');
+    return;
   }
+  // Local demo mode: toggle the runtime flag in memory only.
+  store.demo = true;
+  store.status = store.status === 'paused' ? 'connected_read_only' : 'paused';
+  renderStoreFleet();
+  showToast(store.status === 'paused' ? 'Демо: магазин остановлен' : 'Демо: read-only worker активен', 'success');
 }
 
 function renderFinance() {
@@ -750,7 +757,7 @@ async function syncStoreContent({ silent = false } = {}) {
   const store = selectedStore();
   if (!authState.user || !API_BASE_URL || !store || store.status !== 'connected_read_only') return;
   try {
-    const content = await apiRequest(`/api/v1/stores/${encodeURIComponent(store.id)}/content`, { authenticated: true });
+    const content = await apiRequest('/api/v1/funpay/content', { authenticated: true });
     normalizeStoreContent(content);
     store.metrics = { balance: formatMinor(content.balance?.availableMinor, content.balance?.currency || 'RUB'), lots: content.lots?.length || 0, unread: content.messages?.length || 0 };
     renderStoreFleet(); renderOrders(); renderConversations(); renderLots();
@@ -1073,7 +1080,6 @@ function showToast(message, tone = 'default') {
 }
 
 let connectionStep = 0;
-let connectionDraftId = null;
 let connectionStatus = null;
 let connectionBusy = false;
 const connectionDemoSteps = [
@@ -1084,8 +1090,18 @@ const connectionDemoSteps = [
 ];
 
 const liveConnectionMode = () => Boolean(authState.user && API_BASE_URL);
-const selectedConnectionStore = () => state.storeFleet.stores.find((store) => store.id === connectionDraftId)
-  || state.storeFleet.stores.find((store) => store.id === state.storeFleet.selectedStoreId);
+
+// Live wizard mirrors the backend onboarding journey:
+// bot token -> link code confirmation -> Golden Key -> proxy -> read-only preflight.
+const wizardInitialStep = () => {
+  const onboarding = state.onboarding;
+  if (!onboarding) return 0;
+  if (!onboarding.telegram?.botConfigured) return 0;
+  if (!onboarding.telegram?.linked) return 1;
+  if (!onboarding.funPay?.credentialConfigured) return 2;
+  if (!onboarding.funPay?.proxyConfigured) return 3;
+  return 4;
+};
 
 function renderConnectionWizard() {
   const modal = document.querySelector('.connect-modal');
@@ -1097,6 +1113,7 @@ function renderConnectionWizard() {
     item.classList.toggle('is-active', index === connectionStep);
     item.classList.toggle('is-complete', index < connectionStep);
   });
+  modal.querySelectorAll('.connect-progress > span').forEach((item, index) => { item.style.display = index > 4 ? 'none' : ''; });
   if (!liveConnectionMode()) {
     const step = connectionDemoSteps[connectionStep];
     if (mode) mode.textContent = 'Connection wizard / Demo';
@@ -1105,19 +1122,30 @@ function renderConnectionWizard() {
     return;
   }
   if (mode) mode.textContent = 'Protected single-account connection';
-  const store = selectedConnectionStore();
-  const worker = store?.workerId ? escapeHtml(store.workerId) : 'будет создан автоматически';
-  const pages = [
-    `<span class="connect-illustration">${icon('plus')}<i></i></span><h3>${store?.status === 'awaiting_credentials' ? 'Продолжить подключение' : 'Один аккаунт FunPay'}</h3><p>ZetSlay создаст один защищённый worker для вашего аккаунта. Имя и аватар появятся после read-only проверки профиля.</p>${store?.status === 'awaiting_credentials' ? `<div class="connection-store-badge"><span class="store-logo">FP</span><span><strong>${escapeHtml(store.displayName)}</strong><small>${worker}</small></span></div>` : ''}`,
-    `<span class="connect-illustration">${icon('lock')}<i></i></span><h3>Golden Key</h3><p>Ключ отправляется напрямую в vault для вашего единственного аккаунта и не возвращается обратно.</p><div class="connection-form"><label>Golden Key<input type="password" name="goldenKey" minlength="12" maxlength="4096" autocomplete="off" spellcheck="false" placeholder="Вставьте ключ один раз"></label><small>Не отправляйте Golden Key в Telegram или поддержку.</small></div>`,
-    `<span class="connect-illustration">${icon('shield')}<i></i></span><h3>Обязательный прокси</h3><p>Этот прокси будет использовать только worker <strong>${worker}</strong> для стабильного подключения.</p><div class="connection-form"><label>Proxy URL<input type="password" name="proxyUrl" maxlength="2048" autocomplete="off" spellcheck="false" placeholder="socks5://user:password@host:port"></label><small>Поддерживаются http, https и socks5. Адрес и пароль не появятся в ответе API.</small></div>`,
-    `<span class="connect-illustration connect-illustration--success">${icon('check')}<i></i></span><h3>Read-only проверка</h3><p>ZetSlay проверит авторизацию через закреплённый прокси. Сообщения, лоты, заказы и деньги не изменяются.</p><div class="connection-checks"><span>Golden Key <b>${connectionStatus?.credential?.configured ? 'Добавлен' : 'Ожидается'}</b></span><span>Прокси <b>${connectionStatus?.proxy?.configured ? 'Добавлен' : 'Ожидается'}</b></span><span>Live-действия <b>Отключены</b></span></div>`,
+  const onboarding = state.onboarding;
+  const planRequired = onboarding?.state === 'plan_required' || (!onboarding && !connectionStatus);
+  const linkCode = connectionStatus?.linkCode;
+  const worker = state.storeFleet.stores[0]?.workerId || 'будет создан автоматически';
+  const checks = [
+    `Телеграм-бот <b>${onboarding?.telegram?.botConfigured ? 'Проверен' : 'Ожидается'}</b>`,
+    `Привязка <b>${onboarding?.telegram?.linked ? 'Подтверждена' : 'Ожидается'}</b>`,
+    `Golden Key <b>${onboarding?.funPay?.credentialConfigured ? 'Сохранён' : 'Ожидается'}</b>`,
+    `Прокси <b>${onboarding?.funPay?.proxyConfigured ? 'Сохранён' : 'Ожидается'}</b>`
   ];
-  if (body) body.innerHTML = pages[connectionStep];
+  const pages = [
+    planRequired
+      ? `<span class="connect-illustration">${icon('card')}<i></i></span><h3>Сначала активный тариф</h3><p>Подключение FunPay требует активного тарифа ZetSlay. В статчном контуре доступна демо-активация для проверки интерфейса.</p><div class="connection-checks"><span>Тариф <b>Не активен</b></span></div>`
+      : `<span class="connect-illustration">${icon('send')}<i></i></span><h3>Ваш рабочий бот Telegram</h3><p>Создайте бота через @BotFather и вставьте его Bot Token. Он станет рабочим инструментом вашего магазина: уведомления и автоматизация.</p><div class="connection-form"><label>Bot Token<input type="password" name="botToken" minlength="10" maxlength="256" autocomplete="off" spellcheck="false" placeholder="123456789:AA..."></label><small>Токен уйдёт напрямую в зашифрованный vault и не отобразится второй раз.</small></div>`,
+    `<span class="connect-illustration">${icon('user')}<i></i></span><h3>Одноразовый код привязки</h3><p>Откройте своего бота в Telegram и отправьте команду</p><div class="connection-store-badge"><span class="store-logo">TG</span><span><strong>/start ${escapeHtml(linkCode || '——')}</strong><small>Код действует 10 минут и виден один раз</small></span></div><div class="connection-checks"><span>Ожидание подтверждения <b>${onboarding?.telegram?.linked ? 'Подтверждено' : '…'}</b></span></div>`,
+    `<span class="connect-illustration">${icon('lock')}<i></i></span><h3>Golden Key</h3><p>Ключ отправляется напрямую в vault для вашего единственного аккаунта и не возвращается обратно.</p><div class="connection-form"><label>Golden Key<input type="password" name="goldenKey" minlength="12" maxlength="4096" autocomplete="off" spellcheck="false" placeholder="Вставьте ключ один раз"></label><small>Не отправляйте Golden Key в Telegram или поддержку.</small></div>`,
+    `<span class="connect-illustration">${icon('shield')}<i></i></span><h3>Обязательный прокси</h3><p>Этот прокси будет использовать только worker <strong>${escapeHtml(worker)}</strong> для стабильного подключения.</p><div class="connection-form"><label>Proxy URL<input type="password" name="proxyUrl" maxlength="2048" autocomplete="off" spellcheck="false" placeholder="login:pass@host:port"></label><small>Форматы: ip:port или login:pass@ip:port. Адрес и пароль не появятся в ответе API.</small></div>`,
+    `<span class="connect-illustration connect-illustration--success">${icon('check')}<i></i></span><h3>Read-only проверка</h3><p>ZetSlay проверит авторизацию через закреплённый прокси. Сообщения, лоты, заказы и деньги не изменяются.</p><div class="connection-checks">${checks.map((line) => `<span>${line.split(' <b>')[0]} <b>${line.split(' <b>')[1]}</b></span>`).join('')}<span>Live-действия <b>Отключены</b></span></div>`
+  ];
+  if (body) body.innerHTML = pages[connectionStep] || pages.at(-1);
   if (action) {
-    const labels = [store?.status === 'awaiting_credentials' ? 'Продолжить' : 'Начать подключение', 'Сохранить Golden Key', 'Закрепить прокси', 'Запустить read-only проверку'];
+    const labels = planRequired ? ['Активировать демо-тариф'] : ['Сохранить Bot Token', 'Проверить привязку', 'Сохранить Golden Key', 'Закрепить прокси', 'Запустить read-only проверку'];
     action.disabled = connectionBusy;
-    action.innerHTML = `${connectionBusy ? 'Проверяем…' : labels[connectionStep]} ${icon('chevron-right')}`;
+    action.innerHTML = `${connectionBusy ? 'Проверяем…' : labels[connectionStep] || labels.at(-1)} ${icon('chevron-right')}`;
   }
 }
 
@@ -1127,10 +1155,8 @@ function setModal(open) {
   if (!modal) return;
   if (open) {
     modal.hidden = false;
-    connectionStep = 0;
     connectionStatus = null;
-    const selected = state.storeFleet.stores.find((store) => store.id === state.storeFleet.selectedStoreId);
-    connectionDraftId = selected?.status === 'awaiting_credentials' ? selected.id : null;
+    connectionStep = liveConnectionMode() ? wizardInitialStep() : 0;
     renderConnectionWizard();
   }
   requestAnimationFrame(() => {
@@ -1160,38 +1186,72 @@ async function advanceConnectionWizard() {
   }
   if (connectionBusy) return;
   const modal = document.querySelector('.connect-modal');
+  const planRequired = state.onboarding?.state === 'plan_required';
   let submittedValue = null;
-  if (connectionStep === 1) {
+  if (connectionStep === 0 && !planRequired) {
+    submittedValue = modal.querySelector('input[name="botToken"]')?.value;
+    if (!submittedValue) { showToast('Введите Bot Token от @BotFather'); return; }
+  }
+  if (connectionStep === 2) {
     submittedValue = modal.querySelector('input[name="goldenKey"]')?.value;
     if (!submittedValue) { showToast('Введите Golden Key'); return; }
   }
-  if (connectionStep === 2) {
+  if (connectionStep === 3) {
     submittedValue = modal.querySelector('input[name="proxyUrl"]')?.value;
-    if (!submittedValue) { showToast('Введите Proxy URL'); return; }
+    if (!submittedValue) { showToast('Введите прокси (ip:port или login:pass@ip:port)'); return; }
   }
   connectionBusy = true;
   renderConnectionWizard();
   try {
-    if (connectionStep === 0 && !connectionDraftId) {
-      const draft = await apiRequest('/api/v1/stores', { method: 'POST', authenticated: true, body: { displayName: 'Мой магазин FunPay' } });
-      connectionDraftId = draft.id;
-      await loadStoreFleet();
+    if (connectionStep === 0 && planRequired) {
+      await apiRequest('/api/v1/onboarding/demo-plan', { method: 'POST', authenticated: true, body: {} });
+      await loadOnboarding();
+      showToast('Демо-тариф активирован', 'success');
+      renderConnectionWizard();
+      return;
+    }
+    if (connectionStep === 0) {
+      state.onboarding = await apiRequest('/api/v1/onboarding/telegram/bot', { method: 'POST', authenticated: true, body: { token: submittedValue } });
+      submittedValue = null;
+      showToast('Bot Token принят', 'success');
     } else if (connectionStep === 1) {
-      connectionStatus = await apiRequest(`/api/v1/stores/${encodeURIComponent(connectionDraftId)}/connection/golden-key`, { method: 'POST', authenticated: true, body: { goldenKey: submittedValue } });
-      submittedValue = null;
+      if (!connectionStatus?.linkCode || connectionStatus.linkCode === '——') {
+        const issued = await apiRequest('/api/v1/onboarding/telegram/link-code', { method: 'POST', authenticated: true, body: {} });
+        connectionStatus = { linkCode: issued.code, expiresAt: issued.expiresAt };
+        state.onboarding = issued.onboarding;
+        showToast('Код создан. Отправьте /start ' + issued.code + ' вашему боту', 'success');
+        renderConnectionWizard();
+        return;
+      }
+      const status = await apiRequest('/api/v1/onboarding', { authenticated: true });
+      state.onboarding = status;
+      if (!status.telegram?.linked) {
+        showToast('Привязка ещё не подтверждена. Отправьте боту /start с кодом', 'error');
+        return;
+      }
+      showToast('Telegram привязан', 'success');
     } else if (connectionStep === 2) {
-      connectionStatus = await apiRequest(`/api/v1/stores/${encodeURIComponent(connectionDraftId)}/connection/proxy`, { method: 'POST', authenticated: true, body: { proxyUrl: submittedValue } });
+      state.onboarding = await apiRequest('/api/v1/onboarding/funpay/key', { method: 'POST', authenticated: true, body: { goldenKey: submittedValue } });
       submittedValue = null;
+      const field = modal.querySelector('input[name="goldenKey"]');
+      if (field) field.value = '';
+      showToast('Golden Key сохранён в vault', 'success');
     } else if (connectionStep === 3) {
-      connectionStatus = await apiRequest(`/api/v1/stores/${encodeURIComponent(connectionDraftId)}/connection/preflight`, { method: 'POST', authenticated: true, body: {} });
+      state.onboarding = await apiRequest('/api/v1/onboarding/funpay/proxy', { method: 'POST', authenticated: true, body: { proxyUrl: submittedValue } });
+      submittedValue = null;
+      const field = modal.querySelector('input[name="proxyUrl"]');
+      if (field) field.value = '';
+      showToast('Прокси закреплён', 'success');
+    } else if (connectionStep === 4) {
+      state.onboarding = await apiRequest('/api/v1/onboarding/funpay/preflight', { method: 'POST', authenticated: true, body: {} });
       await loadStoreFleet();
-      await syncStoreContent({ silent: true });
+      await syncStoreContent({ silent: true }).catch(() => {});
       setModal(false);
       showToast('Магазин подключён в read-only режиме через отдельный worker', 'success');
       return;
     }
     connectionStep += 1;
-    showToast(`Шаг ${connectionStep + 1} из 4`, 'success');
+    showToast(`Шаг ${connectionStep + 1} из 5`, 'success');
   } catch (error) {
     showToast(humanError(error), 'error');
   } finally {
@@ -1246,12 +1306,6 @@ function bindInteractions() {
       storeSwitcher.setAttribute('aria-expanded', String(panel ? !panel.hidden : false));
       return;
     }
-    const selectedStore = event.target.closest('[data-select-store]');
-    if (selectedStore) {
-      selectStore(selectedStore.dataset.selectStore).catch((error) => showToast(humanError(error), 'error'));
-      return;
-    }
-
     if (event.target.closest('[data-store-runtime]')) { setStoreRuntime(); return; }
     if (event.target.closest('[data-sync-content]')) { syncStoreContent().catch(() => {}); return; }
     if (event.target.closest('[data-telegram-issue-code]')) { issueTelegramCode(); return; }
